@@ -6,6 +6,24 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 ![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
+## Overview
+
+With the release of macOS Tahoe, Apple redesigned Launchpad and removed several beloved features that power users relied on for years. **My App Launcher** brings back that classic experience and adds even more functionality.
+
+### What's Missing in macOS Tahoe?
+- ❌ No ability to create custom app groups/folders
+- ❌ Limited control over app organization
+- ❌ No quick keyboard access from anywhere
+
+### What My App Launcher Provides
+- ✅ **Custom Groups** - Organize apps into folders just like the classic Launchpad
+- ✅ **Full Reorganization** - Drag and drop to reorder apps and groups exactly how you want
+- ✅ **Global Hotkey** - Summon the launcher instantly with ⌃⌥Space from any app
+- ✅ **Persistent Layout** - Your organization is saved and syncs across sessions
+- ✅ **Import/Export** - Back up your layout or transfer it to another Mac
+
+If you miss the way Launchpad used to work, this app is for you.
+
 ## Features
 
 - 🚀 **Quick Launch** - Click any app icon to launch instantly
