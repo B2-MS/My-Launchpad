@@ -1,0 +1,28 @@
+# Build artifacts
+.build/
+build/
+DerivedData/
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+*.xcuserstate
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# DMG installer (generated, not source)
+*.dmg
+
+# IDE
+.idea/
+*.swp
+*~
