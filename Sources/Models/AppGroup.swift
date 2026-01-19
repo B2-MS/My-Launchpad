@@ -2,15 +2,28 @@ import Foundation
 
 /// Represents a group of applications
 struct AppGroup: Identifiable, Codable {
+    /// Special UUID that represents an empty "void" slot in the grid
+    static let voidId = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+    
     let id: UUID
     var name: String
-    var appIds: [UUID]
+    var appIds: [UUID]  // Can contain voidId for empty slots
     var isExpanded: Bool
     var order: Int
     var positionX: Double
     var positionY: Double
     var width: Double
     var height: Double
+    
+    /// Returns the actual app IDs (excluding voids)
+    var actualAppIds: [UUID] {
+        appIds.filter { $0 != AppGroup.voidId }
+    }
+    
+    /// Check if a UUID is a void
+    static func isVoid(_ id: UUID) -> Bool {
+        return id == voidId
+    }
     
     init(id: UUID = UUID(), name: String, appIds: [UUID] = [], isExpanded: Bool = true, order: Int = 0, positionX: Double = 50, positionY: Double = 50, width: Double = 280, height: Double = 200) {
         self.id = id

@@ -2,10 +2,97 @@ import SwiftUI
 import AppKit
 import UniformTypeIdentifiers
 
+// MARK: - Scroll Wheel Handler for Page Navigation
+
+struct ScrollWheelModifier: ViewModifier {
+    let onScrollLeft: () -> Void
+    let onScrollRight: () -> Void
+    
+    func body(content: Content) -> some View {
+        content
+            .background(
+                ScrollWheelCaptureView(
+                    onScrollLeft: onScrollLeft,
+                    onScrollRight: onScrollRight
+                )
+            )
+    }
+}
+
+struct ScrollWheelCaptureView: NSViewRepresentable {
+    let onScrollLeft: () -> Void
+    let onScrollRight: () -> Void
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+    
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        context.coordinator.onScrollLeft = onScrollLeft
+        context.coordinator.onScrollRight = onScrollRight
+        
+        // Add local event monitor for scroll wheel
+        context.coordinator.monitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { event in
+            context.coordinator.handleScroll(event: event)
+            return event
+        }
+        
+        return view
+    }
+    
+    func updateNSView(_ nsView: NSView, context: Context) {
+        context.coordinator.onScrollLeft = onScrollLeft
+        context.coordinator.onScrollRight = onScrollRight
+    }
+    
+    static func dismantleNSView(_ nsView: NSView, coordinator: Coordinator) {
+        if let monitor = coordinator.monitor {
+            NSEvent.removeMonitor(monitor)
+            coordinator.monitor = nil
+        }
+    }
+    
+    class Coordinator {
+        var onScrollLeft: (() -> Void)?
+        var onScrollRight: (() -> Void)?
+        var monitor: Any?
+        
+        private var scrollAccumulator: CGFloat = 0
+        private var lastScrollTime: Date = Date()
+        private let threshold: CGFloat = 30
+        
+        func handleScroll(event: NSEvent) {
+            let now = Date()
+            
+            // Reset accumulator if it's been a while since last scroll
+            if now.timeIntervalSince(lastScrollTime) > 0.3 {
+                scrollAccumulator = 0
+            }
+            lastScrollTime = now
+            
+            // Use scrollingDeltaX for horizontal scroll
+            scrollAccumulator += event.scrollingDeltaX
+            
+            if scrollAccumulator > threshold {
+                scrollAccumulator = 0
+                DispatchQueue.main.async {
+                    self.onScrollRight?()
+                }
+            } else if scrollAccumulator < -threshold {
+                scrollAccumulator = 0
+                DispatchQueue.main.async {
+                    self.onScrollLeft?()
+                }
+            }
+        }
+    }
+}
+
 /// An expanded group popup overlay (like iOS folder popup) with pagination
 struct ExpandedGroupView: View {
     let group: AppGroup
-    let apps: [AppItem]
+    let appLookup: [UUID: AppItem]  // Dictionary to look up apps by ID
     let allGroups: [AppGroup]
     let isEditingName: Bool
     let headerColor: Color
@@ -18,6 +105,7 @@ struct ExpandedGroupView: View {
     let onCreateNewGroupWithApp: (AppItem) -> Void
     let onRemoveAppFromGroup: (AppItem) -> Void
     let onReorderAppsInGroup: ((UUID, Int) -> Void)?
+    let onSwapAppsInGroup: ((UUID, Int) -> Void)?
     
     @State private var editedName: String = ""
     @State private var currentPage: Int = 0
@@ -26,20 +114,33 @@ struct ExpandedGroupView: View {
     @State private var isLeftEdgeTargeted: Bool = false
     @State private var isRightEdgeTargeted: Bool = false
     @State private var swipeAccumulator: CGFloat = 0
+    @State private var edgeHoverTimer: Timer? = nil
     @FocusState private var isTextFieldFocused: Bool
     
     private let appsPerPage = 16
     private let gridColumns = 4
     
-    private var totalPages: Int {
-        max(1, Int(ceil(Double(apps.count) / Double(appsPerPage))))
+    /// All slot IDs for the group (includes voids)
+    private var allSlotIds: [UUID] {
+        group.appIds
     }
     
-    private var currentPageApps: [AppItem] {
+    /// Total number of pages based on all slots
+    private var totalPages: Int {
+        max(1, Int(ceil(Double(allSlotIds.count) / Double(appsPerPage))))
+    }
+    
+    /// Slot IDs for the current page (can include voids)
+    private var currentPageSlotIds: [UUID] {
         let startIndex = currentPage * appsPerPage
-        let endIndex = min(startIndex + appsPerPage, apps.count)
-        guard startIndex < apps.count else { return [] }
-        return Array(apps[startIndex..<endIndex])
+        let endIndex = min(startIndex + appsPerPage, allSlotIds.count)
+        guard startIndex < allSlotIds.count else { return [] }
+        return Array(allSlotIds[startIndex..<endIndex])
+    }
+    
+    /// Actual apps in the group (for counting, excludes voids)
+    private var actualApps: [AppItem] {
+        group.actualAppIds.compactMap { appLookup[$0] }
     }
     
     private let columns = [
@@ -50,58 +151,50 @@ struct ExpandedGroupView: View {
     ]
     
     var body: some View {
-        ZStack {
-            // Main content
-            VStack(spacing: 0) {
-                headerView
-                contentView
-                if totalPages > 1 {
-                    paginationView
-                }
-            }
-            .frame(width: 500, height: totalPages > 1 ? 560 : 508)
-            .background(Color(NSColor.windowBackgroundColor))
-            .cornerRadius(16)
-            .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(headerColor.opacity(0.3), lineWidth: 1)
-            )
+        VStack(spacing: 0) {
+            headerView
             
-            // Edge drop zones for moving apps between pages (only when multiple pages exist)
-            if totalPages > 1 {
-                HStack(spacing: 0) {
-                    // Left edge drop zone
+            // Content with edge drop zones
+            HStack(spacing: 0) {
+                // Left edge drop zone
+                if totalPages > 1 {
                     edgeDropZone(isLeft: true, enabled: currentPage > 0)
-                    
-                    Spacer()
-                    
-                    // Right edge drop zone
+                }
+                
+                // Main grid content
+                mainGridContent
+                
+                // Right edge drop zone
+                if totalPages > 1 {
                     edgeDropZone(isLeft: false, enabled: currentPage < totalPages - 1)
                 }
-                .frame(width: 500, height: totalPages > 1 ? 560 : 508)
-                .allowsHitTesting(true)
+            }
+            
+            if totalPages > 1 {
+                paginationView
             }
         }
-        .background(
-            SwipeGestureView(
-                onSwipeLeft: {
-                    if currentPage < totalPages - 1 {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            currentPage += 1
-                        }
-                    }
-                },
-                onSwipeRight: {
-                    if currentPage > 0 {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            currentPage -= 1
-                        }
-                    }
-                }
-            )
-            .allowsHitTesting(true)
+        .frame(width: totalPages > 1 ? 580 : 500, height: totalPages > 1 ? 560 : 508)
+        .background(Color(NSColor.windowBackgroundColor))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(headerColor.opacity(0.3), lineWidth: 1)
         )
+    }
+    
+    // MARK: - Main Grid Content
+    
+    private var mainGridContent: some View {
+        Group {
+            if actualApps.isEmpty {
+                emptyStateView
+            } else {
+                paginatedGridView
+            }
+        }
+        .frame(width: 500)
     }
     
     // MARK: - Edge Drop Zone
@@ -110,52 +203,51 @@ struct ExpandedGroupView: View {
         let isTargeted = isLeft ? isLeftEdgeTargeted : isRightEdgeTargeted
         let targetPage = isLeft ? currentPage - 1 : currentPage + 1
         
-        return ZStack {
-            // Always present but invisible hit area
+        return VStack {
+            Spacer()
+            
+            // Invisible drop zone - this triggers page navigation, NOT a drop
             Rectangle()
                 .fill(Color.clear)
-                .frame(width: 60, height: 450)
+                .frame(width: 36, height: 350)
                 .contentShape(Rectangle())
-            
-            // Visual indicator when targeted
-            if enabled && isTargeted {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.purple.opacity(0.3))
-                    .frame(width: 50, height: 400)
-                    .overlay(
-                        VStack(spacing: 4) {
-                            Image(systemName: isLeft ? "chevron.left.2" : "chevron.right.2")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.purple)
-                            Text("Page \(targetPage + 1)")
-                                .font(.system(size: 10, weight: .medium))
-                                .foregroundColor(.purple)
+                .onDrop(of: [.text], isTargeted: Binding(
+                    get: { isLeft ? isLeftEdgeTargeted : isRightEdgeTargeted },
+                    set: { newValue in
+                        if isLeft {
+                            isLeftEdgeTargeted = newValue
+                        } else {
+                            isRightEdgeTargeted = newValue
                         }
-                    )
-            }
+                        
+                        // When drag enters the edge zone, start a timer to flip the page
+                        if newValue && enabled {
+                            edgeHoverTimer?.invalidate()
+                            edgeHoverTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) { _ in
+                                DispatchQueue.main.async {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        currentPage = targetPage
+                                    }
+                                }
+                            }
+                        } else {
+                            // Cancel timer if drag leaves
+                            edgeHoverTimer?.invalidate()
+                            edgeHoverTimer = nil
+                        }
+                    }
+                )) { providers in
+                    // Don't actually drop here - just return false so the drag continues
+                    // The page has already flipped, user can drop on the grid
+                    return false
+                }
+            
+            Spacer()
         }
-        .dropDestination(for: String.self) { items, _ in
-            guard enabled else { return false }
-            return handleEdgeDrop(items: items, toPage: targetPage)
-        } isTargeted: { targeted in
-            guard enabled else { return }
-            if isLeft {
-                isLeftEdgeTargeted = targeted
-            } else {
-                isRightEdgeTargeted = targeted
-            }
-        }
+        .frame(width: 40)
     }
     
-    private func handleEdgeDrop(items: [String], toPage targetPage: Int) -> Bool {
-        guard let uuidString = items.first,
-              let appId = UUID(uuidString: uuidString),
-              let app = apps.first(where: { $0.id == appId }) else {
-            return false
-        }
-        moveAppToPage(app, page: targetPage)
-        return true
-    }
+    // Remove the old handleEdgeDrop function since we're not dropping on edges anymore
     
     // MARK: - Header
     
@@ -201,21 +293,12 @@ struct ExpandedGroupView: View {
             .buttonStyle(.plain)
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 4)
+        .padding(.vertical, 12)
+        .frame(minHeight: 48)
         .background(headerColor)
     }
     
     // MARK: - Content
-    
-    private var contentView: some View {
-        Group {
-            if apps.isEmpty {
-                emptyStateView
-            } else {
-                paginatedGridView
-            }
-        }
-    }
     
     private var emptyStateView: some View {
         VStack(spacing: 12) {
@@ -235,51 +318,80 @@ struct ExpandedGroupView: View {
     
     private var paginatedGridView: some View {
         VStack(spacing: 0) {
-            // Grid for current page
+            // Grid for current page - renders apps AND voids
             LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(currentPageApps) { app in
-                    pageAppIcon(for: app)
+                ForEach(Array(currentPageSlotIds.enumerated()), id: \.element) { localIndex, slotId in
+                    if AppGroup.isVoid(slotId) {
+                        // Render a void slot (droppable empty space)
+                        voidSlotView(localIndex: localIndex)
+                    } else if let app = appLookup[slotId] {
+                        // Render an app icon
+                        pageAppIcon(for: app, localIndex: localIndex)
+                    }
                 }
                 
-                // Fill empty slots to maintain grid structure
-                ForEach(0..<(appsPerPage - currentPageApps.count), id: \.self) { _ in
-                    Color.clear
+                // Fill remaining empty slots to maintain grid structure
+                ForEach(0..<(appsPerPage - currentPageSlotIds.count), id: \.self) { emptyIndex in
+                    let dropIndex = currentPageSlotIds.count + emptyIndex
+                    Rectangle()
+                        .fill(Color.clear)
                         .frame(width: 100, height: 110)
+                        .contentShape(Rectangle())
+                        .dropDestination(for: String.self) { items, _ in
+                            handleInsertDrop(items: items, atLocalIndex: dropIndex)
+                        } isTargeted: { targeted in
+                            dropInsertIndex = targeted ? dropIndex : nil
+                        }
                 }
             }
             .padding(.horizontal, 16)
             .padding(.top, 40)
             .padding(.bottom, 16)
             .frame(height: 470)
-            
-            // Drop zone for moving apps to different pages
-            if totalPages > 1 {
-                HStack(spacing: 20) {
-                    if currentPage > 0 {
-                        pageDropZone(targetPage: currentPage - 1, label: "← Previous")
-                    }
+            .modifier(ScrollWheelModifier(
+                onScrollLeft: {
                     if currentPage < totalPages - 1 {
-                        pageDropZone(targetPage: currentPage + 1, label: "Next →")
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            currentPage += 1
+                        }
+                    }
+                },
+                onScrollRight: {
+                    if currentPage > 0 {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            currentPage -= 1
+                        }
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 8)
-            }
+            ))
         }
     }
     
-    private func pageAppIcon(for app: AppItem) -> some View {
-        let appIndex = apps.firstIndex(where: { $0.id == app.id }) ?? 0
+    /// View for a void (empty) slot - can receive drops
+    private func voidSlotView(localIndex: Int) -> some View {
+        Rectangle()
+            .fill(Color.clear)
+            .frame(width: 100, height: 110)
+            .contentShape(Rectangle())
+            .dropDestination(for: String.self) { items, _ in
+                handleInsertDrop(items: items, atLocalIndex: localIndex)
+            } isTargeted: { targeted in
+                dropInsertIndex = targeted ? localIndex : nil
+            }
+    }
+    
+    private func pageAppIcon(for app: AppItem, localIndex: Int) -> some View {
         
         return HStack(spacing: 0) {
             // Left drop zone for insert
             Rectangle()
-                .fill(dropInsertIndex == appIndex ? Color.purple.opacity(0.3) : Color.clear)
+                .fill(Color.clear)
                 .frame(width: 8)
+                .contentShape(Rectangle())
                 .dropDestination(for: String.self) { items, _ in
-                    handleInsertDrop(items: items, atIndex: appIndex)
+                    handleInsertDrop(items: items, atLocalIndex: localIndex)
                 } isTargeted: { targeted in
-                    dropInsertIndex = targeted ? appIndex : nil
+                    dropInsertIndex = targeted ? localIndex : nil
                 }
             
             AppIconView(
@@ -298,20 +410,22 @@ struct ExpandedGroupView: View {
                     .stroke(dropTargetAppId == app.id ? Color.purple : Color.clear, lineWidth: 3)
             )
             .dropDestination(for: String.self) { items, _ in
-                handleSwapDrop(items: items, withApp: app)
+                // Drop ON an app = insert at that app's position (push it and others forward)
+                handleInsertDrop(items: items, atLocalIndex: localIndex)
             } isTargeted: { targeted in
                 dropTargetAppId = targeted ? app.id : nil
             }
             
-            // Right drop zone for insert (only for last item in row or last item)
-            if (appIndex + 1) % gridColumns == 0 || appIndex == currentPageApps.count - 1 {
+            // Right drop zone for insert (only for last item in row or last item on page)
+            if (localIndex + 1) % gridColumns == 0 || localIndex == currentPageSlotIds.count - 1 {
                 Rectangle()
-                    .fill(dropInsertIndex == appIndex + 1 ? Color.purple.opacity(0.3) : Color.clear)
+                    .fill(Color.clear)
                     .frame(width: 8)
+                    .contentShape(Rectangle())
                     .dropDestination(for: String.self) { items, _ in
-                        handleInsertDrop(items: items, atIndex: appIndex + 1)
+                        handleInsertDrop(items: items, atLocalIndex: localIndex + 1)
                     } isTargeted: { targeted in
-                        dropInsertIndex = targeted ? appIndex + 1 : nil
+                        dropInsertIndex = targeted ? localIndex + 1 : nil
                     }
             }
         }
@@ -323,23 +437,7 @@ struct ExpandedGroupView: View {
         }
     }
     
-    private func handleSwapDrop(items: [String], withApp targetApp: AppItem) -> Bool {
-        guard let uuidString = items.first,
-              let draggedAppId = UUID(uuidString: uuidString),
-              draggedAppId != targetApp.id,
-              let reorder = onReorderAppsInGroup else {
-            return false
-        }
-        
-        // Swap: move dragged app to target app's position
-        if let targetIndex = apps.firstIndex(where: { $0.id == targetApp.id }) {
-            reorder(draggedAppId, targetIndex)
-        }
-        dropTargetAppId = nil
-        return true
-    }
-    
-    private func handleInsertDrop(items: [String], atIndex insertIndex: Int) -> Bool {
+    private func handleInsertDrop(items: [String], atLocalIndex localIndex: Int) -> Bool {
         guard let uuidString = items.first,
               let draggedAppId = UUID(uuidString: uuidString),
               let reorder = onReorderAppsInGroup else {
@@ -347,9 +445,10 @@ struct ExpandedGroupView: View {
         }
         
         // Calculate absolute index based on current page
-        let absoluteIndex = currentPage * appsPerPage + insertIndex
+        let absoluteIndex = currentPage * appsPerPage + localIndex
         reorder(draggedAppId, absoluteIndex)
         dropInsertIndex = nil
+        dropTargetAppId = nil
         return true
     }
     
@@ -400,34 +499,6 @@ struct ExpandedGroupView: View {
         }
     }
     
-    private func pageDropZone(targetPage: Int, label: String) -> some View {
-        Text(label)
-            .font(.system(size: 11))
-            .foregroundColor(.secondary)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 6)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.gray.opacity(0.1))
-            )
-            .dropDestination(for: String.self) { items, _ in
-                guard let uuidString = items.first,
-                      let appId = UUID(uuidString: uuidString),
-                      let app = apps.first(where: { $0.id == appId }) else {
-                    return false
-                }
-                moveAppToPage(app, page: targetPage)
-                return true
-            } isTargeted: { isTargeted in
-                // Could add visual feedback here
-            }
-            .onTapGesture {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    currentPage = targetPage
-                }
-            }
-    }
-    
     // MARK: - Pagination
     
     private var paginationView: some View {
@@ -459,7 +530,7 @@ struct ExpandedGroupView: View {
                         .dropDestination(for: String.self) { items, _ in
                             guard let uuidString = items.first,
                                   let appId = UUID(uuidString: uuidString),
-                                  let app = apps.first(where: { $0.id == appId }) else {
+                                  let app = appLookup[appId] else {
                                 return false
                             }
                             moveAppToPage(app, page: page)
@@ -487,18 +558,32 @@ struct ExpandedGroupView: View {
     
     // MARK: - Actions
     
+    /// Move an app to a specific page (used by context menu)
     private func moveAppToPage(_ app: AppItem, page: Int) {
-        guard apps.contains(where: { $0.id == app.id }) else { return }
+        guard let currentAppIndex = allSlotIds.firstIndex(of: app.id) else { return }
         
-        // Calculate the target index (beginning of target page)
-        let targetIndex = page * appsPerPage
+        let currentAppPage = currentAppIndex / appsPerPage
         
-        // Use the reorder callback if available
+        // Don't move if already on the target page
+        if currentAppPage == page {
+            return
+        }
+        
+        // Calculate target index - place at the end of the target page
+        let targetIndex: Int
+        if page > currentAppPage {
+            // Moving forward: place at end of target page
+            let endOfPage = min((page + 1) * appsPerPage, allSlotIds.count)
+            targetIndex = endOfPage
+        } else {
+            // Moving backward: place at end of target page
+            targetIndex = (page + 1) * appsPerPage
+        }
+        
         if let reorder = onReorderAppsInGroup {
             reorder(app.id, targetIndex)
         }
         
-        // Navigate to target page
         withAnimation(.easeInOut(duration: 0.2)) {
             currentPage = page
         }
@@ -536,75 +621,6 @@ struct AppDragPreview: View {
         .shadow(radius: 5)
         .onAppear {
             loadedIcon = app.getIcon()
-        }
-    }
-}
-
-/// NSView wrapper for detecting trackpad swipe gestures
-struct SwipeGestureView: NSViewRepresentable {
-    let onSwipeLeft: () -> Void
-    let onSwipeRight: () -> Void
-    
-    func makeNSView(context: Context) -> SwipeNSView {
-        let view = SwipeNSView()
-        view.onSwipeLeft = onSwipeLeft
-        view.onSwipeRight = onSwipeRight
-        return view
-    }
-    
-    func updateNSView(_ nsView: SwipeNSView, context: Context) {
-        nsView.onSwipeLeft = onSwipeLeft
-        nsView.onSwipeRight = onSwipeRight
-    }
-}
-
-/// Custom NSView that handles scroll wheel events for swipe detection
-class SwipeNSView: NSView {
-    var onSwipeLeft: (() -> Void)?
-    var onSwipeRight: (() -> Void)?
-    
-    private var accumulatedScrollX: CGFloat = 0
-    private var lastScrollTime: Date = Date()
-    private let swipeThreshold: CGFloat = 50
-    private var isProcessingSwipe = false
-    
-    override var acceptsFirstResponder: Bool { true }
-    
-    override func scrollWheel(with event: NSEvent) {
-        // Reset accumulator if too much time has passed
-        let now = Date()
-        if now.timeIntervalSince(lastScrollTime) > 0.3 {
-            accumulatedScrollX = 0
-            isProcessingSwipe = false
-        }
-        lastScrollTime = now
-        
-        // Only process horizontal scrolling from trackpad
-        guard event.hasPreciseScrollingDeltas else {
-            super.scrollWheel(with: event)
-            return
-        }
-        
-        // Accumulate horizontal scroll
-        accumulatedScrollX += event.scrollingDeltaX
-        
-        // Check for swipe threshold
-        if !isProcessingSwipe {
-            if accumulatedScrollX > swipeThreshold {
-                isProcessingSwipe = true
-                onSwipeRight?()
-                accumulatedScrollX = 0
-            } else if accumulatedScrollX < -swipeThreshold {
-                isProcessingSwipe = true
-                onSwipeLeft?()
-                accumulatedScrollX = 0
-            }
-        }
-        
-        // Reset on scroll end
-        if event.phase == .ended || event.phase == .cancelled {
-            accumulatedScrollX = 0
-            isProcessingSwipe = false
         }
     }
 }

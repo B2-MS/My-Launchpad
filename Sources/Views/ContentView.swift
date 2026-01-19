@@ -449,7 +449,7 @@ struct ContentView: View {
             
             ExpandedGroupView(
                 group: group,
-                apps: viewModel.apps(for: group),
+                appLookup: viewModel.appLookup,
                 allGroups: viewModel.groups,
                 isEditingName: viewModel.editingGroupId == group.id,
                 headerColor: viewModel.groupHeaderColor,
@@ -479,6 +479,9 @@ struct ContentView: View {
                 },
                 onReorderAppsInGroup: { appId, targetIndex in
                     viewModel.reorderAppInGroup(appId, in: group, toIndex: targetIndex)
+                },
+                onSwapAppsInGroup: { appId, targetIndex in
+                    viewModel.swapAppsInGroup(appId, withAppAtIndex: targetIndex, in: group)
                 }
             )
             .transition(.scale.combined(with: .opacity))

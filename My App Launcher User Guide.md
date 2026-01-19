@@ -188,27 +188,30 @@ In the group popup, click the group name in the header to edit it.
 
 - **Pagination** - Groups with more than 16 apps show multiple pages
 - **Page Navigation** - Use arrows or dots at the bottom to navigate pages
-- **Swipe Gestures** - Swipe left or right with trackpad/mouse to navigate between pages
+- **Swipe Gestures** - Two-finger horizontal swipe on trackpad to navigate between pages
+- **Edge Drag Zones** - Drag an app to the left/right edge to flip pages while maintaining the drag
+- **Empty Slots** - Moving an app to another page leaves an empty slot (up to 4 per page)
 - **Close** - Click the X button or click outside the popup
 
 ### Moving Apps Between Pages
 
-When a group has multiple pages, you can move apps between pages in several ways:
+When a group has multiple pages, you can move apps between pages using the iPad-style drag interface:
 
-#### Drag to Edge
+#### Drag to Edge (Recommended)
 Drag an app to the **left or right edge** of the group popup window:
-- **Left edge** - Moves the app to the previous page
-- **Right edge** - Moves the app to the next page
-- A purple highlight with page number appears when hovering over the edge
+- The page will flip after a brief hover (0.4 seconds)
+- Continue dragging to position the app anywhere on the new page
+- The app fills the first available empty slot, or can be dropped on a specific position
+- An empty slot is left on the source page (up to 4 per page)
+
+#### Trackpad Swipe
+Use a **two-finger horizontal swipe** on your trackpad to navigate between pages (when not dragging).
 
 #### Drag to Page Dot
 Drag an app directly onto a **page indicator dot** at the bottom to move it to that specific page.
 
 #### Context Menu
 Right-click an app and select **"Move to Page →"** to choose a specific page.
-
-#### Drop Zones
-Use the **"← Previous"** and **"Next →"** drop zones that appear below the app grid.
 
 ---
 
@@ -299,14 +302,21 @@ Drag an app onto a group icon to add it to that group.
 
 ### Reordering Apps Within a Group
 In the group popup:
-- **Drop ON an app** - Swaps positions with that app
-- **Drop to the LEFT of an app** - Inserts before that app (purple highlight shows insertion point)
+- **Drop ON an app** - Inserts at that position, pushing other apps forward
+- **Drop to the LEFT of an app** - Inserts before that app
 - **Drop to the RIGHT** - Inserts after (at end of row or end of list)
+- **Drop on empty slot** - Places the app in that empty position
+
+### Moving Apps Between Pages
+In multi-page groups:
+- **Drag to edge** - Flip to prev/next page while continuing to drag
+- **Drop anywhere** - App fills first empty slot or drops at position
+- **Empty slot left behind** - Source page keeps an empty slot (up to 4)
 
 ### Reordering Groups
 On the main screen:
 - **Drop ON a group** - Swaps positions with that group
-- **Drop to the LEFT of a group** - Inserts before that group (blue highlight shows insertion point)
+- **Drop to the LEFT of a group** - Inserts before that group
 - **Drop to the RIGHT of a group** - Inserts after that group
 
 ### Moving Apps Between Groups
@@ -360,6 +370,15 @@ If an app shows a blank icon:
 ---
 
 ## Version History
+
+### v1.1.0 (January 2026)
+- iPad-style multi-page navigation with edge drag zones
+- Trackpad swipe gestures for page navigation
+- Empty slot preservation when moving apps between pages
+- Enlarged and improved group popup header
+- Cleaner drop zone visuals (transparent until activated)
+- Fixed app icon not appearing in Finder
+- Fixed settings persistence for app layouts
 
 ### v1.0.0
 - Initial release
