@@ -171,6 +171,7 @@ struct ContentView: View {
         Button(action: {
             withAnimation(.easeInOut(duration: 0.2)) {
                 viewModel.groupTileScale = scale
+                viewModel.saveData()
             }
         }) {
             Text(label)

@@ -130,15 +130,27 @@ struct ExpandedGroupView: View {
         max(1, Int(ceil(Double(allSlotIds.count) / Double(appsPerPage))))
     }
     
-    /// Slot IDs for the current page (can include voids)
-    private var currentPageSlotIds: [UUID] {
+    /// Apps for the current page - sorted so apps come first, then voids (keeps apps contiguous)
+    private var currentPageAppIds: [UUID] {
         let startIndex = currentPage * appsPerPage
         let endIndex = min(startIndex + appsPerPage, allSlotIds.count)
         guard startIndex < allSlotIds.count else { return [] }
-        return Array(allSlotIds[startIndex..<endIndex])
+        
+        let pageSlots = Array(allSlotIds[startIndex..<endIndex])
+        
+        // Sort: real apps first (contiguous), then voids at the end
+        let apps = pageSlots.filter { !AppGroup.isVoid($0) }
+        let voids = pageSlots.filter { AppGroup.isVoid($0) }
+        
+        return apps + voids
     }
     
-    /// Actual apps in the group (for counting, excludes voids)
+    /// Number of real apps on current page
+    private var appsOnCurrentPage: Int {
+        currentPageAppIds.filter { !AppGroup.isVoid($0) }.count
+    }
+    
+    /// Actual apps in the group (for counting)
     private var actualApps: [AppItem] {
         group.actualAppIds.compactMap { appLookup[$0] }
     }
@@ -174,7 +186,7 @@ struct ExpandedGroupView: View {
                 paginationView
             }
         }
-        .frame(width: totalPages > 1 ? 580 : 500, height: totalPages > 1 ? 560 : 508)
+        .frame(width: totalPages > 1 ? 580 : 500, height: totalPages > 1 ? 580 : 540)
         .background(Color(NSColor.windowBackgroundColor))
         .cornerRadius(16)
         .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
@@ -318,11 +330,11 @@ struct ExpandedGroupView: View {
     
     private var paginatedGridView: some View {
         VStack(spacing: 0) {
-            // Grid for current page - renders apps AND voids
+            // Grid for current page - apps are contiguous, voids at the end
             LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(Array(currentPageSlotIds.enumerated()), id: \.element) { localIndex, slotId in
+                ForEach(Array(currentPageAppIds.enumerated()), id: \.element) { localIndex, slotId in
                     if AppGroup.isVoid(slotId) {
-                        // Render a void slot (droppable empty space)
+                        // Void slot - droppable empty space (appears after all apps)
                         voidSlotView(localIndex: localIndex)
                     } else if let app = appLookup[slotId] {
                         // Render an app icon
@@ -330,9 +342,9 @@ struct ExpandedGroupView: View {
                     }
                 }
                 
-                // Fill remaining empty slots to maintain grid structure
-                ForEach(0..<(appsPerPage - currentPageSlotIds.count), id: \.self) { emptyIndex in
-                    let dropIndex = currentPageSlotIds.count + emptyIndex
+                // Fill remaining empty slots to maintain grid structure (for drops)
+                ForEach(0..<(appsPerPage - currentPageAppIds.count), id: \.self) { emptyIndex in
+                    let dropIndex = currentPageAppIds.count + emptyIndex
                     Rectangle()
                         .fill(Color.clear)
                         .frame(width: 100, height: 110)
@@ -347,7 +359,7 @@ struct ExpandedGroupView: View {
             .padding(.horizontal, 16)
             .padding(.top, 40)
             .padding(.bottom, 16)
-            .frame(height: 470)
+            .frame(height: 500)
             .modifier(ScrollWheelModifier(
                 onScrollLeft: {
                     if currentPage < totalPages - 1 {
@@ -400,10 +412,12 @@ struct ExpandedGroupView: View {
                 isEditMode: false,
                 groups: allGroups.filter { $0.id != group.id },
                 iconScale: 1.25,
+                isInGroup: true,
                 onTap: { onAppTap(app) },
                 onLongPress: { },
                 onAddToGroup: { targetGroup in onAddAppToGroup(app, targetGroup) },
-                onCreateNewGroup: { onCreateNewGroupWithApp(app) }
+                onCreateNewGroup: { onCreateNewGroupWithApp(app) },
+                onRemoveFromGroup: { onRemoveAppFromGroup(app) }
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
@@ -416,8 +430,8 @@ struct ExpandedGroupView: View {
                 dropTargetAppId = targeted ? app.id : nil
             }
             
-            // Right drop zone for insert (only for last item in row or last item on page)
-            if (localIndex + 1) % gridColumns == 0 || localIndex == currentPageSlotIds.count - 1 {
+            // Right drop zone for insert (only for last item in row or last app on page)
+            if (localIndex + 1) % gridColumns == 0 || localIndex == appsOnCurrentPage - 1 {
                 Rectangle()
                     .fill(Color.clear)
                     .frame(width: 8)
@@ -431,9 +445,6 @@ struct ExpandedGroupView: View {
         }
         .draggable(app.id.uuidString) {
             AppDragPreview(app: app)
-        }
-        .contextMenu {
-            appContextMenu(for: app)
         }
     }
     

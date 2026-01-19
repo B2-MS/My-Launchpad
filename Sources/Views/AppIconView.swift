@@ -9,10 +9,12 @@ struct AppIconView: View {
     let isEditMode: Bool
     let groups: [AppGroup]
     var iconScale: CGFloat = 1.0
+    var isInGroup: Bool = false
     let onTap: () -> Void
     let onLongPress: () -> Void
     let onAddToGroup: (AppGroup) -> Void
     let onCreateNewGroup: () -> Void
+    var onRemoveFromGroup: (() -> Void)? = nil
     
     @State private var isHovering = false
     @State private var icon: NSImage?
@@ -124,12 +126,10 @@ struct AppIconView: View {
             Button {
                 onCreateNewGroup()
             } label: {
-                Label("Create New Group", systemImage: "folder.badge.plus")
+                Label("Move to New Group", systemImage: "folder.badge.plus")
             }
             
             if !groups.isEmpty {
-                Divider()
-                
                 Menu {
                     ForEach(groups.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }) { group in
                         Button {
@@ -139,7 +139,17 @@ struct AppIconView: View {
                         }
                     }
                 } label: {
-                    Label("Add to Group", systemImage: "folder")
+                    Label("Move to Group", systemImage: "folder")
+                }
+            }
+            
+            if isInGroup, let removeAction = onRemoveFromGroup {
+                Divider()
+                
+                Button(role: .destructive) {
+                    removeAction()
+                } label: {
+                    Label("Remove from Group", systemImage: "minus.circle")
                 }
             }
         }

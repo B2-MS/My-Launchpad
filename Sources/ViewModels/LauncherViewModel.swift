@@ -85,6 +85,11 @@ class LauncherViewModel: ObservableObject {
             ungrouped.append(contentsOf: newApps.map { $0.id })
             self.ungroupedAppIds = ungrouped
             
+            // Restore settings
+            if let scale = savedData.groupTileScale {
+                self.groupTileScale = scale
+            }
+            
         } else {
             // First run - scan all apps
             let freshApps = AppScanner.scanApplications()
@@ -106,7 +111,8 @@ class LauncherViewModel: ObservableObject {
         let data = LauncherData(
             groups: groups,
             ungroupedAppIds: ungroupedAppIds,
-            allApps: allApps
+            allApps: allApps,
+            groupTileScale: groupTileScale
         )
         dataManager.save(data)
     }
@@ -422,13 +428,13 @@ class LauncherViewModel: ObservableObject {
     }
 
     /// Reorder an app within a group to a specific index (for pagination and drag/drop)
-    /// Supports iPad-like behavior with voids when moving between pages
+    /// Voids are allowed at the END of each page to enable cross-page moves
+    /// Apps are always contiguous within a page (no gaps)
     func reorderAppInGroup(_ appId: UUID, in group: AppGroup, toIndex targetIndex: Int) {
         guard let groupIndex = groups.firstIndex(where: { $0.id == group.id }) else { return }
         guard let currentIndex = groups[groupIndex].appIds.firstIndex(of: appId) else { return }
         
         let appsPerPage = 16
-        let maxVoidsPerPage = 4
         
         let currentPage = currentIndex / appsPerPage
         let targetPage = targetIndex / appsPerPage
@@ -442,16 +448,23 @@ class LauncherViewModel: ObservableObject {
         let isMovingToNewPage = currentPage != targetPage
         
         if isMovingToNewPage {
-            // Leave a void on the source page, insert on target page
-            // First, check if target page has a void we can fill
+            // Cross-page move: leave a void on source page, insert on target page
+            
+            // Step 1: Replace the app with a void at its current position
+            groups[groupIndex].appIds[currentIndex] = AppGroup.voidId
+            
+            // Step 2: Compact the source page - move the void to the end of apps on that page
+            compactPage(groupIndex: groupIndex, page: currentPage, appsPerPage: appsPerPage)
+            
+            // Step 3: Find where to insert on the target page
+            // First, check if there's a void on the target page we can fill
             let targetPageStart = targetPage * appsPerPage
             let targetPageEnd = min(targetPageStart + appsPerPage, groups[groupIndex].appIds.count)
             
-            // Find the first void on the target page
             var voidIndexOnTargetPage: Int? = nil
             if targetPageStart < groups[groupIndex].appIds.count {
                 for i in targetPageStart..<targetPageEnd {
-                    if groups[groupIndex].appIds[i] == AppGroup.voidId {
+                    if i < groups[groupIndex].appIds.count && groups[groupIndex].appIds[i] == AppGroup.voidId {
                         voidIndexOnTargetPage = i
                         break
                     }
@@ -459,20 +472,21 @@ class LauncherViewModel: ObservableObject {
             }
             
             if let voidIndex = voidIndexOnTargetPage {
-                // Replace the void with the app, then leave a void at the source
+                // Replace the void with the app
                 groups[groupIndex].appIds[voidIndex] = appId
-                groups[groupIndex].appIds[currentIndex] = AppGroup.voidId
             } else {
-                // No void on target page - leave a void on source page, then insert
-                groups[groupIndex].appIds[currentIndex] = AppGroup.voidId
+                // No void on target page - insert at the target position
                 let clampedTarget = min(targetIndex, groups[groupIndex].appIds.count)
                 groups[groupIndex].appIds.insert(appId, at: clampedTarget)
             }
             
-            // Clean up: just limit voids per page and remove trailing voids
-            cleanupVoids(groupIndex: groupIndex, appsPerPage: appsPerPage, maxVoidsPerPage: maxVoidsPerPage)
+            // Step 4: Compact the target page as well
+            compactPage(groupIndex: groupIndex, page: targetPage, appsPerPage: appsPerPage)
+            
+            // Step 5: Clean up trailing voids
+            cleanupTrailingVoids(groupIndex: groupIndex)
         } else {
-            // Same page move - just reorder normally (no voids)
+            // Same page move - just reorder normally (no voids needed)
             groups[groupIndex].appIds.remove(at: currentIndex)
             
             var adjustedTargetIndex = targetIndex
@@ -487,53 +501,45 @@ class LauncherViewModel: ObservableObject {
         saveData()
     }
     
-    /// Simple cleanup: just limit voids per page and remove trailing empty voids
-    private func cleanupVoids(groupIndex: Int, appsPerPage: Int, maxVoidsPerPage: Int) {
-        var appIds = groups[groupIndex].appIds
+    /// Compact a page so apps are contiguous and voids are at the end
+    private func compactPage(groupIndex: Int, page: Int, appsPerPage: Int) {
+        let pageStart = page * appsPerPage
+        let pageEnd = min(pageStart + appsPerPage, groups[groupIndex].appIds.count)
         
-        // Process each page to limit voids
-        let numPages = max(1, (appIds.count + appsPerPage - 1) / appsPerPage)
+        guard pageStart < groups[groupIndex].appIds.count else { return }
         
-        for pageIndex in 0..<numPages {
-            let pageStart = pageIndex * appsPerPage
-            let pageEnd = min(pageStart + appsPerPage, appIds.count)
-            
-            guard pageStart < appIds.count else { break }
-            
-            // Count voids on this page
-            var voidCount = 0
-            for i in pageStart..<pageEnd {
-                if appIds[i] == AppGroup.voidId {
-                    voidCount += 1
-                }
-            }
-            
-            // If too many voids, remove excess from the end of this page section
-            if voidCount > maxVoidsPerPage {
-                var voidsToRemove = voidCount - maxVoidsPerPage
-                for i in stride(from: pageEnd - 1, through: pageStart, by: -1) {
-                    if voidsToRemove <= 0 { break }
-                    if i < appIds.count && appIds[i] == AppGroup.voidId {
-                        appIds.remove(at: i)
-                        voidsToRemove -= 1
-                    }
-                }
-            }
+        // Extract items on this page
+        var pageItems = Array(groups[groupIndex].appIds[pageStart..<pageEnd])
+        
+        // Separate apps and voids
+        let apps = pageItems.filter { $0 != AppGroup.voidId }
+        let voidCount = pageItems.count - apps.count
+        
+        // Rebuild page: apps first, then voids
+        pageItems = apps + Array(repeating: AppGroup.voidId, count: voidCount)
+        
+        // Replace in the main array
+        for (i, item) in pageItems.enumerated() {
+            groups[groupIndex].appIds[pageStart + i] = item
         }
-        
-        // Remove trailing voids from the very end
-        while !appIds.isEmpty && appIds.last == AppGroup.voidId {
-            appIds.removeLast()
-        }
-        
-        groups[groupIndex].appIds = appIds
     }
     
-    /// Swap two apps by their indices within a group (preserves page boundaries)
+    /// Remove trailing voids from the end of the array
+    private func cleanupTrailingVoids(groupIndex: Int) {
+        while !groups[groupIndex].appIds.isEmpty && groups[groupIndex].appIds.last == AppGroup.voidId {
+            groups[groupIndex].appIds.removeLast()
+        }
+    }
+    
+    /// Swap two apps by their indices within a group
     func swapAppsInGroup(_ appId: UUID, withAppAtIndex targetIndex: Int, in group: AppGroup) {
         guard let groupIndex = groups.firstIndex(where: { $0.id == group.id }) else { return }
-        guard let currentIndex = groups[groupIndex].appIds.firstIndex(of: appId) else { return }
-        guard targetIndex >= 0 && targetIndex < groups[groupIndex].appIds.count else { return }
+        
+        // Work with actual app IDs only (filter out any voids)
+        var actualAppIds = groups[groupIndex].appIds.filter { $0 != AppGroup.voidId }
+        
+        guard let currentIndex = actualAppIds.firstIndex(of: appId) else { return }
+        guard targetIndex >= 0 && targetIndex < actualAppIds.count else { return }
         
         // Don't swap with itself
         if currentIndex == targetIndex {
@@ -541,7 +547,10 @@ class LauncherViewModel: ObservableObject {
         }
         
         // Perform the swap
-        groups[groupIndex].appIds.swapAt(currentIndex, targetIndex)
+        actualAppIds.swapAt(currentIndex, targetIndex)
+        
+        // Update the group
+        groups[groupIndex].appIds = actualAppIds
         
         saveData()
     }
