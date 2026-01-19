@@ -25,6 +25,7 @@ struct ExpandedGroupView: View {
     @State private var dropInsertIndex: Int? = nil
     @State private var isLeftEdgeTargeted: Bool = false
     @State private var isRightEdgeTargeted: Bool = false
+    @State private var swipeAccumulator: CGFloat = 0
     @FocusState private var isTextFieldFocused: Bool
     
     private let appsPerPage = 16
@@ -69,89 +70,81 @@ struct ExpandedGroupView: View {
             
             // Edge drop zones for moving apps between pages (only when multiple pages exist)
             if totalPages > 1 {
-                HStack {
+                HStack(spacing: 0) {
                     // Left edge drop zone
-                    if currentPage > 0 {
-                        edgeDropZone(isLeft: true)
-                    }
+                    edgeDropZone(isLeft: true, enabled: currentPage > 0)
                     
                     Spacer()
                     
                     // Right edge drop zone
-                    if currentPage < totalPages - 1 {
-                        edgeDropZone(isLeft: false)
-                    }
+                    edgeDropZone(isLeft: false, enabled: currentPage < totalPages - 1)
                 }
                 .frame(width: 500, height: totalPages > 1 ? 560 : 508)
+                .allowsHitTesting(true)
             }
         }
-        .gesture(swipeGesture)
-    }
-    
-    // MARK: - Swipe Gesture
-    
-    private var swipeGesture: some Gesture {
-        DragGesture(minimumDistance: 50, coordinateSpace: .local)
-            .onEnded { value in
-                let horizontalAmount = value.translation.width
-                let verticalAmount = value.translation.height
-                
-                // Only process horizontal swipes (ignore vertical)
-                if abs(horizontalAmount) > abs(verticalAmount) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        if horizontalAmount < 0 && currentPage < totalPages - 1 {
-                            // Swipe left - go to next page
+        .background(
+            SwipeGestureView(
+                onSwipeLeft: {
+                    if currentPage < totalPages - 1 {
+                        withAnimation(.easeInOut(duration: 0.2)) {
                             currentPage += 1
-                        } else if horizontalAmount > 0 && currentPage > 0 {
-                            // Swipe right - go to previous page
+                        }
+                    }
+                },
+                onSwipeRight: {
+                    if currentPage > 0 {
+                        withAnimation(.easeInOut(duration: 0.2)) {
                             currentPage -= 1
                         }
                     }
                 }
-            }
+            )
+            .allowsHitTesting(true)
+        )
     }
     
     // MARK: - Edge Drop Zone
     
-    private func edgeDropZone(isLeft: Bool) -> some View {
+    private func edgeDropZone(isLeft: Bool, enabled: Bool) -> some View {
         let isTargeted = isLeft ? isLeftEdgeTargeted : isRightEdgeTargeted
         let targetPage = isLeft ? currentPage - 1 : currentPage + 1
         
-        return VStack {
-            Spacer()
+        return ZStack {
+            // Always present but invisible hit area
+            Rectangle()
+                .fill(Color.clear)
+                .frame(width: 60, height: 450)
+                .contentShape(Rectangle())
             
-            ZStack {
-                // Visual indicator when targeted
+            // Visual indicator when targeted
+            if enabled && isTargeted {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(isTargeted ? Color.purple.opacity(0.3) : Color.clear)
-                    .frame(width: 40)
-                
-                // Arrow indicator
-                if isTargeted {
-                    VStack(spacing: 4) {
-                        Image(systemName: isLeft ? "chevron.left.2" : "chevron.right.2")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.purple)
-                        Text("Page \(targetPage + 1)")
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundColor(.purple)
-                    }
-                }
+                    .fill(Color.purple.opacity(0.3))
+                    .frame(width: 50, height: 400)
+                    .overlay(
+                        VStack(spacing: 4) {
+                            Image(systemName: isLeft ? "chevron.left.2" : "chevron.right.2")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.purple)
+                            Text("Page \(targetPage + 1)")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundColor(.purple)
+                        }
+                    )
             }
-            .frame(width: 50, height: 400)
-            .dropDestination(for: String.self) { items, _ in
-                handleEdgeDrop(items: items, toPage: targetPage)
-            } isTargeted: { targeted in
-                if isLeft {
-                    isLeftEdgeTargeted = targeted
-                } else {
-                    isRightEdgeTargeted = targeted
-                }
-            }
-            
-            Spacer()
         }
-        .padding(.horizontal, 4)
+        .dropDestination(for: String.self) { items, _ in
+            guard enabled else { return false }
+            return handleEdgeDrop(items: items, toPage: targetPage)
+        } isTargeted: { targeted in
+            guard enabled else { return }
+            if isLeft {
+                isLeftEdgeTargeted = targeted
+            } else {
+                isRightEdgeTargeted = targeted
+            }
+        }
     }
     
     private func handleEdgeDrop(items: [String], toPage targetPage: Int) -> Bool {
@@ -543,6 +536,75 @@ struct AppDragPreview: View {
         .shadow(radius: 5)
         .onAppear {
             loadedIcon = app.getIcon()
+        }
+    }
+}
+
+/// NSView wrapper for detecting trackpad swipe gestures
+struct SwipeGestureView: NSViewRepresentable {
+    let onSwipeLeft: () -> Void
+    let onSwipeRight: () -> Void
+    
+    func makeNSView(context: Context) -> SwipeNSView {
+        let view = SwipeNSView()
+        view.onSwipeLeft = onSwipeLeft
+        view.onSwipeRight = onSwipeRight
+        return view
+    }
+    
+    func updateNSView(_ nsView: SwipeNSView, context: Context) {
+        nsView.onSwipeLeft = onSwipeLeft
+        nsView.onSwipeRight = onSwipeRight
+    }
+}
+
+/// Custom NSView that handles scroll wheel events for swipe detection
+class SwipeNSView: NSView {
+    var onSwipeLeft: (() -> Void)?
+    var onSwipeRight: (() -> Void)?
+    
+    private var accumulatedScrollX: CGFloat = 0
+    private var lastScrollTime: Date = Date()
+    private let swipeThreshold: CGFloat = 50
+    private var isProcessingSwipe = false
+    
+    override var acceptsFirstResponder: Bool { true }
+    
+    override func scrollWheel(with event: NSEvent) {
+        // Reset accumulator if too much time has passed
+        let now = Date()
+        if now.timeIntervalSince(lastScrollTime) > 0.3 {
+            accumulatedScrollX = 0
+            isProcessingSwipe = false
+        }
+        lastScrollTime = now
+        
+        // Only process horizontal scrolling from trackpad
+        guard event.hasPreciseScrollingDeltas else {
+            super.scrollWheel(with: event)
+            return
+        }
+        
+        // Accumulate horizontal scroll
+        accumulatedScrollX += event.scrollingDeltaX
+        
+        // Check for swipe threshold
+        if !isProcessingSwipe {
+            if accumulatedScrollX > swipeThreshold {
+                isProcessingSwipe = true
+                onSwipeRight?()
+                accumulatedScrollX = 0
+            } else if accumulatedScrollX < -swipeThreshold {
+                isProcessingSwipe = true
+                onSwipeLeft?()
+                accumulatedScrollX = 0
+            }
+        }
+        
+        // Reset on scroll end
+        if event.phase == .ended || event.phase == .cancelled {
+            accumulatedScrollX = 0
+            isProcessingSwipe = false
         }
     }
 }
