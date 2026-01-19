@@ -23,6 +23,8 @@ struct ExpandedGroupView: View {
     @State private var currentPage: Int = 0
     @State private var dropTargetAppId: UUID? = nil
     @State private var dropInsertIndex: Int? = nil
+    @State private var isLeftEdgeTargeted: Bool = false
+    @State private var isRightEdgeTargeted: Bool = false
     @FocusState private var isTextFieldFocused: Bool
     
     private let appsPerPage = 16
@@ -47,21 +49,119 @@ struct ExpandedGroupView: View {
     ]
     
     var body: some View {
-        VStack(spacing: 0) {
-            headerView
-            contentView
+        ZStack {
+            // Main content
+            VStack(spacing: 0) {
+                headerView
+                contentView
+                if totalPages > 1 {
+                    paginationView
+                }
+            }
+            .frame(width: 500, height: totalPages > 1 ? 560 : 508)
+            .background(Color(NSColor.windowBackgroundColor))
+            .cornerRadius(16)
+            .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(headerColor.opacity(0.3), lineWidth: 1)
+            )
+            
+            // Edge drop zones for moving apps between pages (only when multiple pages exist)
             if totalPages > 1 {
-                paginationView
+                HStack {
+                    // Left edge drop zone
+                    if currentPage > 0 {
+                        edgeDropZone(isLeft: true)
+                    }
+                    
+                    Spacer()
+                    
+                    // Right edge drop zone
+                    if currentPage < totalPages - 1 {
+                        edgeDropZone(isLeft: false)
+                    }
+                }
+                .frame(width: 500, height: totalPages > 1 ? 560 : 508)
             }
         }
-        .frame(width: 500, height: totalPages > 1 ? 560 : 508)
-        .background(Color(NSColor.windowBackgroundColor))
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(headerColor.opacity(0.3), lineWidth: 1)
-        )
+        .gesture(swipeGesture)
+    }
+    
+    // MARK: - Swipe Gesture
+    
+    private var swipeGesture: some Gesture {
+        DragGesture(minimumDistance: 50, coordinateSpace: .local)
+            .onEnded { value in
+                let horizontalAmount = value.translation.width
+                let verticalAmount = value.translation.height
+                
+                // Only process horizontal swipes (ignore vertical)
+                if abs(horizontalAmount) > abs(verticalAmount) {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        if horizontalAmount < 0 && currentPage < totalPages - 1 {
+                            // Swipe left - go to next page
+                            currentPage += 1
+                        } else if horizontalAmount > 0 && currentPage > 0 {
+                            // Swipe right - go to previous page
+                            currentPage -= 1
+                        }
+                    }
+                }
+            }
+    }
+    
+    // MARK: - Edge Drop Zone
+    
+    private func edgeDropZone(isLeft: Bool) -> some View {
+        let isTargeted = isLeft ? isLeftEdgeTargeted : isRightEdgeTargeted
+        let targetPage = isLeft ? currentPage - 1 : currentPage + 1
+        
+        return VStack {
+            Spacer()
+            
+            ZStack {
+                // Visual indicator when targeted
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(isTargeted ? Color.purple.opacity(0.3) : Color.clear)
+                    .frame(width: 40)
+                
+                // Arrow indicator
+                if isTargeted {
+                    VStack(spacing: 4) {
+                        Image(systemName: isLeft ? "chevron.left.2" : "chevron.right.2")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.purple)
+                        Text("Page \(targetPage + 1)")
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundColor(.purple)
+                    }
+                }
+            }
+            .frame(width: 50, height: 400)
+            .dropDestination(for: String.self) { items, _ in
+                handleEdgeDrop(items: items, toPage: targetPage)
+            } isTargeted: { targeted in
+                if isLeft {
+                    isLeftEdgeTargeted = targeted
+                } else {
+                    isRightEdgeTargeted = targeted
+                }
+            }
+            
+            Spacer()
+        }
+        .padding(.horizontal, 4)
+    }
+    
+    private func handleEdgeDrop(items: [String], toPage targetPage: Int) -> Bool {
+        guard let uuidString = items.first,
+              let appId = UUID(uuidString: uuidString),
+              let app = apps.first(where: { $0.id == appId }) else {
+            return false
+        }
+        moveAppToPage(app, page: targetPage)
+        return true
     }
     
     // MARK: - Header

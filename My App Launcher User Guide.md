@@ -188,7 +188,27 @@ In the group popup, click the group name in the header to edit it.
 
 - **Pagination** - Groups with more than 16 apps show multiple pages
 - **Page Navigation** - Use arrows or dots at the bottom to navigate pages
+- **Swipe Gestures** - Swipe left or right with trackpad/mouse to navigate between pages
 - **Close** - Click the X button or click outside the popup
+
+### Moving Apps Between Pages
+
+When a group has multiple pages, you can move apps between pages in several ways:
+
+#### Drag to Edge
+Drag an app to the **left or right edge** of the group popup window:
+- **Left edge** - Moves the app to the previous page
+- **Right edge** - Moves the app to the next page
+- A purple highlight with page number appears when hovering over the edge
+
+#### Drag to Page Dot
+Drag an app directly onto a **page indicator dot** at the bottom to move it to that specific page.
+
+#### Context Menu
+Right-click an app and select **"Move to Page →"** to choose a specific page.
+
+#### Drop Zones
+Use the **"← Previous"** and **"Next →"** drop zones that appear below the app grid.
 
 ---
 
