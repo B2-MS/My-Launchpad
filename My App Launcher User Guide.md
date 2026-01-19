@@ -10,11 +10,12 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 3. [Menu Bar](#menu-bar)
 4. [Global Hotkey](#global-hotkey)
 5. [Main Window](#main-window)
-6. [Groups](#groups)
-7. [Apps](#apps)
-8. [Settings](#settings)
-9. [Drag and Drop](#drag-and-drop)
-10. [Keyboard Shortcuts](#keyboard-shortcuts)
+6. [Search](#search)
+7. [Groups](#groups)
+8. [Apps](#apps)
+9. [Settings](#settings)
+10. [Drag and Drop](#drag-and-drop)
+11. [Keyboard Shortcuts](#keyboard-shortcuts)
 
 ---
 
@@ -118,6 +119,33 @@ The main window has two collapsible sections:
 2. **Apps** - Ungrouped applications (collapsed by default)
 
 Click the section headers to expand/collapse them.
+
+---
+
+## Search
+
+My App Launcher includes a built-in search function to help you quickly find apps.
+
+### Using Search
+
+1. **Locate the Search Bar** - The search bar is located in the toolbar at the top of the main window, next to the settings gear icon
+2. **Type to Search** - Simply start typing the name of the app you're looking for
+3. **Real-Time Filtering** - Results filter instantly as you type
+
+### How Search Works
+
+- **Case-Insensitive** - Search is not case-sensitive, so "Safari", "safari", and "SAFARI" all work the same
+- **Partial Matching** - You can type any part of an app's name to find it (e.g., typing "note" will find "Notes")
+- **Searches All Apps** - The search filters both ungrouped apps and apps within groups
+- **Groups with Matches** - When searching, groups that contain matching apps will show only those matching apps when expanded
+
+### Clearing Search
+
+To clear your search and show all apps again:
+- Delete the text in the search field, or
+- Click the X button in the search field (if visible)
+
+> **Tip:** Search is a great way to quickly launch apps without scrolling through your groups. Just press ⌃⌥Space to open the launcher, type a few letters of the app name, and click to launch!
 
 ---
 
