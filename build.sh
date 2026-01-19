@@ -7,7 +7,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BUILD_DIR="$SCRIPT_DIR/build"
-APP_NAME="App Launcher"
+APP_NAME="My App Launcher"
 APP_BUNDLE="$BUILD_DIR/$APP_NAME.app"
 EXECUTABLE_NAME="AppLauncher"
 
