@@ -84,6 +84,8 @@ The app is configured to start automatically when you log in to your Mac. It run
 
 ## Menu Bar
 
+<img src="images/menu-bar.png" alt="Menu Bar" width="300">
+
 The app displays a **grid icon** (⊞) in your menu bar. Click it to access:
 
 - **Show Launcher (⌃⌥Space)** - Opens the main launcher window
@@ -107,6 +109,8 @@ This hotkey works system-wide to toggle the launcher window:
 
 ## Main Window
 
+<img src="images/main-window.png" alt="Main Window" width="600">
+
 ### Window Behavior
 - **Red X (Close button)** - Hides the window (app keeps running)
 - **Window Transparency** - 95% opacity for a subtle see-through effect
@@ -123,6 +127,8 @@ Click the section headers to expand/collapse them.
 ---
 
 ## Search
+
+<img src="images/search-bar.png" alt="Search Bar" width="500">
 
 My App Launcher includes a built-in search function to help you quickly find apps.
 
@@ -151,6 +157,8 @@ To clear your search and show all apps again:
 
 ## Groups
 
+<img src="images/groups.png" alt="Groups" width="600">
+
 Groups let you organize apps into collections (like iOS folders).
 
 ### Creating a Group
@@ -175,6 +183,9 @@ Click on a group to open it in an expanded popup view showing all apps inside.
 In the group popup, click the group name in the header to edit it.
 
 ### Group Popup Features
+
+<img src="images/group-popup.png" alt="Group Popup" width="500">
+
 - **Pagination** - Groups with more than 16 apps show multiple pages
 - **Page Navigation** - Use arrows or dots at the bottom to navigate pages
 - **Close** - Click the X button or click outside the popup
@@ -186,11 +197,31 @@ In the group popup, click the group name in the header to edit it.
 ### Launching an App
 Simply **click** on any app icon to launch it.
 
-### App Context Menu
-Right-click on any app to access:
-- **Move to New Group** - Creates a new group with this app
-- **Move to Group** - Move the app to an existing group
-- **Remove from Group** (when in a group) - Returns app to ungrouped
+### App Context Menu (Right-Click)
+
+<img src="images/app-context-menu.png" alt="App Context Menu" width="250">
+
+Right-click on any app icon to access a context menu with options that vary based on where the app is located:
+
+#### For Ungrouped Apps (Main Window)
+
+| Option | Description |
+|--------|-------------|
+| **Create New Group** | Creates a new group containing this app |
+| **Add to Group →** | Shows a submenu listing all existing groups (sorted alphabetically). Select a group to add the app to it |
+
+#### For Apps Inside a Group (Group Popup)
+
+<img src="images/group-app-context-menu.png" alt="Group App Context Menu" width="250">
+
+| Option | Description |
+|--------|-------------|
+| **Move to New Group** | Removes the app from the current group and creates a new group with it |
+| **Move to Group →** | Shows a submenu of other groups (excludes current group). Select to move the app there |
+| **Move to Page →** | *(Only appears if group has multiple pages)* Move the app to a different page within the same group |
+| **Remove from Group** | Returns the app to the ungrouped section |
+
+> **Tip:** The group list in the context menu is sorted alphabetically, making it easy to find the group you want.
 
 ### App Icons
 - Apps display their native macOS icons
@@ -200,6 +231,8 @@ Right-click on any app to access:
 ---
 
 ## Settings
+
+<img src="images/settings.png" alt="Settings Panel" width="300">
 
 Access settings by clicking the **gear icon** in the top-right corner.
 
@@ -238,6 +271,8 @@ Use this to:
 ---
 
 ## Drag and Drop
+
+<img src="images/drag-and-drop.png" alt="Drag and Drop" width="500">
 
 ### Adding Apps to Groups
 Drag an app onto a group icon to add it to that group.
