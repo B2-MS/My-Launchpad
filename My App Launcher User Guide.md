@@ -23,9 +23,9 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 
 ### From DMG Installer
 
-1. **Download** the `My App Launcher.dmg` file
+1. **Download** the `My App Launcher Installer.dmg` file
 2. **Double-click** the DMG file to mount it
-3. **Drag** "My App Launcher.app" to the **Applications** folder shortcut
+3. **Drag** "My App Launcher.app" to the **Applications** shortcut
 4. **Eject** the DMG by right-clicking it in Finder and selecting "Eject"
 5. **Launch** the app from your Applications folder
 
