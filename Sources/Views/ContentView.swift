@@ -420,7 +420,7 @@ struct ContentView: View {
             isEditMode: viewModel.isEditMode,
             groups: viewModel.groups,
             draggedAppId: $draggedAppId,
-            onTap: { handleAppTap(app) },
+            onTap: { modifiers in handleAppTap(app, modifiers: modifiers) },
             onLongPress: { handleAppLongPress(app) },
             onAddToGroup: { group in viewModel.moveAppToGroup(app.id, group: group) },
             onCreateNewGroup: {
@@ -567,12 +567,10 @@ struct ContentView: View {
     
     // MARK: - Actions
     
-    private func handleAppTap(_ app: AppItem) {
+    private func handleAppTap(_ app: AppItem, modifiers: NSEvent.ModifierFlags) {
         if viewModel.isEditMode {
-            // Get current modifier keys
-            let flags = NSEvent.modifierFlags
-            let shiftKey = flags.contains(.shift)
-            let commandKey = flags.contains(.command)
+            let shiftKey = modifiers.contains(.shift)
+            let commandKey = modifiers.contains(.command)
             
             viewModel.selectWithModifiers(app, shiftKey: shiftKey, commandKey: commandKey, appList: viewModel.filteredUngroupedApps)
         } else {

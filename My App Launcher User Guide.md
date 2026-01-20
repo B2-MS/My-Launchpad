@@ -254,6 +254,8 @@ Right-click on any app icon to access a context menu with options that vary base
 
 ## Multi-Select
 
+<img src="images/multi-select.png" alt="Multi-Select" width="500">
+
 My App Launcher supports selecting multiple apps at once using keyboard modifiers, making it easy to organize many apps quickly.
 
 ### Selection Methods

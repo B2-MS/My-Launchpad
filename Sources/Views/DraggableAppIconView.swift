@@ -10,7 +10,7 @@ struct DraggableAppIconView: View {
     let groups: [AppGroup]
     @Binding var draggedAppId: UUID?
     
-    let onTap: () -> Void
+    let onTap: (NSEvent.ModifierFlags) -> Void
     let onLongPress: () -> Void
     let onAddToGroup: (AppGroup) -> Void
     let onCreateNewGroup: () -> Void
@@ -33,9 +33,12 @@ struct DraggableAppIconView: View {
         .onHover { hovering in
             isHovered = hovering
         }
-        .onTapGesture {
-            onTap()
-        }
+        .gesture(
+            TapGesture()
+                .onEnded { _ in
+                    onTap(NSEvent.modifierFlags)
+                }
+        )
         .onLongPressGesture(minimumDuration: 0.5) {
             onLongPress()
         }
