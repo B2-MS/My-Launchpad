@@ -68,16 +68,16 @@ tell application "Finder"
         set current view of container window to icon view
         set toolbar visible of container window to false
         set statusbar visible of container window to false
-        set bounds of container window to {400, 100, 900, 450}
+        set bounds of container window to {500, 200, 900, 450}
         set theViewOptions to the icon view options of container window
         set arrangement of theViewOptions to not arranged
-        set icon size of theViewOptions to 80
+        set icon size of theViewOptions to 128
         
-        -- Position the app icon on the left
-        set position of item "$APP_NAME.app" of container window to {125, 170}
+        -- Position the app icon on the left-center
+        set position of item "$APP_NAME.app" of container window to {100, 110}
         
-        -- Position Applications folder on the right
-        set position of item "Applications" of container window to {375, 170}
+        -- Position Applications folder on the right-center
+        set position of item "Applications" of container window to {300, 110}
         
         close
         open

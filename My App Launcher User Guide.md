@@ -30,6 +30,8 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 4. **Eject** the DMG by right-clicking it in Finder and selecting "Eject"
 5. **Launch** the app from your Applications folder
 
+<img src="images/installer.png" alt="Menu Bar" width="300">
+
 ### First-Time Security Prompt
 
 Since this app is not signed with an Apple Developer certificate, macOS will show a security warning on first launch:
