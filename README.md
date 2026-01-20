@@ -4,7 +4,7 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 
 ![macOS](https://img.shields.io/badge/macOS-13.0+-blue.svg)
 ![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)
-![Version](https://img.shields.io/badge/Version-1.1.0-purple.svg)
+![Version](https://img.shields.io/badge/Version-1.3.0-purple.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 **[Release Notes](RELEASE_NOTES.md)** | **[User Guide](My%20App%20Launcher%20User%20Guide.md)**
@@ -38,6 +38,7 @@ If you miss the way Launchpad used to work, this app is for you.
 - 🖱️ **Drag & Drop** - Reorder apps and groups with intuitive drag and drop
 - 📄 **Multi-Page Groups** - Groups with 16+ apps paginate automatically with swipe gestures
 - 🎯 **iPad-Style Layout** - Drag apps to page edges to move between pages, with empty slot preservation
+- ✅ **Multi-Select** - Shift+click for range selection, Command+click for individual toggle
 - 💾 **Import/Export** - Back up and restore your settings
 - 🪟 **Translucent Window** - Beautiful semi-transparent design
 - 💾 **Auto-Save** - Your organization is saved automatically

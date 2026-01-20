@@ -9,6 +9,7 @@ class LauncherViewModel: ObservableObject {
     @Published var ungroupedAppIds: [UUID] = []
     @Published var isEditMode: Bool = false
     @Published var selectedApps: Set<UUID> = []
+    @Published var lastSelectedAppId: UUID? = nil  // For Shift+click range selection
     @Published var searchText: String = ""
     @Published var editingGroupId: UUID? = nil
     @Published var isGroupsSectionCollapsed: Bool = false
@@ -131,6 +132,42 @@ class LauncherViewModel: ObservableObject {
         } else {
             selectedApps.insert(app.id)
         }
+        lastSelectedAppId = app.id
+    }
+    
+    /// Handle selection with modifier keys (Shift, Command)
+    /// - Parameters:
+    ///   - app: The app that was clicked
+    ///   - shiftKey: True if Shift is held (range selection)
+    ///   - commandKey: True if Command is held (toggle individual)
+    ///   - appList: The ordered list of apps to use for range selection
+    func selectWithModifiers(_ app: AppItem, shiftKey: Bool, commandKey: Bool, appList: [AppItem]) {
+        if shiftKey, let lastId = lastSelectedAppId {
+            // Shift+click: Select range from last selected to current
+            selectRange(from: lastId, to: app.id, in: appList)
+        } else if commandKey {
+            // Command+click: Toggle individual selection
+            toggleSelection(app)
+        } else {
+            // Plain click: Clear selection and select only this one
+            selectedApps.removeAll()
+            selectedApps.insert(app.id)
+            lastSelectedAppId = app.id
+        }
+    }
+    
+    /// Select a range of apps between two app IDs
+    private func selectRange(from startId: UUID, to endId: UUID, in appList: [AppItem]) {
+        guard let startIndex = appList.firstIndex(where: { $0.id == startId }),
+              let endIndex = appList.firstIndex(where: { $0.id == endId }) else {
+            return
+        }
+        
+        let range = min(startIndex, endIndex)...max(startIndex, endIndex)
+        for index in range {
+            selectedApps.insert(appList[index].id)
+        }
+        lastSelectedAppId = endId
     }
     
     /// Create a new group with selected apps

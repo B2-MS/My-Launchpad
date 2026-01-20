@@ -13,9 +13,10 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 6. [Search](#search)
 7. [Groups](#groups)
 8. [Apps](#apps)
-9. [Settings](#settings)
-10. [Drag and Drop](#drag-and-drop)
-11. [Keyboard Shortcuts](#keyboard-shortcuts)
+9. [Multi-Select](#multi-select)
+10. [Settings](#settings)
+11. [Drag and Drop](#drag-and-drop)
+12. [Keyboard Shortcuts](#keyboard-shortcuts)
 
 ---
 
@@ -248,6 +249,38 @@ Right-click on any app icon to access a context menu with options that vary base
 
 ### App Icons
 - Apps display their native macOS icons
+
+---
+
+## Multi-Select
+
+My App Launcher supports selecting multiple apps at once using keyboard modifiers, making it easy to organize many apps quickly.
+
+### Selection Methods
+
+| Action | Result |
+|--------|--------|
+| **Click** (in edit mode) | Selects only that app, clears other selections |
+| **Shift+Click** | Selects all apps from the last selected to the clicked app (range selection) |
+| **Command+Click** | Toggles the clicked app without affecting other selections |
+
+### How to Use Multi-Select
+
+1. **Enter Edit Mode** - Long-press on any app or use the edit button
+2. **Select Apps**:
+   - Click the first app you want to select
+   - **Shift+Click** another app to select the entire range between them
+   - **Command+Click** to add or remove individual apps from your selection
+3. **Perform Actions** - Right-click on any selected app to:
+   - Create a new group with all selected apps
+   - Add all selected apps to an existing group
+
+### Tips
+
+- Selected apps show a blue checkmark overlay
+- The selection works in the main Apps section (ungrouped apps)
+- Use Shift+Click for selecting many consecutive apps quickly
+- Use Command+Click for picking specific apps scattered throughout the list
 - Icons scale based on the group tile size setting
 - Hovering over an app shows a subtle highlight effect
 
@@ -370,6 +403,16 @@ If an app shows a blank icon:
 ---
 
 ## Version History
+
+### v1.3.0 (January 2026)
+- Multi-select support with Shift+Click and Command+Click
+- Persistent group tile size setting
+- "Remove from Group" context menu option
+- Improved group popup height for 16-app groups
+- Sequential grid layout (no gaps in middle of pages)
+
+### v1.2.0 (January 2026)
+- Internal release with bug fixes
 
 ### v1.1.0 (January 2026)
 - iPad-style multi-page navigation with edge drag zones

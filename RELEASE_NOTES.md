@@ -1,5 +1,35 @@
 # Release Notes
 
+## Version 1.3.0 (January 2026)
+
+### New Features
+
+#### Multi-Select Support
+- **Shift+Click** - Select a contiguous range of apps from the last selected app to the clicked app
+- **Command+Click** - Toggle individual app selection without affecting other selections
+- **Plain Click** (in edit mode) - Clears selection and selects only the clicked app
+
+#### Persistent Group Tile Size
+- Group popup tile size setting now persists between app restarts
+- Your preferred zoom level is saved automatically
+
+#### Remove from Group
+- New "Remove from Group" context menu option when right-clicking apps inside groups
+- Quickly move apps back to the ungrouped Apps section
+
+### Improvements
+
+- **Improved Group Popup Height** - Fixed bottom row text being cut off in 16-app groups
+- **Sequential Grid Layout** - Apps now fill grid positions sequentially (no gaps in the middle of pages)
+
+---
+
+## Version 1.2.0 (January 2026)
+
+*Internal release with bug fixes*
+
+---
+
 ## Version 1.1.0 (January 2026)
 
 ### New Features

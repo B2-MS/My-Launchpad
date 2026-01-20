@@ -569,7 +569,12 @@ struct ContentView: View {
     
     private func handleAppTap(_ app: AppItem) {
         if viewModel.isEditMode {
-            viewModel.toggleSelection(app)
+            // Get current modifier keys
+            let flags = NSEvent.modifierFlags
+            let shiftKey = flags.contains(.shift)
+            let commandKey = flags.contains(.command)
+            
+            viewModel.selectWithModifiers(app, shiftKey: shiftKey, commandKey: commandKey, appList: viewModel.filteredUngroupedApps)
         } else {
             viewModel.launchApp(app)
         }
