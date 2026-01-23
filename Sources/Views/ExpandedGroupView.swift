@@ -187,12 +187,40 @@ struct ExpandedGroupView: View {
             }
         }
         .frame(width: totalPages > 1 ? 580 : 500, height: totalPages > 1 ? 580 : 540)
-        .background(Color(NSColor.windowBackgroundColor))
-        .cornerRadius(16)
+        .background(
+            ZStack {
+                // Frosted glass material base
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(.thickMaterial)
+                
+                // Color tint gradient
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                headerColor.opacity(0.15),
+                                Color.purple.opacity(0.1),
+                                Color.blue.opacity(0.05)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+            }
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .shadow(color: headerColor.opacity(0.3), radius: 40, y: 15)
         .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(headerColor.opacity(0.3), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.7), Color.white.opacity(0.2)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1.5
+                )
         )
     }
     
@@ -307,7 +335,31 @@ struct ExpandedGroupView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .frame(minHeight: 48)
-        .background(headerColor)
+        .background(
+            ZStack {
+                // Glass material with color tint
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                
+                // Color overlay
+                Rectangle()
+                    .fill(
+                        LinearGradient(
+                            colors: [headerColor.opacity(0.8), headerColor.opacity(0.6)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                
+                // Top highlight
+                VStack {
+                    Rectangle()
+                        .fill(Color.white.opacity(0.2))
+                        .frame(height: 1)
+                    Spacer()
+                }
+            }
+        )
     }
     
     // MARK: - Content

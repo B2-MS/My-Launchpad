@@ -45,9 +45,9 @@ struct AppIconView: View {
                     }
                 }
                 .frame(width: iconSize, height: iconSize)
-                .shadow(color: .black.opacity(0.2), radius: isHovering ? 4 : 2, y: isHovering ? 2 : 1)
+                .shadow(color: .black.opacity(0.25), radius: isHovering ? 8 : 3, y: isHovering ? 4 : 2)
                 .scaleEffect(isHovering ? 1.1 : 1.0)
-                .animation(.easeInOut(duration: 0.15), value: isHovering)
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovering)
                 
                 // Selection checkmark
                 if isEditMode {

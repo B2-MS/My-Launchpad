@@ -109,24 +109,34 @@ struct DraggableAppIconView: View {
     }
     
     private var backgroundView: some View {
-        RoundedRectangle(cornerRadius: 12)
-            .fill(backgroundColor)
+        ZStack {
+            if isDropTargeted || isReorderTarget || isHovered {
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(.ultraThinMaterial)
+                
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(backgroundColor)
+                
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+            }
+        }
     }
     
     private var backgroundColor: Color {
         if isDropTargeted {
-            return Color.purple.opacity(0.3)
+            return Color.purple.opacity(0.25)
         } else if isReorderTarget {
             return Color.blue.opacity(0.2)
         } else if isHovered {
-            return Color.gray.opacity(0.15)
+            return Color.white.opacity(0.1)
         }
         return Color.clear
     }
     
     private var borderView: some View {
-        RoundedRectangle(cornerRadius: 12)
-            .stroke(isDropTargeted ? Color.purple : (isReorderTarget ? Color.blue : Color.clear), lineWidth: 2)
+        RoundedRectangle(cornerRadius: 14)
+            .stroke(isDropTargeted ? Color.purple.opacity(0.6) : (isReorderTarget ? Color.blue.opacity(0.6) : Color.clear), lineWidth: 2)
     }
     
     private var dragPreview: some View {

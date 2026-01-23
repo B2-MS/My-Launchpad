@@ -57,7 +57,27 @@ struct ContentView: View {
             }
             .padding(.vertical, 16)
         }
-        .background(gridBackground.opacity(viewModel.backgroundOpacity))
+        .background(
+            ZStack {
+                // Frosted glass base
+                Rectangle()
+                    .fill(.ultraThickMaterial)
+                
+                // Color tint overlay
+                LinearGradient(
+                    colors: [
+                        viewModel.groupHeaderColor.opacity(0.15),
+                        Color.purple.opacity(0.08),
+                        Color.blue.opacity(0.05)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                
+                // Subtle grid pattern
+                gridBackground.opacity(viewModel.backgroundOpacity * 0.3)
+            }
+        )
     }
     
     // MARK: - Settings Section
@@ -68,8 +88,38 @@ struct ContentView: View {
             settingsControls
         }
         .padding(.vertical, 12)
-        .background(Color(NSColor.controlBackgroundColor).opacity(0.8))
-        .cornerRadius(12)
+        .background(
+            ZStack {
+                // Glass panel with strong blur
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.thickMaterial)
+                
+                // Gradient color wash
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.blue.opacity(0.12),
+                                Color.purple.opacity(0.08)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                
+                // Bright highlight edge
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.6), Color.white.opacity(0.2)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1.5
+                    )
+            }
+        )
+        .shadow(color: .black.opacity(0.25), radius: 20, y: 8)
         .padding(.horizontal, 16)
     }
     
@@ -249,7 +299,15 @@ struct ContentView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .background(Color(NSColor.controlBackgroundColor))
+        .background(
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.regularMaterial)
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+            }
+        )
+        .shadow(color: .black.opacity(0.1), radius: 8, y: 2)
     }
     
     // MARK: - Groups Section

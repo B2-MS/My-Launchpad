@@ -80,10 +80,36 @@ struct GroupIconView: View {
     
     private var folderIconView: some View {
         ZStack {
-            // Background
-            RoundedRectangle(cornerRadius: 16 * scale)
-                .fill(Color.purple.opacity(isCollapsed ? 0.3 : 0.2))
-                .frame(width: scaledIconSize, height: scaledIconSize)
+            // Glass background with gradient
+            ZStack {
+                RoundedRectangle(cornerRadius: 18 * scale)
+                    .fill(.thickMaterial)
+                
+                // Strong color gradient overlay
+                RoundedRectangle(cornerRadius: 18 * scale)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.purple.opacity(isCollapsed ? 0.5 : 0.35),
+                                Color.blue.opacity(isCollapsed ? 0.3 : 0.2)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                
+                // Bright highlight stroke
+                RoundedRectangle(cornerRadius: 18 * scale)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.7), Color.white.opacity(0.2)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1.5
+                    )
+            }
+            .frame(width: scaledIconSize, height: scaledIconSize)
             
             if isCollapsed {
                 collapsedContent
@@ -98,7 +124,7 @@ struct GroupIconView: View {
         }
         .frame(width: scaledIconSize, height: scaledIconSize)
         .overlay(dropTargetBorder)
-        .shadow(color: .black.opacity(0.15), radius: isHovering ? 4 : 2, y: isHovering ? 2 : 1)
+        .shadow(color: .purple.opacity(0.4), radius: isHovering ? 16 : 10, y: isHovering ? 8 : 4)
         .scaleEffect(isHovering ? 1.05 : 1.0)
         .animation(.easeInOut(duration: 0.15), value: isHovering)
         .animation(.easeInOut(duration: 0.2), value: isCollapsed)

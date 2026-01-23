@@ -131,38 +131,23 @@ struct MyAppLauncherApp: App {
                 }
             }
         }
-        
-        // Menu bar icon
-        MenuBarExtra("App Launcher", systemImage: "square.grid.2x2.fill") {
-            Button("Show Launcher (⌃⌥Space)") {
-                showMainWindow()
-            }
-            Divider()
-            Button("Quit") {
-                NSApp.terminate(nil)
-            }
-            .keyboardShortcut("q")
-        }
-    }
-    
-    private func showMainWindow() {
-        NSApp.activate(ignoringOtherApps: true)
-        if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
-            window.makeKeyAndOrderFront(nil)
-            window.center()
-        }
+        // Menu bar is now handled by AppDelegate with custom NSStatusItem
     }
 }
 
 /// App delegate to handle global hotkey registration
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var keepAliveTimer: Timer?
+    private var statusItem: NSStatusItem?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Set as accessory app (no dock icon, stays running)
         NSApp.setActivationPolicy(.accessory)
         
         HotkeyManager.shared.registerHotkey()
+        
+        // Setup custom status bar item with click-to-show behavior
+        setupStatusBarItem()
         
         // Keep the run loop active for hotkey processing
         keepAliveTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
@@ -178,14 +163,78 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil
         )
         
-        // Show the window on launch
+        // Show the window on launch (check hideOnLaunch setting)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if let data = DataManager.shared.load(), data.hideOnLaunch == true {
+                // Don't show window on launch
+                return
+            }
             NSApp.activate(ignoringOtherApps: true)
             if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
                 window.makeKeyAndOrderFront(nil)
                 window.center()
             }
         }
+    }
+    
+    private func setupStatusBarItem() {
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        
+        if let button = statusItem?.button {
+            button.image = NSImage(systemSymbolName: "square.grid.2x2.fill", accessibilityDescription: "App Launcher")
+            button.action = #selector(statusBarButtonClicked(_:))
+            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+            button.target = self
+        }
+        
+        // Create menu for right-click
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "Show Launcher (⌃⌥Space)", action: #selector(showLauncher), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
+        
+        statusItem?.menu = nil // Don't set menu directly - we'll show it conditionally
+    }
+    
+    @objc private func statusBarButtonClicked(_ sender: NSStatusBarButton) {
+        guard let event = NSApp.currentEvent else { return }
+        
+        // Right-click shows menu
+        if event.type == .rightMouseUp {
+            let menu = NSMenu()
+            menu.addItem(NSMenuItem(title: "Show Launcher (⌃⌥Space)", action: #selector(showLauncher), keyEquivalent: ""))
+            menu.addItem(NSMenuItem.separator())
+            menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
+            
+            statusItem?.menu = menu
+            statusItem?.button?.performClick(nil)
+            statusItem?.menu = nil
+        } else {
+            // Left-click toggles window visibility
+            toggleLauncher()
+        }
+    }
+    
+    @objc private func toggleLauncher() {
+        if let window = NSApp.windows.first(where: { $0.canBecomeKey }), window.isVisible, NSApp.isActive {
+            // Window is visible and app is active - hide it
+            NSApp.hide(nil)
+        } else {
+            // Window is hidden - show it
+            showLauncher()
+        }
+    }
+    
+    @objc private func showLauncher() {
+        NSApp.activate(ignoringOtherApps: true)
+        if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
+            window.makeKeyAndOrderFront(nil)
+            window.center()
+        }
+    }
+    
+    @objc private func quitApp() {
+        NSApp.terminate(nil)
     }
     
     @objc func applicationDidResignActive(_ notification: Notification) {

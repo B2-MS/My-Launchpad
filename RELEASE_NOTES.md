@@ -1,5 +1,22 @@
 # Release Notes
 
+## Version 1.5.0 (January 2026)
+
+### New Features
+
+#### Liquid Glass Design
+- **Frosted Glass Materials** - Thick vibrancy materials throughout the UI that blur the background beautifully
+- **Color-Tinted Panels** - Settings, group popups, and main background now feature subtle purple/blue gradient washes
+- **Enhanced Highlights** - Bright edge highlights give panels a premium glass appearance
+- **Colored Shadows** - Group icons cast purple-tinted shadows for added depth
+
+#### Menu Bar Toggle
+- **Click to Show/Hide** - Left-click the menu bar icon to toggle the launcher visibility
+- **Right-Click Menu** - Access "Quit" and other options via right-click
+- Matches the global hotkey behavior (⌃⌥Space)
+
+---
+
 ## Version 1.4.0 (January 2026)
 
 ### New Features
