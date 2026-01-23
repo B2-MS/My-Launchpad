@@ -161,6 +161,28 @@ struct ContentView: View {
                 }
             }
             
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Behavior")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Toggle("Hide on launch", isOn: $viewModel.hideOnLaunch)
+                    .toggleStyle(.checkbox)
+                    .font(.system(size: 12))
+                    .onChange(of: viewModel.hideOnLaunch) { _ in
+                        viewModel.saveData()
+                    }
+                    .help("Hide the launcher when an app is launched")
+                
+                Toggle("Hide on focus lost", isOn: $viewModel.hideOnFocusLost)
+                    .toggleStyle(.checkbox)
+                    .font(.system(size: 12))
+                    .onChange(of: viewModel.hideOnFocusLost) { _ in
+                        viewModel.saveData()
+                    }
+                    .help("Hide the launcher when clicking outside")
+            }
+            
             Spacer()
         }
         .padding(.horizontal, 16)

@@ -328,6 +328,15 @@ Use this to:
 
 > **Note:** Importing will replace your current groups and organization with the imported settings.
 
+#### Behavior Settings
+
+| Setting | Description |
+|---------|-------------|
+| **Hide on launch** | When enabled, the launcher automatically hides after you launch an app (default: ON) |
+| **Hide on focus lost** | When enabled, the launcher automatically hides when you click outside its window (default: ON) |
+
+These settings help keep the launcher out of your way while still being instantly accessible via the global hotkey (⌃⌥Space).
+
 ---
 
 ## Drag and Drop
@@ -407,6 +416,11 @@ If an app shows a blank icon:
 ---
 
 ## Version History
+
+### v1.4.0 (January 2026)
+- Auto-hide on app launch (configurable)
+- Auto-hide on focus lost / click outside (configurable)
+- Improved DMG installer layout
 
 ### v1.3.0 (January 2026)
 - Multi-select support with Shift+Click and Command+Click

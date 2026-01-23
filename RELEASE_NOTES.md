@@ -1,5 +1,20 @@
 # Release Notes
 
+## Version 1.4.0 (January 2026)
+
+### New Features
+
+#### Auto-Hide Behavior Settings
+- **Hide on Launch** - Automatically hides the launcher when you launch an app (enabled by default)
+- **Hide on Focus Lost** - Automatically hides the launcher when you click outside the window (enabled by default)
+- Both settings are configurable in the Settings panel and persist between restarts
+
+### Improvements
+
+- **Improved DMG Installer** - Smaller window with larger, centered icons for easier drag-to-install
+
+---
+
 ## Version 1.3.0 (January 2026)
 
 ### New Features

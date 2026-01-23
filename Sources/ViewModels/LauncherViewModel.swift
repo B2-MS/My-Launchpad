@@ -18,6 +18,8 @@ class LauncherViewModel: ObservableObject {
     @Published var windowOpacity: Double = 0.5
     @Published var groupHeaderColor: Color = .purple
     @Published var groupTileScale: Double = 1.1
+    @Published var hideOnLaunch: Bool = true
+    @Published var hideOnFocusLost: Bool = true
     @Published var showSettings: Bool = false
     
     private let dataManager = DataManager.shared
@@ -90,6 +92,12 @@ class LauncherViewModel: ObservableObject {
             if let scale = savedData.groupTileScale {
                 self.groupTileScale = scale
             }
+            if let hide = savedData.hideOnLaunch {
+                self.hideOnLaunch = hide
+            }
+            if let hideFocus = savedData.hideOnFocusLost {
+                self.hideOnFocusLost = hideFocus
+            }
             
         } else {
             // First run - scan all apps
@@ -113,15 +121,21 @@ class LauncherViewModel: ObservableObject {
             groups: groups,
             ungroupedAppIds: ungroupedAppIds,
             allApps: allApps,
-            groupTileScale: groupTileScale
+            groupTileScale: groupTileScale,
+            hideOnLaunch: hideOnLaunch,
+            hideOnFocusLost: hideOnFocusLost
         )
         dataManager.save(data)
     }
     
-    /// Launch an app
+    /// Launch an app and optionally hide the launcher window
     func launchApp(_ app: AppItem) {
         if !isEditMode {
             app.launch()
+            // Hide the launcher window after launching an app if enabled
+            if hideOnLaunch {
+                NSApplication.shared.hide(nil)
+            }
         }
     }
     

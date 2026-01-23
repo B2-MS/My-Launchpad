@@ -170,6 +170,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 0.01))
         }
         
+        // Register for app deactivation (clicking outside)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidResignActive),
+            name: NSApplication.didResignActiveNotification,
+            object: nil
+        )
+        
         // Show the window on launch
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             NSApp.activate(ignoringOtherApps: true)
@@ -180,9 +188,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    @objc func applicationDidResignActive(_ notification: Notification) {
+        // Check if hideOnFocusLost is enabled
+        if let data = DataManager.shared.load(), data.hideOnFocusLost == true {
+            // Hide all windows when focus is lost
+            for window in NSApp.windows {
+                window.orderOut(nil)
+            }
+        }
+    }
+    
     func applicationWillTerminate(_ notification: Notification) {
         keepAliveTimer?.invalidate()
         HotkeyManager.shared.unregisterHotkey()
+        NotificationCenter.default.removeObserver(self)
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

@@ -49,11 +49,15 @@ struct LauncherData: Codable {
     var ungroupedAppIds: [UUID]
     var allApps: [AppItem]
     var groupTileScale: Double?
+    var hideOnLaunch: Bool?
+    var hideOnFocusLost: Bool?
     
-    init(groups: [AppGroup] = [], ungroupedAppIds: [UUID] = [], allApps: [AppItem] = [], groupTileScale: Double? = nil) {
+    init(groups: [AppGroup] = [], ungroupedAppIds: [UUID] = [], allApps: [AppItem] = [], groupTileScale: Double? = nil, hideOnLaunch: Bool? = nil, hideOnFocusLost: Bool? = nil) {
         self.groups = groups
         self.ungroupedAppIds = ungroupedAppIds
         self.allApps = allApps
         self.groupTileScale = groupTileScale
+        self.hideOnLaunch = hideOnLaunch
+        self.hideOnFocusLost = hideOnFocusLost
     }
 }
