@@ -81,6 +81,8 @@ class HotkeyManager {
         } else {
             NSApp.activate(ignoringOtherApps: true)
             if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
+                // Make window appear on all spaces/desktops
+                window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
                 window.makeKeyAndOrderFront(nil)
                 window.center()
             }
@@ -166,11 +168,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Show the window on launch (check hideOnLaunch setting)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             if let data = DataManager.shared.load(), data.hideOnLaunch == true {
-                // Don't show window on launch
+                // Don't show window on launch, but still set collection behavior
+                if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
+                    window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+                }
                 return
             }
             NSApp.activate(ignoringOtherApps: true)
             if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
+                // Make window appear on all spaces/desktops
+                window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
                 window.makeKeyAndOrderFront(nil)
                 window.center()
             }
@@ -228,6 +235,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func showLauncher() {
         NSApp.activate(ignoringOtherApps: true)
         if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
+            // Make window appear on all spaces/desktops
+            window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
             window.makeKeyAndOrderFront(nil)
             window.center()
         }
@@ -256,6 +265,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         NSApp.activate(ignoringOtherApps: true)
         if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
+            // Make window appear on all spaces/desktops
+            window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
             window.makeKeyAndOrderFront(nil)
             window.center()
         }

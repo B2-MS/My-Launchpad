@@ -1,5 +1,16 @@
 # Release Notes
 
+## Version 1.5.1 (January 2026)
+
+### New Features
+
+#### Multi-Desktop Support
+- **Available on All Spaces** - The launcher now appears on your current desktop instead of switching you to another space
+- Works with menu bar icon clicks and the global hotkey (⌃⌥Space)
+- No more disruptive desktop switching when using multiple spaces
+
+---
+
 ## Version 1.5.0 (January 2026)
 
 ### New Features
