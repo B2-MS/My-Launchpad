@@ -4,19 +4,17 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 
 ---
 
+<a id="table-of-contents"></a>
 ## Table of Contents
-1. [Installation](#installation)
-2. [Getting Started](#getting-started)
-3. [Menu Bar](#menu-bar)
-4. [Global Hotkey](#global-hotkey)
-5. [Main Window](#main-window)
-6. [Search](#search)
-7. [Groups](#groups)
-8. [Apps](#apps)
-9. [Multi-Select](#multi-select)
-10. [Settings](#settings)
-11. [Drag and Drop](#drag-and-drop)
-12. [Keyboard Shortcuts](#keyboard-shortcuts)
+
+| | |
+|:--|:--|
+| 1. [Installation](#installation) | 7. [Groups](#groups) |
+| 2. [Getting Started](#getting-started) | 8. [Apps](#apps) |
+| 3. [Menu Bar](#menu-bar) | 9. [Multi-Select](#multi-select) |
+| 4. [Global Hotkey](#global-hotkey) | 10. [Settings](#settings) |
+| 5. [Main Window](#main-window) | 11. [Drag and Drop](#drag-and-drop) |
+| 6. [Search](#search) | 12. [Keyboard Shortcuts](#keyboard-shortcuts) |
 
 ---
 
@@ -69,6 +67,8 @@ The global hotkey (⌃⌥Space) requires Accessibility permissions:
 3. Optionally remove from **Login Items** in System Settings
 4. Optionally remove from **Accessibility** permissions
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## Getting Started
@@ -83,6 +83,8 @@ When you first launch My App Launcher, it will:
 ### Auto-Start at Login
 The app is configured to start automatically when you log in to your Mac. It runs in the background with a menu bar icon, ready to be summoned with the global hotkey.
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## Menu Bar
@@ -96,6 +98,8 @@ The app displays a **grid icon** (⊞) in your menu bar. Click it to access:
 
 The menu bar icon remains visible even when the main window is closed, indicating the app is running in the background.
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## Global Hotkey
@@ -107,6 +111,8 @@ This hotkey works system-wide to toggle the launcher window:
 - Press again to **hide** the launcher
 
 > **Note:** The app requires Accessibility permissions for the global hotkey to work. Grant access in **System Settings → Privacy & Security → Accessibility**.
+
+[↑ Table of Contents](#table-of-contents)
 
 ---
 
@@ -126,6 +132,8 @@ The main window has two collapsible sections:
 2. **Apps** - Ungrouped applications (collapsed by default)
 
 Click the section headers to expand/collapse them.
+
+[↑ Table of Contents](#table-of-contents)
 
 ---
 
@@ -155,6 +163,8 @@ To clear your search and show all apps again:
 - Click the X button in the search field (if visible)
 
 > **Tip:** Search is a great way to quickly launch apps without scrolling through your groups. Just press ⌃⌥Space to open the launcher, type a few letters of the app name, and click to launch!
+
+[↑ Table of Contents](#table-of-contents)
 
 ---
 
@@ -216,6 +226,8 @@ Drag an app directly onto a **page indicator dot** at the bottom to move it to t
 #### Context Menu
 Right-click an app and select **"Move to Page →"** to choose a specific page.
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## Apps
@@ -252,6 +264,8 @@ Right-click on any app icon to access a context menu with options that vary base
 ### App Icons
 - Apps display their native macOS icons
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## Multi-Select
@@ -287,6 +301,8 @@ My App Launcher supports selecting multiple apps at once using keyboard modifier
 - Use Command+Click for picking specific apps scattered throughout the list
 - Icons scale based on the group tile size setting
 - Hovering over an app shows a subtle highlight effect
+
+[↑ Table of Contents](#table-of-contents)
 
 ---
 
@@ -337,6 +353,8 @@ Use this to:
 
 These settings help keep the launcher out of your way while still being instantly accessible via the global hotkey (⌃⌥Space).
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## Drag and Drop
@@ -368,6 +386,8 @@ On the main screen:
 ### Moving Apps Between Groups
 Use the context menu to move apps between groups, or drag from ungrouped to a group.
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## Keyboard Shortcuts
@@ -378,6 +398,8 @@ Use the context menu to move apps between groups, or drag from ungrouped to a gr
 | **⌘⇧N** | Create new group |
 | **⌘Q** | Quit application |
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## Tips & Tricks
@@ -386,6 +408,8 @@ Use the context menu to move apps between groups, or drag from ungrouped to a gr
 2. **Stay Organized** - Group related apps together (e.g., "Development", "Design", "Games")
 3. **Collapse Groups** - Use collapsed mode for groups you access less frequently
 4. **Search** - Use the search bar to quickly find apps by name
+
+[↑ Table of Contents](#table-of-contents)
 
 ---
 
@@ -406,12 +430,16 @@ If an app shows a blank icon:
 1. The app may have been moved or deleted
 2. Try refreshing the app list (relaunch My App Launcher)
 
+[↑ Table of Contents](#table-of-contents)
+
 ---
 
 ## System Requirements
 
 - **macOS 13.0** (Ventura) or later
 - Accessibility permissions for global hotkey
+
+[↑ Table of Contents](#table-of-contents)
 
 ---
 
@@ -450,6 +478,10 @@ If an app shows a blank icon:
 - Customizable group colors and sizes
 - Window transparency
 - Auto-start at login
+
+---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ---
 
