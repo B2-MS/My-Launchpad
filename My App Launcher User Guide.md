@@ -7,14 +7,32 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 <a id="table-of-contents"></a>
 ## Table of Contents
 
-| | |
-|:--|:--|
-| 1. [Installation](#installation) | 7. [Groups](#groups) |
-| 2. [Getting Started](#getting-started) | 8. [Apps](#apps) |
-| 3. [Menu Bar](#menu-bar) | 9. [Multi-Select](#multi-select) |
-| 4. [Global Hotkey](#global-hotkey) | 10. [Settings](#settings) |
-| 5. [Main Window](#main-window) | 11. [Drag and Drop](#drag-and-drop) |
-| 6. [Search](#search) | 12. [Keyboard Shortcuts](#keyboard-shortcuts) |
+<table style="border: none; border-collapse: collapse;">
+<tr style="border: none;">
+<td style="border: none; padding-right: 40px;">1. <a href="#installation">Installation</a></td>
+<td style="border: none;">7. <a href="#groups">Groups</a></td>
+</tr>
+<tr style="border: none;">
+<td style="border: none; padding-right: 40px;">2. <a href="#getting-started">Getting Started</a></td>
+<td style="border: none;">8. <a href="#apps">Apps</a></td>
+</tr>
+<tr style="border: none;">
+<td style="border: none; padding-right: 40px;">3. <a href="#menu-bar">Menu Bar</a></td>
+<td style="border: none;">9. <a href="#multi-select">Multi-Select</a></td>
+</tr>
+<tr style="border: none;">
+<td style="border: none; padding-right: 40px;">4. <a href="#global-hotkey">Global Hotkey</a></td>
+<td style="border: none;">10. <a href="#settings">Settings</a></td>
+</tr>
+<tr style="border: none;">
+<td style="border: none; padding-right: 40px;">5. <a href="#main-window">Main Window</a></td>
+<td style="border: none;">11. <a href="#drag-and-drop">Drag and Drop</a></td>
+</tr>
+<tr style="border: none;">
+<td style="border: none; padding-right: 40px;">6. <a href="#search">Search</a></td>
+<td style="border: none;">12. <a href="#keyboard-shortcuts">Keyboard Shortcuts</a></td>
+</tr>
+</table>
 
 ---
 
