@@ -1,4 +1,4 @@
-# My App Launcher User Guide
+# My Launchpad User Guide
 
 A beautiful, native macOS app launcher with group organization, global hotkeys, and a menu bar presence.
 
@@ -40,9 +40,9 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 
 ### From DMG Installer
 
-1. **Download** the `My App Launcher Installer.dmg` file
+1. **Download** the `My Launchpad Installer.dmg` file
 2. **Double-click** the DMG file to mount it
-3. **Drag** "My App Launcher.app" to the **Applications** shortcut
+3. **Drag** "My Launchpad.app" to the **Applications** shortcut
 4. **Eject** the DMG by right-clicking it in Finder and selecting "Eject"
 5. **Launch** the app from your Applications folder
 
@@ -54,14 +54,14 @@ Since this app is not signed with an Apple Developer certificate, macOS will sho
 
 #### Method 1: Right-Click to Open
 1. Go to your **Applications** folder
-2. **Right-click** (or Control-click) on "My App Launcher"
+2. **Right-click** (or Control-click) on "My Launchpad"
 3. Select **"Open"** from the context menu
 4. Click **"Open"** in the dialog that appears
 
 #### Method 2: System Settings
 1. Try to open the app normally (it will be blocked)
 2. Go to **System Settings → Privacy & Security**
-3. Scroll down to find the message about "My App Launcher"
+3. Scroll down to find the message about "My Launchpad"
 4. Click **"Open Anyway"**
 5. Enter your password if prompted
 
@@ -72,7 +72,7 @@ The global hotkey (⌃⌥Space) requires Accessibility permissions:
 
 1. Go to **System Settings → Privacy & Security → Accessibility**
 2. Click the **+** button
-3. Navigate to **Applications** and select **"My App Launcher.app"**
+3. Navigate to **Applications** and select **"My Launchpad.app"**
 4. Ensure the toggle is **ON**
 5. **Restart the app** after granting permission
 
@@ -92,7 +92,7 @@ The global hotkey (⌃⌥Space) requires Accessibility permissions:
 ## Getting Started
 
 ### First Launch
-When you first launch My App Launcher, it will:
+When you first launch My Launchpad, it will:
 - Scan your Applications folder for all installed apps
 - Display them in the main window
 - Add a grid icon to your menu bar
@@ -159,7 +159,7 @@ Click the section headers to expand/collapse them.
 
 <img src="images/search-bar.png" alt="Search Bar" width="500">
 
-My App Launcher includes a built-in search function to help you quickly find apps.
+My Launchpad includes a built-in search function to help you quickly find apps.
 
 ### Using Search
 
@@ -290,7 +290,7 @@ Right-click on any app icon to access a context menu with options that vary base
 
 <img src="images/multi-select.png" alt="Multi-Select" width="500">
 
-My App Launcher supports selecting multiple apps at once using keyboard modifiers, making it easy to organize many apps quickly.
+My Launchpad supports selecting multiple apps at once using keyboard modifiers, making it easy to organize many apps quickly.
 
 ### Selection Methods
 
@@ -435,18 +435,18 @@ Use the context menu to move apps between groups, or drag from ungrouped to a gr
 
 ### Hotkey Not Working
 1. Check **System Settings → Privacy & Security → Accessibility**
-2. Ensure "My App Launcher" is listed and enabled
+2. Ensure "My Launchpad" is listed and enabled
 3. Try removing and re-adding the app to the list
 4. Restart the app after granting permissions
 
 ### App Not Starting at Login
 1. Go to **System Settings → General → Login Items**
-2. Add "My App Launcher.app" from the Applications folder
+2. Add "My Launchpad.app" from the Applications folder
 
 ### Missing App Icons
 If an app shows a blank icon:
 1. The app may have been moved or deleted
-2. Try refreshing the app list (relaunch My App Launcher)
+2. Try refreshing the app list (relaunch My Launchpad)
 
 [↑ Table of Contents](#table-of-contents)
 
@@ -503,4 +503,4 @@ If an app shows a blank icon:
 
 ---
 
-*My App Launcher - A better way to launch your apps.*
+*My Launchpad - A better way to launch your apps.*

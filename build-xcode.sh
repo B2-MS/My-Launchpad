@@ -6,9 +6,9 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PROJECT_DIR="$SCRIPT_DIR/AppLauncher.xcodeproj"
+PROJECT_DIR="$SCRIPT_DIR/MyLaunchpad.xcodeproj"
 
-echo "🔨 Creating Xcode project for App Launcher..."
+echo "🔨 Creating Xcode project for My Launchpad..."
 
 # Generate Xcode project from Package.swift
 cd "$SCRIPT_DIR"
@@ -18,7 +18,7 @@ swift package generate-xcodeproj 2>/dev/null || {
     echo ""
     echo "You can build manually:"
     echo "  1. Open Xcode"
-    echo "  2. File > Open > Select the AppLauncher folder"
+    echo "  2. File > Open > Select the MyLaunchpad folder"
     echo "  3. Xcode will recognize Package.swift"
     echo "  4. Select 'My Mac' as the run destination"
     echo "  5. Press Cmd+R to build and run"

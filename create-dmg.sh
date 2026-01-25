@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Create a proper DMG installer for My App Launcher
+# Create a proper DMG installer for My Launchpad
 # This creates a DMG with the app and an Applications shortcut for drag-to-install
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BUILD_DIR="$SCRIPT_DIR/build"
-APP_NAME="My App Launcher"
+APP_NAME="My Launchpad"
 APP_BUNDLE="$BUILD_DIR/$APP_NAME.app"
-DMG_NAME="My App Launcher Installer.dmg"
+DMG_NAME="My Launchpad Installer.dmg"
 DMG_PATH="$SCRIPT_DIR/$DMG_NAME"
 TEMP_DMG="$SCRIPT_DIR/temp_$DMG_NAME"
 VOLUME_NAME="$APP_NAME"

@@ -7,11 +7,11 @@ class DataManager {
     
     static let shared = DataManager()
     
-    private let dataFileName = "MyAppLauncherData.json"
+    private let dataFileName = "MyLaunchpadData.json"
     
     private var dataFileURL: URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let appFolder = appSupport.appendingPathComponent("My App Launcher", isDirectory: true)
+        let appFolder = appSupport.appendingPathComponent("My Launchpad", isDirectory: true)
         
         // Create directory if needed
         try? FileManager.default.createDirectory(at: appFolder, withIntermediateDirectories: true)
@@ -56,7 +56,7 @@ class DataManager {
     func exportData(_ data: LauncherData) -> Bool {
         let savePanel = NSSavePanel()
         savePanel.allowedContentTypes = [.json]
-        savePanel.nameFieldStringValue = "My App Launcher Settings.json"
+        savePanel.nameFieldStringValue = "My Launchpad Settings.json"
         savePanel.title = "Export Settings"
         savePanel.message = "Choose where to save your launcher settings"
         

@@ -2,13 +2,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "AppLauncher",
+    name: "MyLaunchpad",
     platforms: [
         .macOS(.v13)
     ],
     targets: [
         .executableTarget(
-            name: "AppLauncher",
+            name: "MyLaunchpad",
             path: "Sources"
         )
     ]

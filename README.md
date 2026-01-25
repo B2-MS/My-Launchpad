@@ -1,4 +1,4 @@
-# My App Launcher for macOS
+# My Launchpad for macOS
 
 A beautiful, native macOS app launcher with group organization, global hotkeys, and menu bar presence.
 
@@ -7,18 +7,18 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 ![Version](https://img.shields.io/badge/Version-1.5.0-purple.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-**[Release Notes](RELEASE_NOTES.md)** | **[User Guide](My%20App%20Launcher%20User%20Guide.md)**
+**[Release Notes](RELEASE_NOTES.md)** | **[User Guide](My%20Launchpad%20User%20Guide.md)**
 
 ## Overview
 
-With the release of macOS Tahoe, Apple redesigned Launchpad and removed several beloved features that power users relied on for years. **My App Launcher** brings back that classic experience and adds even more functionality.
+With the release of macOS Tahoe, Apple redesigned Launchpad and removed several beloved features that power users relied on for years. **My Launchpad** brings back that classic experience and adds even more functionality.
 
 ### What's Missing in macOS Tahoe?
 - ❌ No ability to create custom app groups/folders
 - ❌ Limited control over app organization
 - ❌ No quick keyboard access from anywhere
 
-### What My App Launcher Provides
+### What My Launchpad Provides
 - ✅ **Custom Groups** - Organize apps into folders just like the classic Launchpad
 - ✅ **Full Reorganization** - Drag and drop to reorder apps and groups exactly how you want
 - ✅ **Global Hotkey** - Summon the launcher instantly with ⌃⌥Space from any app
@@ -56,16 +56,16 @@ If you miss the way Launchpad used to work, this app is for you.
 
 ### From DMG (Recommended)
 
-1. Download `My App Launcher Installer.dmg` from the [Releases](releases) page
-2. Open the DMG and drag **My App Launcher.app** to the **Applications** folder
+1. Download `My Launchpad Installer.dmg` from the [Releases](releases) page
+2. Open the DMG and drag **My Launchpad.app** to the **Applications** folder
 3. Launch the app and grant Accessibility permission when prompted
 
 ### Building from Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/my-app-launcher.git
-cd my-app-launcher
+git clone https://github.com/YOUR_USERNAME/my-launchpad.git
+cd my-launchpad
 
 # Build with Swift Package Manager
 swift build -c release
@@ -85,7 +85,7 @@ Since this app isn't signed with an Apple Developer certificate, you'll need to:
 ### Accessibility Permission
 For the global hotkey to work:
 1. Go to **System Settings → Privacy & Security → Accessibility**
-2. Add "My App Launcher" and enable the toggle
+2. Add "My Launchpad" and enable the toggle
 3. Restart the app
 
 ## Usage
@@ -110,15 +110,15 @@ For the global hotkey to work:
 ## File Structure
 
 ```
-AppLauncher/
+MyLaunchpad/
 ├── Package.swift                 # Swift package definition
 ├── build.sh                      # Build script
 ├── README.md                     # This file
-├── My App Launcher User Guide.md # Detailed user guide
+├── My Launchpad User Guide.md    # Detailed user guide
 ├── Resources/
 │   └── Info.plist               # App metadata
 └── Sources/
-    ├── AppLauncherApp.swift     # Main app, hotkey manager, menu bar
+    ├── MyLaunchpadApp.swift     # Main app, hotkey manager, menu bar
     ├── Models/
     │   ├── AppItem.swift        # App model
     │   └── AppGroup.swift       # Group model
@@ -139,7 +139,7 @@ AppLauncher/
 
 Your settings are stored at:
 ```
-~/Library/Application Support/My App Launcher/MyAppLauncherData.json
+~/Library/Application Support/My Launchpad/MyLaunchpadData.json
 ```
 
 ## Keyboard Shortcuts

@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# Build script for App Launcher
+# Build script for My Launchpad
 # This script compiles the SwiftUI app and creates a proper macOS .app bundle
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BUILD_DIR="$SCRIPT_DIR/build"
-APP_NAME="My App Launcher"
+APP_NAME="My Launchpad"
 APP_BUNDLE="$BUILD_DIR/$APP_NAME.app"
-EXECUTABLE_NAME="AppLauncher"
+EXECUTABLE_NAME="MyLaunchpad"
 
-echo "🔨 Building App Launcher..."
+echo "🔨 Building My Launchpad..."
 
 # Quit the app if it's running
 echo "🛑 Stopping any running instances..."
-pkill -f "App Launcher" 2>/dev/null || true
-pkill -f "AppLauncher" 2>/dev/null || true
+pkill -f "My Launchpad" 2>/dev/null || true
+pkill -f "MyLaunchpad" 2>/dev/null || true
 sleep 1
 
 # Clean previous build

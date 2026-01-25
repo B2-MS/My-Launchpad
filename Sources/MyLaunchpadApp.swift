@@ -102,7 +102,7 @@ class HotkeyManager {
 }
 
 @main
-struct MyAppLauncherApp: App {
+struct MyLaunchpadApp: App {
     @StateObject private var windowSettings = WindowSettings.shared
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
@@ -126,7 +126,7 @@ struct MyAppLauncherApp: App {
             }
             
             CommandGroup(replacing: .help) {
-                Button("My App Launcher Help") {
+                Button("My Launchpad Help") {
                     if let url = URL(string: "https://github.com") {
                         NSWorkspace.shared.open(url)
                     }
