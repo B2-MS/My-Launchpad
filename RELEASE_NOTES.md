@@ -1,5 +1,18 @@
 # Release Notes
 
+## Version 1.5.2 (January 2026)
+
+### Improvements
+
+#### Smarter Panel Interactions
+- **Click Outside to Close Group** - Clicking anywhere outside an open group popup now closes it
+- **Settings Closes Group** - Clicking the settings gear while a group is open automatically closes the group first
+- **Group Closes Settings** - Clicking on a group while settings is open automatically closes the settings panel
+
+These changes provide a more intuitive experience where only one panel (group or settings) is open at a time.
+
+---
+
 ## Version 1.5.1 (January 2026)
 
 ### New Features

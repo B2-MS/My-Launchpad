@@ -222,7 +222,7 @@ In the group popup, click the group name in the header to edit it.
 - **Swipe Gestures** - Two-finger horizontal swipe on trackpad to navigate between pages
 - **Edge Drag Zones** - Drag an app to the left/right edge to flip pages while maintaining the drag
 - **Empty Slots** - Moving an app to another page leaves an empty slot (up to 4 per page)
-- **Close** - Click the X button or click outside the popup
+- **Close** - Click the X button, click outside the popup, or click the settings gear
 
 ### Moving Apps Between Pages
 
@@ -329,6 +329,8 @@ My Launchpad supports selecting multiple apps at once using keyboard modifiers, 
 <img src="images/settings.png" alt="Settings Panel" width="300">
 
 Access settings by clicking the **gear icon** in the top-right corner.
+
+> **Smart Panel Behavior:** Only one panel can be open at a time. Opening settings will close any open group popup, and clicking on a group will close the settings panel.
 
 ### Available Settings
 

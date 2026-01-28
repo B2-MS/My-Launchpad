@@ -413,8 +413,9 @@ class LauncherViewModel: ObservableObject {
     /// Get the expanded group (only one at a time)
     @Published var expandedGroupId: UUID? = nil
     
-    /// Expand a group (close others)
+    /// Expand a group (close others and close settings)
     func expandGroup(_ group: AppGroup) {
+        showSettings = false
         expandedGroupId = group.id
     }
     

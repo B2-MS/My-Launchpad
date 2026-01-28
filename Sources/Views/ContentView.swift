@@ -575,6 +575,10 @@ struct ContentView: View {
     private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup(placement: .automatic) {
             Button {
+                // Close any expanded group when opening settings
+                if viewModel.expandedGroupId != nil {
+                    viewModel.collapseGroup()
+                }
                 withAnimation(.easeInOut(duration: 0.2)) {
                     viewModel.showSettings.toggle()
                 }
