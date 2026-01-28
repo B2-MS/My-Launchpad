@@ -1,5 +1,16 @@
 # Release Notes
 
+## Version 1.5.3 (January 2026)
+
+### Improvements
+
+#### Window Positioning & Sizing
+- **True Center Positioning** - Window now opens centered in the visible screen area, properly accounting for the menu bar and dock
+- **Persistent Window Size** - Window size is remembered between sessions and restored on launch
+- **Smart Initial Sizing** - On first launch, window size is calculated based on the number of groups to show them all
+
+---
+
 ## Version 1.5.2 (January 2026)
 
 ### Improvements

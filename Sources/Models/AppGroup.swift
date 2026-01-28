@@ -51,13 +51,17 @@ struct LauncherData: Codable {
     var groupTileScale: Double?
     var hideOnLaunch: Bool?
     var hideOnFocusLost: Bool?
+    var windowWidth: Double?
+    var windowHeight: Double?
     
-    init(groups: [AppGroup] = [], ungroupedAppIds: [UUID] = [], allApps: [AppItem] = [], groupTileScale: Double? = nil, hideOnLaunch: Bool? = nil, hideOnFocusLost: Bool? = nil) {
+    init(groups: [AppGroup] = [], ungroupedAppIds: [UUID] = [], allApps: [AppItem] = [], groupTileScale: Double? = nil, hideOnLaunch: Bool? = nil, hideOnFocusLost: Bool? = nil, windowWidth: Double? = nil, windowHeight: Double? = nil) {
         self.groups = groups
         self.ungroupedAppIds = ungroupedAppIds
         self.allApps = allApps
         self.groupTileScale = groupTileScale
         self.hideOnLaunch = hideOnLaunch
         self.hideOnFocusLost = hideOnFocusLost
+        self.windowWidth = windowWidth
+        self.windowHeight = windowHeight
     }
 }

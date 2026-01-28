@@ -21,6 +21,8 @@ class LauncherViewModel: ObservableObject {
     @Published var hideOnLaunch: Bool = true
     @Published var hideOnFocusLost: Bool = true
     @Published var showSettings: Bool = false
+    @Published var windowWidth: Double = 800
+    @Published var windowHeight: Double = 600
     
     private let dataManager = DataManager.shared
     
@@ -98,6 +100,12 @@ class LauncherViewModel: ObservableObject {
             if let hideFocus = savedData.hideOnFocusLost {
                 self.hideOnFocusLost = hideFocus
             }
+            if let width = savedData.windowWidth {
+                self.windowWidth = width
+            }
+            if let height = savedData.windowHeight {
+                self.windowHeight = height
+            }
             
         } else {
             // First run - scan all apps
@@ -123,7 +131,9 @@ class LauncherViewModel: ObservableObject {
             allApps: allApps,
             groupTileScale: groupTileScale,
             hideOnLaunch: hideOnLaunch,
-            hideOnFocusLost: hideOnFocusLost
+            hideOnFocusLost: hideOnFocusLost,
+            windowWidth: windowWidth,
+            windowHeight: windowHeight
         )
         dataManager.save(data)
     }

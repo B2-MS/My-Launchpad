@@ -84,7 +84,7 @@ class HotkeyManager {
                 // Make window appear on all spaces/desktops
                 window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
                 window.makeKeyAndOrderFront(nil)
-                window.center()
+                WindowAccessor.centerWindowOnScreen(window)
             }
         }
     }
@@ -179,7 +179,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 // Make window appear on all spaces/desktops
                 window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
                 window.makeKeyAndOrderFront(nil)
-                window.center()
+                WindowAccessor.centerWindowOnScreen(window)
             }
         }
     }
@@ -238,7 +238,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Make window appear on all spaces/desktops
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
             window.makeKeyAndOrderFront(nil)
-            window.center()
+            WindowAccessor.centerWindowOnScreen(window)
         }
     }
     
@@ -268,7 +268,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Make window appear on all spaces/desktops
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
             window.makeKeyAndOrderFront(nil)
-            window.center()
+            WindowAccessor.centerWindowOnScreen(window)
         }
         return true
     }
@@ -278,13 +278,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
-/// Intercepts window close to hide instead of close
+/// Intercepts window close to hide instead of close and saves window size
 struct WindowAccessor: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
             if let window = view.window {
                 window.delegate = context.coordinator
+                
+                // Restore saved window size or calculate based on groups
+                if let data = DataManager.shared.load(),
+                   let width = data.windowWidth,
+                   let height = data.windowHeight {
+                    let newSize = NSSize(width: width, height: height)
+                    window.setContentSize(newSize)
+                } else {
+                    // Calculate initial size based on number of groups
+                    let defaultSize = Self.calculateIdealWindowSize()
+                    window.setContentSize(defaultSize)
+                }
+                
+                // Center window on screen properly
+                Self.centerWindowOnScreen(window)
             }
         }
         return view
@@ -296,11 +311,70 @@ struct WindowAccessor: NSViewRepresentable {
         Coordinator()
     }
     
+    /// Calculate ideal window size based on number of groups
+    static func calculateIdealWindowSize() -> NSSize {
+        let data = DataManager.shared.load()
+        let groupCount = data?.groups.count ?? 0
+        let groupTileScale = data?.groupTileScale ?? 1.1
+        
+        // Calculate based on group tile size and count
+        let tileSize: CGFloat = 120 * groupTileScale + 10 // tile + spacing
+        let tilesPerRow = max(4, min(6, groupCount)) // 4-6 tiles per row
+        let rows = max(1, Int(ceil(Double(groupCount) / Double(tilesPerRow))))
+        
+        // Calculate dimensions
+        let width = max(700, min(1200, tileSize * CGFloat(tilesPerRow) + 80))
+        let height = max(500, min(900, tileSize * CGFloat(rows) + 150))
+        
+        return NSSize(width: width, height: height)
+    }
+    
+    /// Center window on the visible screen area (accounting for menu bar and dock)
+    static func centerWindowOnScreen(_ window: NSWindow) {
+        guard let screen = window.screen ?? NSScreen.main else {
+            window.center()
+            return
+        }
+        
+        let screenFrame = screen.visibleFrame // Excludes menu bar and dock
+        let windowFrame = window.frame
+        
+        let newX = screenFrame.origin.x + (screenFrame.width - windowFrame.width) / 2
+        let newY = screenFrame.origin.y + (screenFrame.height - windowFrame.height) / 2
+        
+        window.setFrameOrigin(NSPoint(x: newX, y: newY))
+    }
+    
     class Coordinator: NSObject, NSWindowDelegate {
         func windowShouldClose(_ sender: NSWindow) -> Bool {
             // Hide instead of close
             sender.orderOut(nil)
             return false
+        }
+        
+        func windowDidResize(_ notification: Notification) {
+            guard let window = notification.object as? NSWindow else { return }
+            saveWindowSize(window)
+        }
+        
+        func windowDidEndLiveResize(_ notification: Notification) {
+            guard let window = notification.object as? NSWindow else { return }
+            saveWindowSize(window)
+        }
+        
+        private func saveWindowSize(_ window: NSWindow) {
+            let size = window.frame.size
+            if var data = DataManager.shared.load() {
+                data.windowWidth = size.width
+                data.windowHeight = size.height
+                DataManager.shared.save(data)
+            } else {
+                let data = LauncherData(
+                    windowWidth: size.width,
+                    windowHeight: size.height
+                )
+                DataManager.shared.save(data)
+            }
         }
     }
 }
