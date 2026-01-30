@@ -315,11 +315,19 @@ class LauncherViewModel: ObservableObject {
     func exitEditMode() {
         isEditMode = false
         selectedApps.removeAll()
+        // Collapse apps section when exiting edit mode
+        if !isAppsSectionCollapsed {
+            isAppsSectionCollapsed = true
+        }
     }
     
     /// Enter edit mode
     func enterEditMode() {
         isEditMode = true
+        // Expand apps section when entering edit mode
+        if isAppsSectionCollapsed {
+            isAppsSectionCollapsed = false
+        }
     }
     
     /// Move a single app to a specific group (for drag and drop)

@@ -1,5 +1,27 @@
 # Release Notes
 
+## Version 1.5.4 (January 2026)
+
+### New Features
+
+#### Multi-Select Group Operations
+- **Add Multiple Apps to Group** - Select multiple apps and right-click to add them all to an existing group at once
+- **Create Group with Multiple Apps** - Select multiple apps and right-click to create a new group containing all selected apps
+- **Visual Feedback** - New group dialog shows count of selected apps when creating groups with multi-select
+
+#### Edit Mode Improvements
+- **Auto-Expand Apps Section** - Clicking the edit icon now automatically expands the Apps section and scrolls to show it
+- **Auto-Collapse on Exit** - Exiting edit mode automatically collapses the Apps section
+
+#### Settings Enhancements
+- **Real-Time Color Preview** - Groups stay open when adjusting settings so you can preview color changes
+- **Click to Close Color Picker** - Clicking outside the color picker now closes it automatically
+
+#### Create Group Dialog
+- **Enter Key Support** - Press Enter to create a group after typing the name (no need to click "Create")
+
+---
+
 ## Version 1.5.3 (January 2026)
 
 ### Improvements

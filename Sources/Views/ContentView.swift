@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var draggedAppId: UUID? = nil
     @State private var dropTargetGroupId: UUID? = nil
     @State private var groupInsertIndex: Int? = nil
+    @State private var scrollProxy: ScrollViewProxy? = nil
     
     private var groupGridColumns: [GridItem] {
         let baseSize: CGFloat = 120 * viewModel.groupTileScale
@@ -34,28 +35,38 @@ struct ContentView: View {
         .sheet(isPresented: $showingNewGroupSheet) {
             newGroupSheet
         }
+        .onTapGesture {
+            // Close the system color panel when clicking outside
+            NSColorPanel.shared.close()
+        }
     }
     
     // MARK: - Main Content
     
     private var mainContent: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                if viewModel.showSettings {
-                    settingsSection
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    if viewModel.showSettings {
+                        settingsSection
+                    }
+                    
+                    if viewModel.isEditMode {
+                        editModeToolbar
+                    }
+                    
+                    if !viewModel.groups.isEmpty {
+                        groupsSection
+                    }
+                    
+                    appsSection
+                        .id("appsSection")
                 }
-                
-                if viewModel.isEditMode {
-                    editModeToolbar
-                }
-                
-                if !viewModel.groups.isEmpty {
-                    groupsSection
-                }
-                
-                appsSection
+                .padding(.vertical, 16)
             }
-            .padding(.vertical, 16)
+            .onAppear {
+                scrollProxy = proxy
+            }
         }
         .background(
             ZStack {
@@ -502,9 +513,21 @@ struct ContentView: View {
             draggedAppId: $draggedAppId,
             onTap: { modifiers in handleAppTap(app, modifiers: modifiers) },
             onLongPress: { handleAppLongPress(app) },
-            onAddToGroup: { group in viewModel.moveAppToGroup(app.id, group: group) },
+            onAddToGroup: { group in
+                // If this app is part of a multi-selection, move all selected apps
+                if viewModel.selectedApps.contains(app.id) && viewModel.selectedApps.count > 1 {
+                    viewModel.addToGroup(group)
+                } else {
+                    viewModel.moveAppToGroup(app.id, group: group)
+                }
+            },
             onCreateNewGroup: {
-                appForNewGroup = app
+                // If this app is part of a multi-selection, create group with all selected apps
+                if viewModel.selectedApps.contains(app.id) && viewModel.selectedApps.count > 1 {
+                    appForNewGroup = nil  // nil signals to use selectedApps
+                } else {
+                    appForNewGroup = app
+                }
                 showingNewGroupSheet = true
             },
             onDropOntoApp: { droppedAppId in
@@ -533,7 +556,7 @@ struct ContentView: View {
                 appLookup: viewModel.appLookup,
                 allGroups: viewModel.groups,
                 isEditingName: viewModel.editingGroupId == group.id,
-                headerColor: viewModel.groupHeaderColor,
+                headerColor: $viewModel.groupHeaderColor,
                 onClose: {
                     viewModel.editingGroupId = nil
                     viewModel.collapseGroup()
@@ -575,10 +598,7 @@ struct ContentView: View {
     private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup(placement: .automatic) {
             Button {
-                // Close any expanded group when opening settings
-                if viewModel.expandedGroupId != nil {
-                    viewModel.collapseGroup()
-                }
+                // Keep expanded group open so user can see real-time color changes
                 withAnimation(.easeInOut(duration: 0.2)) {
                     viewModel.showSettings.toggle()
                 }
@@ -605,6 +625,12 @@ struct ContentView: View {
                     viewModel.exitEditMode()
                 } else {
                     viewModel.enterEditMode()
+                    // Scroll to apps section after a brief delay to allow expansion
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            scrollProxy?.scrollTo("appsSection", anchor: .top)
+                        }
+                    }
                 }
             } label: {
                 Image(systemName: viewModel.isEditMode ? "checkmark.circle.fill" : "square.and.pencil")
@@ -624,11 +650,18 @@ struct ContentView: View {
                 Text("with \(app.name)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+            } else if !viewModel.selectedApps.isEmpty {
+                Text("with \(viewModel.selectedApps.count) selected apps")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
             
             TextField("Group name", text: $newGroupName)
                 .textFieldStyle(.roundedBorder)
                 .frame(width: 250)
+                .onSubmit {
+                    createNewGroup()
+                }
             
             HStack(spacing: 16) {
                 Button("Cancel") {

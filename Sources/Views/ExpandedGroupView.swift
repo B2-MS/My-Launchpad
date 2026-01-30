@@ -95,7 +95,7 @@ struct ExpandedGroupView: View {
     let appLookup: [UUID: AppItem]  // Dictionary to look up apps by ID
     let allGroups: [AppGroup]
     let isEditingName: Bool
-    let headerColor: Color
+    @Binding var headerColor: Color
     
     let onClose: () -> Void
     let onRename: (String) -> Void
@@ -186,6 +186,7 @@ struct ExpandedGroupView: View {
                 paginationView
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: headerColor)
         .frame(width: totalPages > 1 ? 580 : 500, height: totalPages > 1 ? 580 : 540)
         .background(
             ZStack {
