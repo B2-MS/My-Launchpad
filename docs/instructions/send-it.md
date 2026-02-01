@@ -98,12 +98,12 @@ git push
 ### 9. 🚀 Create GitHub Release with DMG
 
 ```bash
-gh release create vX.X.X "My Launchpad Installer.dmg" --title "My Launchpad vX.X.X" --notes "Release notes here"
+gh release create vX.X.X "releases/My Launchpad Installer.dmg" --title "My Launchpad vX.X.X" --notes "Release notes here"
 ```
 
 Or use the full command with formatted notes:
 ```bash
-gh release create vX.X.X "My Launchpad Installer.dmg" \
+gh release create vX.X.X "releases/My Launchpad Installer.dmg" \
   --title "My Launchpad vX.X.X" \
   --notes "## What's New
 
@@ -130,7 +130,7 @@ git add -A && git commit -m "Release vX.X.X - description" && git push
 ## Full Release One-Liner (Steps 7-9)
 
 ```bash
-git add -A && git commit -m "Release vX.X.X - description" && git push && ./create-dmg.sh && gh release create vX.X.X "My Launchpad Installer.dmg" --title "My Launchpad vX.X.X" --generate-notes
+git add -A && git commit -m "Release vX.X.X - description" && git push && ./create-dmg.sh && gh release create vX.X.X "releases/My Launchpad Installer.dmg" --title "My Launchpad vX.X.X" --generate-notes
 ```
 
 ---

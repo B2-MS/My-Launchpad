@@ -19,8 +19,8 @@ xcuserdata/
 .LSOverride
 ._*
 
-# DMG installer (generated, not source)
-*.dmg
+# DMG releases folder (generated, not source)
+releases/
 
 # IDE
 .idea/
