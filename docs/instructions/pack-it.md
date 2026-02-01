@@ -123,7 +123,7 @@ open "/Applications/My Launchpad.app"
 | File | Location |
 |------|----------|
 | App Bundle | `build/My Launchpad.app` |
-| DMG Installer | `My Launchpad Installer.dmg` |
+| DMG Installer | `releases/My Launchpad Installer.dmg` |
 
 ## Troubleshooting
 

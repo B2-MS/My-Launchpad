@@ -128,4 +128,4 @@ After completing the above steps, create a DMG installer:
 ./create-dmg.sh
 ```
 
-Output: `My Launchpad Installer.dmg`
+Output: `releases/My Launchpad Installer.dmg`

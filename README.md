@@ -56,7 +56,7 @@ If you miss the way Launchpad used to work, this app is for you.
 
 ### From DMG (Recommended)
 
-1. Download `My Launchpad Installer.dmg` from the [Releases](releases) page
+1. Download `My Launchpad Installer.dmg` from the [releases](releases) folder
 2. Open the DMG and drag **My Launchpad.app** to the **Applications** folder
 3. Launch the app and grant Accessibility permission when prompted
 
