@@ -19,9 +19,6 @@ xcuserdata/
 .LSOverride
 ._*
 
-# DMG releases folder (generated, not source)
-releases/
-
 # IDE
 .idea/
 *.swp
