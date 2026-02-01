@@ -89,6 +89,30 @@ git commit -m "Release v1.x.x - brief description of changes"
 git push
 ```
 
+### 8. 💿 Create DMG Installer
+
+```bash
+./create-dmg.sh
+```
+
+### 9. 🚀 Create GitHub Release with DMG
+
+```bash
+gh release create vX.X.X "My Launchpad Installer.dmg" --title "My Launchpad vX.X.X" --notes "Release notes here"
+```
+
+Or use the full command with formatted notes:
+```bash
+gh release create vX.X.X "My Launchpad Installer.dmg" \
+  --title "My Launchpad vX.X.X" \
+  --notes "## What's New
+
+- Feature 1
+- Feature 2
+
+**Download:** Open the DMG and drag the app to Applications."
+```
+
 ---
 
 ## Complete One-Liner (Steps 1-4, 6)
@@ -101,6 +125,12 @@ git push
 
 ```bash
 git add -A && git commit -m "Release vX.X.X - description" && git push
+```
+
+## Full Release One-Liner (Steps 7-9)
+
+```bash
+git add -A && git commit -m "Release vX.X.X - description" && git push && ./create-dmg.sh && gh release create vX.X.X "My Launchpad Installer.dmg" --title "My Launchpad vX.X.X" --generate-notes
 ```
 
 ---
@@ -117,15 +147,13 @@ git add -A && git commit -m "Release vX.X.X - description" && git push
 - [ ] App launches and works correctly
 - [ ] Changes committed to git
 - [ ] Changes pushed to GitHub
+- [ ] DMG created
+- [ ] GitHub Release published with DMG
 
 ---
 
-## Optional: Create DMG for Distribution
+## Notes
 
-After completing the above steps, create a DMG installer:
-
-```bash
-./create-dmg.sh
-```
-
-Output: `My Launchpad Installer.dmg`
+- The `gh` command requires GitHub CLI (`brew install gh`)
+- First time use requires authentication: `gh auth login`
+- Use `--generate-notes` to auto-generate release notes from commits
