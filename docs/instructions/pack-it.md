@@ -95,10 +95,11 @@ rm -rf "/Applications/My Launchpad.app"
 # 4. Install new version to Applications
 cp -R "build/My Launchpad.app" "/Applications/"
 
-# 5. Update ALL markdown files (README.md, RELEASE_NOTES.md, User Guide)
+# 5. Update ALL markdown files (README.md, RELEASE_NOTES.md, User Guide, Chat History)
 # - Update version badge in README.md
 # - Add new version section to RELEASE_NOTES.md
 # - Update User Guide with any new features/behavior
+# - Document session changes in docs/chat-history.md
 
 # 6. Launch the new version
 open "/Applications/My Launchpad.app"
@@ -117,6 +118,7 @@ open "/Applications/My Launchpad.app"
 | `README.md` | Version badge (e.g., `Version-1.5.2-purple`) |
 | `RELEASE_NOTES.md` | Add new version section at top with changes |
 | `My Launchpad User Guide.md` | Document any new features or behavior changes |
+| `docs/chat-history.md` | Document development session changes and decisions |
 
 ## Output Files
 

@@ -47,6 +47,7 @@ cp -R "build/My Launchpad.app" "/Applications/"
 | `README.md` | Version badge (e.g., `Version-1.5.2-purple`) |
 | `RELEASE_NOTES.md` | Add new version section at top with all changes |
 | `My Launchpad User Guide.md` | Document any new features or behavior changes |
+| `docs/chat-history.md` | Document development session changes and decisions |
 
 #### README.md Version Badge
 ```markdown
