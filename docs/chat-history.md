@@ -4,117 +4,6 @@ This file documents the development conversations and changes made to My Launchp
 
 ---
 
-## Session: January 29-31, 2026 - Version 1.5.4
-
-### Issues Addressed
-
-#### 1. Multi-Select Group Operations Not Working
-**Problem:** When selecting multiple apps and right-clicking to add them to a group or create a new group, only the first app was being added.
-
-**Solution:** Updated `ContentView.swift` to check if the right-clicked app is part of a multi-selection:
-- `onAddToGroup` callback now calls `viewModel.addToGroup(group)` for all selected apps when multi-selected
-- `onCreateNewGroup` callback now uses `selectedApps` when the app is part of a multi-selection
-- Added visual feedback in new group dialog showing count of selected apps
-
-**Files Modified:**
-- `Sources/Views/ContentView.swift`
-
----
-
-#### 2. Edit Mode Should Expand Apps Section
-**Problem:** When clicking the edit icon in the top right, the Apps section didn't expand, making it hard to see and select apps.
-
-**Solution:** 
-- Modified `enterEditMode()` in `LauncherViewModel.swift` to automatically expand the Apps section
-- Added `ScrollViewReader` to `ContentView.swift` to scroll to the Apps section when entering edit mode
-- Modified `exitEditMode()` to collapse the Apps section when exiting
-
-**Files Modified:**
-- `Sources/ViewModels/LauncherViewModel.swift`
-- `Sources/Views/ContentView.swift`
-
----
-
-#### 3. Enter Key Should Submit New Group Dialog
-**Problem:** After entering a group name, users had to click "Create" button instead of pressing Enter.
-
-**Solution:** Added `.onSubmit` modifier to the TextField in the new group sheet.
-
-**Files Modified:**
-- `Sources/Views/ContentView.swift`
-
----
-
-#### 4. Real-Time Color Preview for Group Headers
-**Problem:** When adjusting colors in settings with a group open, the group header didn't update in real-time.
-
-**Solution:** 
-- Removed code that collapsed groups when opening settings
-- Changed `headerColor` in `ExpandedGroupView` from `let` to `@Binding` for reactive updates
-- Added animation modifier for smooth color transitions
-
-**Files Modified:**
-- `Sources/Views/ContentView.swift`
-- `Sources/Views/ExpandedGroupView.swift`
-
-**Note:** The macOS system ColorPicker panel doesn't trigger real-time SwiftUI updates. Color changes apply when the panel is closed.
-
----
-
-#### 5. Click Outside to Close Color Picker
-**Problem:** The color picker panel stayed open when clicking elsewhere in the app.
-
-**Solution:** Added `onTapGesture` to close `NSColorPanel.shared` when clicking outside.
-
-**Files Modified:**
-- `Sources/Views/ContentView.swift`
-
----
-
-### New Files Created
-
-#### Instruction Files
-- `docs/instructions/test-it.md` - Quick rebuild and test workflow
-- `docs/instructions/pack-it-up-now.md` - Combined pack-it workflow
-
----
-
-### Infrastructure Changes
-
-#### DMG Files Moved to releases/ Folder
-- Created `releases/` folder for DMG installers
-- Updated `create-dmg.sh` to output to `releases/` folder
-- Updated `.gitignore` to track `releases/` folder (DMGs now in repo)
-- Updated all markdown files with new paths
-
-#### GitHub Release Workflow Added
-- Installed GitHub CLI (`gh`)
-- Added steps 8-9 to `send-it.md` for creating GitHub Releases with DMG
-- Published v1.5.4 release with DMG installer
-
-**Files Modified:**
-- `.gitignore`
-- `create-dmg.sh`
-- `docs/instructions/send-it.md`
-- `docs/instructions/pack-it.md`
-- `docs/instructions/pack-it-up-now.md`
-- `README.md`
-
----
-
-### Version Released
-
-**Version 1.5.4** - Published January 31, 2026
-
-Features:
-- Multi-select group operations (add multiple apps to group, create group with multiple apps)
-- Edit mode auto-expands/collapses Apps section and scrolls to show it
-- Real-time color preview (groups stay open during settings)
-- Click outside to close color picker
-- Enter key support in create group dialog
-
----
-
 ## How to Update This File
 
 When making changes to My Launchpad, document the session here with:
@@ -127,42 +16,6 @@ When making changes to My Launchpad, document the session here with:
 3. **New Files Created** - Any new files added
 4. **Infrastructure Changes** - Build/deploy/tooling changes
 5. **Version Released** - Summary of what was released
-
----
-
-## Previous Sessions
-
-*Add earlier development history here if available*
-
----
-
-## Session: AppLauncher UI Improvements and Settings Feature
-**Date:** February 2, 2026
-
-### Prompts
-1. Requested 5 changes to AppLauncher app: remove the 'groups' dropdown, resize from 9 icons per group to 16, enlarge groups by 30%, sort group names alphabetically in "Add to Group" popups, and redeploy the app.
-2. Continued monitoring build progress after encountering SwiftPM process conflicts and terminal issues with paths containing spaces.
-3. Requested 4 additional changes: reduce header height in group popup by 30%, add a settings option at the top, include a slider to change background transparency of main window, and add a collapsible section for apps with default state collapsed.
-4. Continued monitoring deployment build progress.
-5. Requested this conversation summary be appended to chat-history.md.
-
-### Outcomes
-- Removed groups dropdown from main view
-- Changed group popup from 9 icons (3x3 grid) to 16 icons (4x4 grid)
-- Enlarged group popup by 30% (320×380 → 416×494)
-- Added alphabetical sorting for groups in context menus
-- Reduced header padding in ExpandedGroupView (12 → 8)
-- Added settings section with gear icon button in toolbar
-- Added transparency slider (bound to `backgroundOpacity`)
-- Made apps section collapsible with chevron toggle (default collapsed)
-- Created deploy.sh script to handle build issues with SwiftPM process conflicts
-- Key files modified:
-  - `Sources/Views/ContentView.swift`
-  - `Sources/Views/ExpandedGroupView.swift`
-  - `Sources/ViewModels/LauncherViewModel.swift`
-  - `Sources/Views/AppIconView.swift`
-  - `Sources/Views/DraggableAppIconView.swift`
-  - `deploy.sh` (new)
 
 ---
 
@@ -281,6 +134,73 @@ When making changes to My Launchpad, document the session here with:
 - Key files modified:
   - `Sources/AppLauncherApp.swift` - Added window collection behavior for all spaces
   - `RELEASE_NOTES.md` - Added v1.5.1 section
+
+---
+
+## Session: Project Rename - "My App Launcher" to "My Launchpad"
+**Date:** January 24, 2026
+
+### Prompts
+1. Asked if it's possible to rename the entire project, app, contents, etc. from "My App Launcher" to "My Launchpad"
+2. Confirmed "yes, please rename all to 'My Launchpad'" - requested renaming folder from AppLauncher to MyLaunchpad as well
+3. Asked "was all of the markdown updated with this change?"
+4. Said "pack it up" - execute build workflow
+5. Confirmed "yes" - create DMG installer
+6. Reported "I just opened the new version that's installed and all of my previous settings are missing"
+7. Reported "in my applications folder I still see 'My App Launcher' I don't see 'My Launchpad'"
+8. Requested "please open these settings" - to open Accessibility permissions
+9. Requested "let's add an option for full screen and add that to the settings"
+10. Reported "I see the setting option but it does nothing"
+11. Reported "it's not working properly, in full screen there's no way to exit the app then after it runs once it will not restart"
+12. Said "revert and remove, it doesn't work" - remove fullscreen feature
+13. Asked "have you rebuilt and deployed the new version?"
+14. Said "pack it up"
+15. Asked "can the GitHub repo also be renamed?"
+16. Confirmed "ye" - to push changes to GitHub
+17. Reported GitHub repo renamed to "My-Launchpad"
+18. Said "try again" - retry push after repo rename
+19. Asked "was the installer package updated?"
+20. Said "I've updated the screen captures so 'pack it up'"
+21. Asked "did you remove and replace my local installation?"
+22. Reported "I don't see it on the menu bar" - app not visible after install
+23. Reported "the multi-select.png image is not showing in the user guide"
+24. Confirmed "it shows now" - image was VS Code caching issue
+25. Said "no, good for now"
+26. Reported "I still see an 'AppLauncher' folder in the local project"
+27. Confirmed "looks good now" - old folder removed
+
+### Outcomes
+- **Complete project rename from "My App Launcher" to "My Launchpad"**:
+  - Renamed folder: `AppLauncher/` → `MyLaunchpad/`
+  - Renamed source file: `AppLauncherApp.swift` → `MyLaunchpadApp.swift`
+  - Renamed main struct: `MyAppLauncherApp` → `MyLaunchpadApp`
+  - Updated Package.swift: package and target name to `MyLaunchpad`
+  - Updated Info.plist: `CFBundleExecutable`, `CFBundleName`, `CFBundleDisplayName`, `CFBundleIdentifier` (com.mylaunchpad.app)
+  - Updated all shell scripts: build.sh, deploy.sh, create-dmg.sh, build-xcode.sh
+  - Updated VS Code configs: .vscode/launch.json, .vscode/tasks.json
+  - Renamed markdown file: `My App Launcher User Guide.md` → `My Launchpad User Guide.md`
+  - Renamed DMG files: `My App Launcher Installer.dmg` → `My Launchpad Installer.dmg`
+- **Updated DataManager.swift**: 
+  - App Support folder: `My App Launcher` → `My Launchpad`
+  - Data file: `MyAppLauncherData.json` → `MyLaunchpadData.json`
+  - Export filename: `My App Launcher Settings.json` → `My Launchpad Settings.json`
+- **Migrated user settings**: Copied settings from old location to new location
+- **Removed old app from Applications**: Deleted `My App Launcher.app`, installed `My Launchpad.app`
+- **Attempted fullscreen feature**: Added toggle in settings, tried multiple implementations (native fullscreen, borderless window, visible frame) - feature removed due to issues with accessory apps and window management
+- **Renamed GitHub repo**: Updated remote URL from `my-app-launcher` to `My-Launchpad`
+- **Cleaned up old folders**: Removed stale `AppLauncher/` folder and `dist/` folder
+- **Updated all markdown files**: README.md, User Guide, with all "My App Launcher" → "My Launchpad" references
+- **Published to GitHub**: All changes committed and pushed to `https://github.com/B2-MS/My-Launchpad`
+- Key files modified:
+  - `Package.swift` - Name changed to MyLaunchpad
+  - `Resources/Info.plist` - All bundle identifiers and names
+  - `Sources/MyLaunchpadApp.swift` (renamed) - Main app struct renamed
+  - `Sources/Services/DataManager.swift` - Storage paths and filenames
+  - `build.sh`, `deploy.sh`, `create-dmg.sh`, `build-xcode.sh` - App names and paths
+  - `.vscode/launch.json`, `.vscode/tasks.json` - Target names
+  - `README.md` - All branding, links, file structure
+  - `My Launchpad User Guide.md` (renamed) - All references
+  - GitHub remote URL updated
 
 ---
 
@@ -461,5 +381,35 @@ When making changes to My Launchpad, document the session here with:
   - `README.md` - Version 1.5.4, releases folder reference
   - `RELEASE_NOTES.md` - v1.5.4 section
   - `releases/My Launchpad Installer.dmg` - Published to repo
+
+---
+
+## Session: AppLauncher UI Improvements and Settings Feature
+**Date:** February 2, 2026
+
+### Prompts
+1. Requested 5 changes to AppLauncher app: remove the 'groups' dropdown, resize from 9 icons per group to 16, enlarge groups by 30%, sort group names alphabetically in "Add to Group" popups, and redeploy the app.
+2. Continued monitoring build progress after encountering SwiftPM process conflicts and terminal issues with paths containing spaces.
+3. Requested 4 additional changes: reduce header height in group popup by 30%, add a settings option at the top, include a slider to change background transparency of main window, and add a collapsible section for apps with default state collapsed.
+4. Continued monitoring deployment build progress.
+5. Requested this conversation summary be appended to chat-history.md.
+
+### Outcomes
+- Removed groups dropdown from main view
+- Changed group popup from 9 icons (3x3 grid) to 16 icons (4x4 grid)
+- Enlarged group popup by 30% (320×380 → 416×494)
+- Added alphabetical sorting for groups in context menus
+- Reduced header padding in ExpandedGroupView (12 → 8)
+- Added settings section with gear icon button in toolbar
+- Added transparency slider (bound to `backgroundOpacity`)
+- Made apps section collapsible with chevron toggle (default collapsed)
+- Created deploy.sh script to handle build issues with SwiftPM process conflicts
+- Key files modified:
+  - `Sources/Views/ContentView.swift`
+  - `Sources/Views/ExpandedGroupView.swift`
+  - `Sources/ViewModels/LauncherViewModel.swift`
+  - `Sources/Views/AppIconView.swift`
+  - `Sources/Views/DraggableAppIconView.swift`
+  - `deploy.sh` (new)
 
 ---
