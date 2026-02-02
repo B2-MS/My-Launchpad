@@ -838,3 +838,68 @@ docs/prompts-used.md
 ```
 
 ---
+
+## Session: January 24 - February 2, 2026 - Project Rename & Documentation Workflow
+
+### Prompt 1: Project Rename Inquiry
+```
+is it possible to rename this entire project, app, contents, etc. from 'My App Launcher' to 'My Launchpad'
+```
+
+### Prompt 2: Confirm Full Rename
+```
+yes, please rename all to 'My Launchpad'
+```
+
+### Prompt 3: Pack It Up
+```
+pack it up
+```
+
+### Prompt 4: Fullscreen Feature Request
+```
+let's add an option for full screen
+```
+
+### Prompt 5: Revert Fullscreen
+```
+revert and remove, it doesn't work
+```
+
+### Prompt 6: GitHub Repo Rename
+```
+can the GitHub repo also be renamed?
+```
+
+### Prompt 7: Screen Capture Update
+```
+I updated the images, rebuild and repackage
+```
+
+### Prompt 8: Cleanup Old Folder
+```
+remove the stale AppLauncher folder
+```
+
+### Prompt 9: Chat History Documentation
+```
+how can I get ALL chat history updated into this file from all 9 of the chats?
+```
+
+### Prompt 10: Verify Instructions Added
+```
+have instructions been added to test-it, pack-it, and send-it update the history file?
+```
+
+### Prompt 11: Create Prompts Extraction Script
+```
+can you create a script that I can paste into each of the chats to extract my actual prompts and put them into a new file called prompts used
+```
+
+### Prompt 12: Document Prompts Used
+```
+Review our entire conversation and APPEND to the file:
+docs/prompts-used.md
+```
+
+---
