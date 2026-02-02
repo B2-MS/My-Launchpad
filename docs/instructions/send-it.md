@@ -47,7 +47,36 @@ cp -R "build/My Launchpad.app" "/Applications/"
 | `README.md` | Version badge (e.g., `Version-1.5.2-purple`) |
 | `RELEASE_NOTES.md` | Add new version section at top with all changes |
 | `My Launchpad User Guide.md` | Document any new features or behavior changes |
-| `docs/chat-history.md` | Document development session changes and decisions |
+| `docs/chat-history.md` | **REQUIRED**: Append session summary (see below) |
+
+#### Update Chat History (Required)
+
+Use this prompt to append the session summary:
+
+```
+Review our entire conversation and APPEND a summary to the file:
+docs/chat-history.md
+
+Use this format:
+
+---
+
+## Session: [Descriptive Topic Title]
+**Date:** [Date]
+
+### Prompts
+1. [First prompt - summarized]
+2. [Second prompt - summarized]
+...
+
+### Outcomes
+- [What was built/changed/fixed]
+- [Key files modified]
+
+---
+
+APPEND to the END of the file. Do not overwrite. Ensure chronological order.
+```
 
 #### README.md Version Badge
 ```markdown
