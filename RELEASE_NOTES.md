@@ -1,5 +1,24 @@
 # Release Notes
 
+## Version 1.5.5 (February 2026)
+
+### New Features
+
+#### Enhanced Window Transparency
+- **Transparent Background** - Window now has a beautiful see-through background (75% opacity)
+- **Removed Opaque Materials** - Replaced heavy frosted glass with light color tints
+- **Better Desktop Integration** - See your wallpaper and windows through the launcher
+
+#### UI Improvements
+- **Removed Groups Dropdown** - Cleaner interface without the redundant dropdown
+- **Larger Groups** - Group tiles are now 30% larger for better visibility
+- **16 Icons Per Group** - Expanded from 9 to 16 app icons per group
+- **Compact Group Header** - Group popup header reduced by 30% for more app space
+- **Alphabetical Group Sorting** - "Add to Group" context menu now sorted alphabetically
+- **Collapsible Apps Section** - Apps section in settings now collapsible (default: collapsed)
+
+---
+
 ## Version 1.5.4 (January 2026)
 
 ### New Features

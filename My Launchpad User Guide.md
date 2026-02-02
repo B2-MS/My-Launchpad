@@ -467,6 +467,14 @@ If an app shows a blank icon:
 
 ## Version History
 
+### v1.5.5 (February 2026)
+- Enhanced window transparency (75% opacity)
+- Removed groups dropdown for cleaner UI
+- Groups 30% larger with 16 icons per group
+- Group popup header 30% more compact
+- "Add to Group" menu sorted alphabetically
+- Collapsible apps section in settings
+
 ### v1.5.4 (January 2026)
 - Multi-select group operations (add multiple apps to group, create group with multiple apps)
 - Edit mode auto-expands and scrolls to Apps section

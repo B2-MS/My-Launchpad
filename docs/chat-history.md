@@ -413,3 +413,56 @@ When making changes to My Launchpad, document the session here with:
   - `deploy.sh` (new)
 
 ---
+
+## Session: Project Rename Documentation & Transparency Fix (v1.5.5)
+**Date:** February 2, 2026
+
+### Prompts
+1. Requested prompts-used.md update with this session's prompts
+2. Pushed changes to GitHub
+3. Requested all entries be in chronological order in prompts-used.md
+4. Requested summary totals moved to same line as Summary header
+5. Requested test-it, pack-it, send-it instructions updated to include prompts-used.md updates
+6. Asked which screenshots need updating
+7. Noted transparency slider was removed
+8. Confirmed to proceed with screenshot updates
+9. Reported main window background is no longer transparent
+10. Requested trying ultraThinMaterial for transparency
+11. Asked if app was reloaded
+12. Still not transparent, asked for other options
+13. Requested option 4 (no material, just color overlay)
+14. Asked if reloaded again, no difference seen
+15. Confirmed transparency now works but needs more
+16. Confirmed "YES!" when transparency was right at 75%
+17. Asked about prompts-used markdown
+18. Requested summary totals on same line as Summary heading
+19. Asked why User Guide version history is outdated
+20. Confirmed to add sync reminder to pack-it and send-it instructions
+21. Confirmed screenshots are complete
+22. Asked if ALL markdown files were updated per instructions
+
+### Outcomes
+- Fixed window transparency by reducing opacity from 0.95 to 0.75
+- Removed opaque .ultraThickMaterial, replaced with light color tints
+- Updated prompts-used.md to chronological order with summary header
+- Added prompts-used.md update instructions to test-it.md, pack-it.md, send-it.md
+- Added User Guide version history sync reminder to pack-it.md and send-it.md
+- Synced User Guide version history with RELEASE_NOTES.md (added v1.5.0-1.5.4)
+- Updated screenshots for new UI
+- Updated README.md version badge to 1.5.5
+- Added v1.5.5 section to RELEASE_NOTES.md
+- Added v1.5.5 to User Guide version history
+- Built and created DMG installer
+- Key files modified:
+  - `Sources/Views/ContentView.swift` - Removed opaque material
+  - `Sources/MyLaunchpadApp.swift` - Window opacity 0.75
+  - `docs/instructions/test-it.md` - Added prompts-used.md section
+  - `docs/instructions/pack-it.md` - Added prompts-used.md and version sync
+  - `docs/instructions/send-it.md` - Added prompts-used.md and version sync
+  - `docs/prompts-used.md` - Reordered chronologically, updated summary
+  - `My Launchpad User Guide.md` - Synced version history
+  - `README.md` - Version 1.5.5
+  - `RELEASE_NOTES.md` - Added v1.5.5 section
+  - `images/` - Updated screenshots
+
+---
