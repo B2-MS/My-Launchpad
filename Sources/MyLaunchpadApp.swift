@@ -4,7 +4,7 @@ import Carbon
 /// Shared window settings accessible across the app
 class WindowSettings: ObservableObject {
     static let shared = WindowSettings()
-    @Published var opacity: Double = 0.95
+    @Published var opacity: Double = 0.75
 }
 
 /// Global hotkey manager using Carbon APIs with system event target

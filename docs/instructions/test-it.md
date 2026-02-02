@@ -18,9 +18,11 @@ Quick rebuild and redeploy for testing My Launchpad.
 
 ---
 
-## After Testing: Update Chat History
+## After Testing: Update Documentation
 
-After your testing session, update the development history:
+After your testing session, update the development history files:
+
+### 1. Update Chat History
 
 ```
 Review our entire conversation and APPEND a summary to the file:
@@ -44,5 +46,42 @@ Use this format:
 
 ---
 
-APPEND to the END of the file. Do not overwrite.
+APPEND to the END of the file. Do not overwrite. Ensure chronological order.
+```
+
+### 2. Update Prompts Used
+
+```
+Review our entire conversation and APPEND to the file:
+docs/prompts-used.md
+
+Extract EVERY prompt/request I made - use my EXACT words, not summaries.
+
+Format:
+
+---
+
+## Session: [Descriptive Topic Title]
+**Date:** [Date]
+
+### Prompt 1: [Brief Title]
+```
+[Exact text of my prompt]
+```
+
+### Prompt 2: [Brief Title]
+```
+[Exact text of my prompt]
+```
+
+... continue for ALL prompts
+
+---
+
+IMPORTANT:
+- Use my EXACT words in code blocks
+- Include EVERY prompt, even short ones
+- APPEND to the END of the file
+- Ensure entries are in CHRONOLOGICAL order
+- UPDATE the Summary table at the bottom with the new session count
 ```

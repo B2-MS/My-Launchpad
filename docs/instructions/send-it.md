@@ -47,7 +47,9 @@ cp -R "build/My Launchpad.app" "/Applications/"
 | `README.md` | Version badge (e.g., `Version-1.5.2-purple`) |
 | `RELEASE_NOTES.md` | Add new version section at top with all changes |
 | `My Launchpad User Guide.md` | Document any new features or behavior changes |
+| `My Launchpad User Guide.md` | **Sync Version History** with RELEASE_NOTES.md |
 | `docs/chat-history.md` | **REQUIRED**: Append session summary (see below) |
+| `docs/prompts-used.md` | **REQUIRED**: Append exact prompts used (see below) |
 
 #### Update Chat History (Required)
 
@@ -76,6 +78,45 @@ Use this format:
 ---
 
 APPEND to the END of the file. Do not overwrite. Ensure chronological order.
+```
+
+#### Update Prompts Used (Required)
+
+Use this prompt to append exact prompts:
+
+```
+Review our entire conversation and APPEND to the file:
+docs/prompts-used.md
+
+Extract EVERY prompt/request I made - use my EXACT words, not summaries.
+
+Format:
+
+---
+
+## Session: [Descriptive Topic Title]
+**Date:** [Date]
+
+### Prompt 1: [Brief Title]
+```
+[Exact text of my prompt]
+```
+
+### Prompt 2: [Brief Title]
+```
+[Exact text of my prompt]
+```
+
+... continue for ALL prompts
+
+---
+
+IMPORTANT:
+- Use my EXACT words in code blocks
+- Include EVERY prompt, even short ones
+- APPEND to the END of the file
+- Ensure entries are in CHRONOLOGICAL order
+- UPDATE the Summary table at the bottom with the new session count
 ```
 
 #### README.md Version Badge
@@ -174,6 +215,8 @@ git add -A && git commit -m "Release vX.X.X - description" && git push && ./crea
 - [ ] README.md version updated
 - [ ] RELEASE_NOTES.md updated with new version
 - [ ] User Guide updated (if needed)
+- [ ] chat-history.md updated (chronological order)
+- [ ] prompts-used.md updated (chronological order, summary updated)
 - [ ] App launches and works correctly
 - [ ] Changes committed to git
 - [ ] Changes pushed to GitHub

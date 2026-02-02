@@ -70,23 +70,19 @@ struct ContentView: View {
         }
         .background(
             ZStack {
-                // Frosted glass base
-                Rectangle()
-                    .fill(.ultraThickMaterial)
-                
-                // Color tint overlay
+                // Color tint overlay only - no opaque background
                 LinearGradient(
                     colors: [
-                        viewModel.groupHeaderColor.opacity(0.15),
-                        Color.purple.opacity(0.08),
-                        Color.blue.opacity(0.05)
+                        viewModel.groupHeaderColor.opacity(0.05),
+                        Color.purple.opacity(0.02),
+                        Color.blue.opacity(0.01)
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
                 
                 // Subtle grid pattern
-                gridBackground.opacity(viewModel.backgroundOpacity * 0.3)
+                gridBackground.opacity(viewModel.backgroundOpacity * 0.1)
             }
         )
     }

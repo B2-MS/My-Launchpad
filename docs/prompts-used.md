@@ -4,72 +4,6 @@ This file contains the actual prompts used during development of My Launchpad.
 
 ---
 
-## Session: February 2, 2026 - AppLauncher UI Improvements
-
-### Prompt 1: UI Changes and Redeploy
-```
-1. remove the 'groups' drop down
-2. resize from 9 icons in each group to 16
-3. enlarge the size of the groups to be 30% larger
-4. in the popup for 'add to group' sort the group names alphabetically
-5. redeploy the app
-```
-
-### Prompt 2: Continue Build
-```
-Continue: "Continue to iterate?"
-```
-*(Monitoring build progress after SwiftPM process conflicts)*
-
-### Prompt 3: Additional UI Improvements
-```
-1. Reduce the height of the header in the group popup by 30%
-2. Add a settings option at the top
-3. include a slider to change the backgroun transparency of the mai window
-4. add a collapsible section for apps and set default state to collapsed
-```
-
-### Prompt 4: Continue Build
-```
-Continue: "Continue to iterate?"
-```
-*(Monitoring deployment build progress)*
-
-### Prompt 5: Document Chat History
-```
-Review our entire conversation and APPEND a summary to the file:
-docs/chat-history.md
-
-Use this exact format:
-
----
-
-## Session: [Descriptive Topic Title]
-**Date:** [Date from conversation context]
-
-### Prompts
-1. [First prompt I made - summarized in 1-2 sentences]
-2. [Second prompt - summarized]
-... [continue for all prompts]
-
-### Outcomes
-- [What was built/changed/fixed]
-- [Key files modified]
-- [Important decisions made]
-
----
-
-IMPORTANT: Append to the END of the existing file. Do not overwrite. Include ALL prompts from this session.
-```
-
-### Prompt 6: Document Prompts Used
-```
-Review our entire conversation and APPEND to the file:
-docs/prompts-used.md
-```
-
----
-
 ## Session: January 19, 2026 - App Launcher v1.1.0 Release & DMG Installer
 
 ### Prompt 1: Settings Reverted & DMG Installer Issue
@@ -308,6 +242,81 @@ docs/prompts-used.md
 
 ---
 
+## Session: January 24 - February 2, 2026 - Project Rename & Documentation Workflow
+
+### Prompt 1: Project Rename Inquiry
+```
+is it possible to rename this entire project, app, contents, etc. from 'My App Launcher' to 'My Launchpad'
+```
+
+### Prompt 2: Confirm Full Rename
+```
+yes, please rename all to 'My Launchpad'
+```
+
+### Prompt 3: Pack It Up
+```
+pack it up
+```
+
+### Prompt 4: Fullscreen Feature Request
+```
+let's add an option for full screen
+```
+
+### Prompt 5: Revert Fullscreen
+```
+revert and remove, it doesn't work
+```
+
+### Prompt 6: GitHub Repo Rename
+```
+can the GitHub repo also be renamed?
+```
+
+### Prompt 7: Screen Capture Update
+```
+I updated the images, rebuild and repackage
+```
+
+### Prompt 8: Cleanup Old Folder
+```
+remove the stale AppLauncher folder
+```
+
+### Prompt 9: Chat History Documentation
+```
+how can I get ALL chat history updated into this file from all 9 of the chats?
+```
+
+### Prompt 10: Verify Instructions Added
+```
+have instructions been added to test-it, pack-it, and send-it update the history file?
+```
+
+### Prompt 11: Create Prompts Extraction Script
+```
+can you create a script that I can paste into each of the chats to extract my actual prompts and put them into a new file called prompts used
+```
+
+### Prompt 12: Document Prompts Used
+```
+Review our entire conversation and APPEND to the file:
+docs/prompts-used.md
+```
+
+### Prompt 13: Push to GitHub
+```
+push changes to github
+```
+
+### Prompt 14: Reorder Chronologically
+```
+please ensure all entries are in chronological order
+```
+
+---
+
 ## Session: January 27, 2026 - Smart Panel Interactions & Pack It Up Instructions (v1.5.2)
 
 ### Prompt 1: Where to Put Instructions
@@ -474,6 +483,7 @@ docs/prompts-used.md
 ```
 
 ---
+
 ## Session: January 27, 2026 - Window Positioning & Size Persistence (v1.5.3)
 
 ### Prompt 1: Center Window and Remember Size
@@ -839,67 +849,82 @@ docs/prompts-used.md
 
 ---
 
-## Session: January 24 - February 2, 2026 - Project Rename & Documentation Workflow
+## Session: February 2, 2026 - AppLauncher UI Improvements
 
-### Prompt 1: Project Rename Inquiry
+### Prompt 1: UI Changes and Redeploy
 ```
-is it possible to rename this entire project, app, contents, etc. from 'My App Launcher' to 'My Launchpad'
-```
-
-### Prompt 2: Confirm Full Rename
-```
-yes, please rename all to 'My Launchpad'
-```
-
-### Prompt 3: Pack It Up
-```
-pack it up
+1. remove the 'groups' drop down
+2. resize from 9 icons in each group to 16
+3. enlarge the size of the groups to be 30% larger
+4. in the popup for 'add to group' sort the group names alphabetically
+5. redeploy the app
 ```
 
-### Prompt 4: Fullscreen Feature Request
+### Prompt 2: Continue Build
 ```
-let's add an option for full screen
+Continue: "Continue to iterate?"
+```
+*(Monitoring build progress after SwiftPM process conflicts)*
+
+### Prompt 3: Additional UI Improvements
+```
+1. Reduce the height of the header in the group popup by 30%
+2. Add a settings option at the top
+3. include a slider to change the backgroun transparency of the mai window
+4. add a collapsible section for apps and set default state to collapsed
 ```
 
-### Prompt 5: Revert Fullscreen
+### Prompt 4: Continue Build
 ```
-revert and remove, it doesn't work
+Continue: "Continue to iterate?"
+```
+*(Monitoring deployment build progress)*
+
+### Prompt 5: Document Chat History
+```
+Review our entire conversation and APPEND a summary to the file:
+docs/chat-history.md
+
+Use this exact format:
+
+---
+
+## Session: [Descriptive Topic Title]
+**Date:** [Date from conversation context]
+
+### Prompts
+1. [First prompt I made - summarized in 1-2 sentences]
+2. [Second prompt - summarized]
+... [continue for all prompts]
+
+### Outcomes
+- [What was built/changed/fixed]
+- [Key files modified]
+- [Important decisions made]
+
+---
+
+IMPORTANT: Append to the END of the existing file. Do not overwrite. Include ALL prompts from this session.
 ```
 
-### Prompt 6: GitHub Repo Rename
-```
-can the GitHub repo also be renamed?
-```
-
-### Prompt 7: Screen Capture Update
-```
-I updated the images, rebuild and repackage
-```
-
-### Prompt 8: Cleanup Old Folder
-```
-remove the stale AppLauncher folder
-```
-
-### Prompt 9: Chat History Documentation
-```
-how can I get ALL chat history updated into this file from all 9 of the chats?
-```
-
-### Prompt 10: Verify Instructions Added
-```
-have instructions been added to test-it, pack-it, and send-it update the history file?
-```
-
-### Prompt 11: Create Prompts Extraction Script
-```
-can you create a script that I can paste into each of the chats to extract my actual prompts and put them into a new file called prompts used
-```
-
-### Prompt 12: Document Prompts Used
+### Prompt 6: Document Prompts Used
 ```
 Review our entire conversation and APPEND to the file:
 docs/prompts-used.md
 ```
 
 ---
+
+## Summary — 9 Sessions, 136 Prompts
+
+| Session | Date | Prompts |
+|---------|------|---------|
+| App Launcher v1.1.0 Release & DMG Installer | January 19, 2026 | 5 |
+| Liquid Glass Design & Menu Bar Toggle (v1.5.0) | January 22, 2026 | 9 |
+| User Guide Table of Contents Formatting | January 22, 2026 | 11 |
+| Multi-Desktop Support (v1.5.1) | January 22, 2026 | 7 |
+| Project Rename & Documentation Workflow | January 24 - February 2, 2026 | 14 |
+| Smart Panel Interactions & Pack It Up Instructions (v1.5.2) | January 27, 2026 | 25 |
+| Window Positioning & Size Persistence (v1.5.3) | January 27, 2026 | 8 |
+| Version 1.5.4 Features, DMG Publishing & Chat History | January 29 - February 2, 2026 | 51 |
+| AppLauncher UI Improvements | February 2, 2026 | 6 |

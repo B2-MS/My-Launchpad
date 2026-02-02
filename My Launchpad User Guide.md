@@ -109,7 +109,7 @@ The app is configured to start automatically when you log in to your Mac. It run
 
 <img src="images/menu-bar.png" alt="Menu Bar" width="300">
 
-The app displays a **grid icon** (⊞) in your menu bar. Click it to access:
+The app displays a **grid icon** (⊞) in your menu bar. Click to open MyLaunchpad and Right-click it to access popup menu:
 
 - **Show Launcher (⌃⌥Space)** - Opens the main launcher window
 - **Quit** - Completely exits the application
@@ -166,6 +166,8 @@ My Launchpad includes a built-in search function to help you quickly find apps.
 1. **Locate the Search Bar** - The search bar is located in the toolbar at the top of the main window, next to the settings gear icon
 2. **Type to Search** - Simply start typing the name of the app you're looking for
 3. **Real-Time Filtering** - Results filter instantly as you type
+
+<img src="images/search-filter.png" alt="Search Bar" width="500">
 
 ### How Search Works
 
@@ -464,6 +466,34 @@ If an app shows a blank icon:
 ---
 
 ## Version History
+
+### v1.5.4 (January 2026)
+- Multi-select group operations (add multiple apps to group, create group with multiple apps)
+- Edit mode auto-expands and scrolls to Apps section
+- Auto-collapse Apps section when exiting edit mode
+- Real-time color preview with groups open
+- Click outside to close color picker
+- Enter key support in Create Group dialog
+
+### v1.5.3 (January 2026)
+- True center window positioning (accounts for menu bar and dock)
+- Persistent window size between sessions
+- Smart initial sizing based on number of groups
+
+### v1.5.2 (January 2026)
+- Click outside to close group popup
+- Settings click closes open group
+- Group click closes open settings panel
+
+### v1.5.1 (January 2026)
+- Multi-desktop support (app appears on current space)
+- No more desktop switching when using menu bar or hotkey
+
+### v1.5.0 (January 2026)
+- Liquid Glass design with frosted glass materials
+- Color-tinted panels with purple/blue gradient washes
+- Enhanced highlights and colored shadows
+- Menu bar toggle (click to show/hide)
 
 ### v1.4.0 (January 2026)
 - Auto-hide on app launch (configurable)
