@@ -19,6 +19,44 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: Project Creation - Mac App Launcher (v1.0.0)
+**Date:** January 2026 (Initial Development)
+
+### Prompts
+1. Original request to create an app launcher solution for Mac with 5 requirements:
+   - Create functionality to provide shortcuts to apps from the application folder
+   - Run as a standalone executable app from macOS
+   - Allow grouping of app icons, naming groups, and editing group names
+   - Long-click on app icon to enter edit mode and allow grouping
+   - Clicking app shortcuts should launch the related app
+
+### Outcomes
+- **Created SwiftUI-based Mac app launcher**: Native macOS app using Swift and SwiftUI
+- **Project structure established**:
+  - Swift Package Manager setup with Package.swift
+  - Sources/ folder with Views, ViewModels, Models, Services
+  - Resources/ folder with Info.plist and assets
+- **Core features implemented**:
+  - App icon display from /Applications folder
+  - Group creation and management
+  - Edit mode with long-press gesture
+  - App launching functionality
+  - Persistent storage for groups and settings
+- **Initial files created**:
+  - `Package.swift` - Swift Package Manager configuration
+  - `Sources/AppLauncherApp.swift` - Main app entry point
+  - `Sources/Views/ContentView.swift` - Main window view
+  - `Sources/Views/GroupIconView.swift` - Group folder display
+  - `Sources/Views/ExpandedGroupView.swift` - Group popup with apps
+  - `Sources/Views/AppIconView.swift` - App icon display
+  - `Sources/ViewModels/LauncherViewModel.swift` - Business logic
+  - `Sources/Models/AppGroup.swift` - Data models
+  - `Sources/Services/DataManager.swift` - Persistence layer
+  - `Resources/Info.plist` - App bundle configuration
+  - `build.sh` - Build script
+
+---
+
 ## Session: App Launcher v1.1.0 Release - iPad-Style Navigation & DMG Installer
 **Date:** January 19, 2026
 
@@ -464,5 +502,23 @@ When making changes to My Launchpad, document the session here with:
   - `README.md` - Version 1.5.5
   - `RELEASE_NOTES.md` - Added v1.5.5 section
   - `images/` - Updated screenshots
+
+---
+
+## Session: Documentation Updates (Continuation)
+**Date:** February 2, 2026
+
+### Prompts
+1. Requested appending this conversation to chat-history.md (for the January 22 v1.5.0 Liquid Glass session that was loaded from conversation context).
+2. Requested appending to prompts-used.md.
+3. Reported the chat history from this chat was not included in the chat history file - requested ensuring entire contents are included in correct chronological location.
+
+### Outcomes
+- Appended v1.5.0 Liquid Glass session (January 22, 2026) to chat-history.md with 9 prompts documented
+- Appended January 22, 2026 session prompts to prompts-used.md
+- Verified chronological ordering of all sessions in chat-history.md
+- Key files modified:
+  - `docs/chat-history.md` - Added v1.5.0 session documentation
+  - `docs/prompts-used.md` - Added January 22 session prompts
 
 ---
