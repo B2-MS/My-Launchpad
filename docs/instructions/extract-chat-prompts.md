@@ -36,8 +36,9 @@ Format:
 IMPORTANT:
 - Use my EXACT words in quotes
 - Include EVERY prompt, even short ones like "yes", "pack it", "test it"
-- APPEND to the END of the file
-- Do not overwrite existing content
+- APPEND session to the END of the file
+- UPDATE the Summary table at the TOP with the new session count
+- Ensure entries are in CHRONOLOGICAL order
 ```
 
 ---

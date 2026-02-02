@@ -114,9 +114,9 @@ Format:
 IMPORTANT:
 - Use my EXACT words in code blocks
 - Include EVERY prompt, even short ones
-- APPEND to the END of the file
+- APPEND session to the END of the file
 - Ensure entries are in CHRONOLOGICAL order
-- UPDATE the Summary table at the bottom with the new session count
+- UPDATE the Summary table at the TOP with the new session count
 ```
 
 #### README.md Version Badge

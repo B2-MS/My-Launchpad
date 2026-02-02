@@ -2,6 +2,21 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
+## Summary — 10 Sessions, 158 Prompts
+
+| Session | Date | Prompts |
+|---------|------|---------|
+| App Launcher v1.1.0 Release & DMG Installer | January 19, 2026 | 5 |
+| Liquid Glass Design & Menu Bar Toggle (v1.5.0) | January 22, 2026 | 9 |
+| User Guide Table of Contents Formatting | January 22, 2026 | 11 |
+| Multi-Desktop Support (v1.5.1) | January 22, 2026 | 7 |
+| Project Rename & Documentation Workflow | January 24 - February 2, 2026 | 14 |
+| Smart Panel Interactions & Pack It Up Instructions (v1.5.2) | January 27, 2026 | 25 |
+| Window Positioning & Size Persistence (v1.5.3) | January 27, 2026 | 8 |
+| Version 1.5.4 Features, DMG Publishing & Chat History | January 29 - February 2, 2026 | 51 |
+| AppLauncher UI Improvements | February 2, 2026 | 6 |
+| Transparency Fix & Documentation (v1.5.5) | February 2, 2026 | 22 |
+
 ---
 
 ## Session: January 19, 2026 - App Launcher v1.1.0 Release & DMG Installer
@@ -1032,18 +1047,3 @@ did you update ALL of the markdown files per the instructions as part of this?
 ```
 
 ---
-
-## Summary — 10 Sessions, 158 Prompts
-
-| Session | Date | Prompts |
-|---------|------|---------|
-| App Launcher v1.1.0 Release & DMG Installer | January 19, 2026 | 5 |
-| Liquid Glass Design & Menu Bar Toggle (v1.5.0) | January 22, 2026 | 9 |
-| User Guide Table of Contents Formatting | January 22, 2026 | 11 |
-| Multi-Desktop Support (v1.5.1) | January 22, 2026 | 7 |
-| Project Rename & Documentation Workflow | January 24 - February 2, 2026 | 14 |
-| Smart Panel Interactions & Pack It Up Instructions (v1.5.2) | January 27, 2026 | 25 |
-| Window Positioning & Size Persistence (v1.5.3) | January 27, 2026 | 8 |
-| Version 1.5.4 Features, DMG Publishing & Chat History | January 29 - February 2, 2026 | 51 |
-| AppLauncher UI Improvements | February 2, 2026 | 6 |
-| Transparency Fix & Documentation (v1.5.5) | February 2, 2026 | 22 |
