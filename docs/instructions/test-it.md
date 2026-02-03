@@ -1,32 +1,27 @@
-# Test It Instructions
+# Test It
 
-Quick rebuild and redeploy for testing My Launchpad.
+Quick rebuild and deploy for testing.
 
----
-
-## Quick Command
+## Command
 
 ```bash
-./rebuild.sh
-```
-
-Or manually:
-```bash
-./build.sh && pkill -f "My Launchpad" 2>/dev/null; rm -rf "/Applications/My Launchpad.app" && cp -R "build/My Launchpad.app" "/Applications/" && open "/Applications/My Launchpad.app"
+./test-it.sh
 ```
 
 ## What It Does
 
-1. 🔨 Rebuilds the app with `./build.sh`
-2. 🛑 Stops any running instances
-3. 🗑️ Removes the installed version from Applications
-4. 📦 Copies the new build to Applications
-5. 🚀 Launches the app for testing
-
----
+1. Runs `./rebuild.sh` (build, stop, remove, install, launch)
+2. Runs `./verify-build.sh` (validates build succeeded)
 
 ## After Testing
 
-📝 **Update Documentation:** See [update-docs.md](update-docs.md)
+1. Update documentation: [update-docs.md](update-docs.md)
+2. Verify: `./verify-docs.sh`
 
-✅ **Verify:** Run `./verify-docs.sh`
+## Scripts Used
+
+| Script | Purpose |
+|--------|---------|
+| `rebuild.sh` | Build, stop old, install new, launch |
+| `verify-build.sh` | Validate build succeeded |
+| `verify-docs.sh` | Validate documentation updated |

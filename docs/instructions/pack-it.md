@@ -1,48 +1,23 @@
-# Pack It Instructions
+# Pack It
 
-Build, package, and prepare My Launchpad for distribution.
+Build, deploy, and create DMG installer.
 
----
-
-## Scripts Overview
-
-| Script | Purpose |
-|--------|---------|
-| `rebuild.sh` | Build, stop, remove, install, launch |
-| `build.sh` | Full build with app bundle creation |
-| `deploy.sh` | Quick rebuild and launch (development) |
-| `create-dmg.sh` | Create distributable DMG installer |
-| `verify-docs.sh` | Verify all documentation is updated |
-
----
-
-## Workflow
-
-### 1. Rebuild & Deploy
+## Command
 
 ```bash
-./rebuild.sh
+./pack-it.sh
 ```
 
-### 2. Update Documentation
+## What It Does
 
-📝 See [update-docs.md](update-docs.md) for all prompts and checklists.
+1. Runs `./rebuild.sh` (build, stop, remove, install, launch)
+2. Runs `./verify-build.sh` (validates build succeeded)
+3. Runs `./create-dmg.sh` (creates DMG installer)
 
-### 3. Create DMG (Optional)
+## After Packing
 
-```bash
-./create-dmg.sh
-```
-
-### 4. Verify Documentation
-
-```bash
-./verify-docs.sh
-```
-
-**Do not mark as complete until all checks pass!**
-
----
+1. Update documentation: [update-docs.md](update-docs.md)
+2. Verify: `./verify-docs.sh`
 
 ## Output Files
 
@@ -51,18 +26,11 @@ Build, package, and prepare My Launchpad for distribution.
 | App Bundle | `build/My Launchpad.app` |
 | DMG Installer | `releases/My Launchpad Installer.dmg` |
 
----
+## Scripts Used
 
-## Troubleshooting
-
-### Build fails - executable not found
-- Ensure Swift is installed: `swift --version`
-- Check for compilation errors in the output
-
-### Code signing warnings
-- Ad-hoc signing (`--sign -`) is used for local testing
-- For distribution, use a valid Developer ID certificate
-
-### DMG creation fails
-- Ensure the app bundle exists (run `build.sh` first)
-- Check for mounted volumes with the same name
+| Script | Purpose |
+|--------|---------|
+| `rebuild.sh` | Build, stop old, install new, launch |
+| `verify-build.sh` | Validate build succeeded |
+| `create-dmg.sh` | Create DMG installer |
+| `verify-docs.sh` | Validate documentation updated |
