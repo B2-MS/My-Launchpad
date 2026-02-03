@@ -2,10 +2,11 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 10 Sessions, 158 Prompts
+## Summary — 11 Sessions, 159 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
+| Project Creation (v1.0.0) | January 2026 | 1 |
 | App Launcher v1.1.0 Release & DMG Installer | January 19, 2026 | 5 |
 | Liquid Glass Design & Menu Bar Toggle (v1.5.0) | January 22, 2026 | 9 |
 | User Guide Table of Contents Formatting | January 22, 2026 | 11 |
@@ -16,6 +17,21 @@ This file contains the actual prompts used during development of My Launchpad.
 | Version 1.5.4 Features, DMG Publishing & Chat History | January 29 - February 2, 2026 | 51 |
 | AppLauncher UI Improvements | February 2, 2026 | 6 |
 | Transparency Fix & Documentation (v1.5.5) | February 2, 2026 | 22 |
+
+---
+
+## Session: January 2026 - Project Creation (v1.0.0)
+
+### Prompt 1: Original App Requirements
+```
+I need to create an app launcher solution for Mac
+
+1. create functionality to provide shortcuts to apps from the application folder
+2. this should run as a standalone executable app from Mac OS
+3. All for grouping of app icons and naming the groups and allowing the group names to be edited as needed
+4. by long clicking on an app icon, it should be put into edit mode and allow for grouping
+5. clicking on any of the app shortcuts should launch the related app
+```
 
 ---
 

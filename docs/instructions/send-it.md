@@ -217,11 +217,31 @@ git add -A && git commit -m "Release vX.X.X - description" && git push && ./crea
 - [ ] User Guide updated (if needed)
 - [ ] chat-history.md updated (chronological order)
 - [ ] prompts-used.md updated (chronological order, summary updated)
+- [ ] **Run `./verify-docs.sh` - ALL CHECKS PASS**
 - [ ] App launches and works correctly
 - [ ] Changes committed to git
 - [ ] Changes pushed to GitHub
 - [ ] DMG created
 - [ ] GitHub Release published with DMG
+
+---
+
+## Final Step: Verify Documentation
+
+**REQUIRED:** Run the verification script before completing:
+
+```bash
+./verify-docs.sh
+```
+
+This script checks:
+- ✅ README.md version badge
+- ✅ RELEASE_NOTES.md version section
+- ✅ User Guide version history
+- ✅ chat-history.md recent entry
+- ✅ prompts-used.md summary matches actual counts
+
+**Do not mark as complete until all checks pass!**
 
 ---
 

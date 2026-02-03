@@ -85,3 +85,22 @@ IMPORTANT:
 - Ensure entries are in CHRONOLOGICAL order
 - UPDATE the Summary table at the TOP with the new session count
 ```
+
+---
+
+## Final Step: Verify Documentation
+
+**REQUIRED:** Run the verification script before completing:
+
+```bash
+./verify-docs.sh
+```
+
+This script checks:
+- ✅ README.md version badge
+- ✅ RELEASE_NOTES.md version section
+- ✅ User Guide version history
+- ✅ chat-history.md recent entry
+- ✅ prompts-used.md summary matches actual counts
+
+**Do not mark as complete until all checks pass!**

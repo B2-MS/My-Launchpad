@@ -14,6 +14,7 @@ Instructions for packaging and distributing My Launchpad.
 | `build.sh` | Full build with app bundle creation and auto-launch |
 | `deploy.sh` | Quick rebuild and launch (for development) |
 | `create-dmg.sh` | Create distributable DMG installer |
+| `verify-docs.sh` | **Verify all documentation is updated** |
 
 ---
 
@@ -210,3 +211,22 @@ IMPORTANT:
 ### DMG creation fails
 - Ensure the app bundle exists (run `build.sh` first)
 - Check for mounted volumes with the same name
+
+---
+
+## Final Step: Verify Documentation
+
+**REQUIRED:** Run the verification script before completing:
+
+```bash
+./verify-docs.sh
+```
+
+This script checks:
+- ✅ README.md version badge
+- ✅ RELEASE_NOTES.md version section
+- ✅ User Guide version history
+- ✅ chat-history.md recent entry
+- ✅ prompts-used.md summary matches actual counts
+
+**Do not mark as complete until all checks pass!**
