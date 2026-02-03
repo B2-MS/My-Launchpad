@@ -3,6 +3,10 @@
 # Documentation Verification Script
 # Run this before completing pack-it, send-it, or test-it workflows
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_DIR"
+
 echo "📋 Verifying Documentation Updates..."
 echo "======================================="
 

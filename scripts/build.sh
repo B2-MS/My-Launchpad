@@ -6,7 +6,8 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-BUILD_DIR="$SCRIPT_DIR/build"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+BUILD_DIR="$PROJECT_DIR/build"
 APP_NAME="My Launchpad"
 APP_BUNDLE="$BUILD_DIR/$APP_NAME.app"
 EXECUTABLE_NAME="MyLaunchpad"
@@ -26,11 +27,11 @@ mkdir -p "$BUILD_DIR"
 
 # Build the executable using Swift Package Manager
 echo "📦 Compiling with Swift..."
-cd "$SCRIPT_DIR"
+cd "$PROJECT_DIR"
 swift build -c release
 
 # Get the built executable path
-BUILT_EXECUTABLE="$SCRIPT_DIR/.build/release/$EXECUTABLE_NAME"
+BUILT_EXECUTABLE="$PROJECT_DIR/.build/release/$EXECUTABLE_NAME"
 
 if [ ! -f "$BUILT_EXECUTABLE" ]; then
     echo "❌ Build failed - executable not found"
@@ -47,11 +48,11 @@ mkdir -p "$APP_BUNDLE/Contents/Resources"
 cp "$BUILT_EXECUTABLE" "$APP_BUNDLE/Contents/MacOS/$EXECUTABLE_NAME"
 
 # Copy Info.plist
-cp "$SCRIPT_DIR/Resources/Info.plist" "$APP_BUNDLE/Contents/"
+cp "$PROJECT_DIR/Resources/Info.plist" "$APP_BUNDLE/Contents/"
 
 # Copy app icon
-if [ -f "$SCRIPT_DIR/Resources/AppIcon.icns" ]; then
-    cp "$SCRIPT_DIR/Resources/AppIcon.icns" "$APP_BUNDLE/Contents/Resources/"
+if [ -f "$PROJECT_DIR/Resources/AppIcon.icns" ]; then
+    cp "$PROJECT_DIR/Resources/AppIcon.icns" "$APP_BUNDLE/Contents/Resources/"
 fi
 
 # Create PkgInfo

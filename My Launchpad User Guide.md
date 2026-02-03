@@ -467,6 +467,11 @@ If an app shows a blank icon:
 
 ## Version History
 
+### v1.5.6 (February 2026)
+- Reorganized project: all scripts moved to `scripts/` folder
+- Renamed workflow files for clarity (instruction files vs scripts)
+- Integrated documentation update prompts into workflow files
+
 ### v1.5.5 (February 2026)
 - Enhanced window transparency (75% opacity)
 - Removed groups dropdown for cleaner UI

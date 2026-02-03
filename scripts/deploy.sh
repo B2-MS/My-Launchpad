@@ -1,7 +1,9 @@
 #!/bin/bash
 # Quick deploy script - creates app bundle from existing build
 
-cd "$(dirname "$0")"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_DIR"
 
 # Kill any stale Swift processes
 pkill -f "swift-build" 2>/dev/null

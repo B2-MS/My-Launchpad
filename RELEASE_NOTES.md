@@ -1,5 +1,21 @@
 # Release Notes
 
+## Version 1.5.6 (February 2026)
+
+### Project Structure Improvements
+
+#### Scripts Reorganization
+- **Scripts Folder** - All 10 shell scripts moved from root to `scripts/` folder
+- **Cleaner Root** - Project root now only contains essential config files
+
+#### Workflow Documentation
+- **Renamed Instruction Files** - Simple names for triggers: `test-it.md`, `pack-it.md`, `send-it.md`
+- **Renamed Scripts** - Descriptive names: `testing-workflow.sh`, `packaging-workflow.sh`, `release-workflow.sh`
+- **Integrated Documentation Steps** - Each workflow file now includes prompts for updating chat-history and prompts-used
+- **Removed Redundant File** - Merged `update-docs.md` content into workflow files
+
+---
+
 ## Version 1.5.5 (February 2026)
 
 ### New Features

@@ -1,10 +1,14 @@
 #!/bin/bash
 
 # Send It - Complete release workflow
-# Usage: ./send-it.sh [version] [message]
-# Example: ./send-it.sh 1.5.6 "Added new feature"
+# Usage: ./scripts/send-it.sh [version] [message]
+# Example: ./scripts/send-it.sh 1.5.6 "Added new feature"
 
 set -e  # Exit on any error
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_DIR"
 
 VERSION=${1:-"X.X.X"}
 MESSAGE=${2:-"Release updates"}
@@ -17,27 +21,27 @@ echo ""
 
 # Step 1: Rebuild and deploy
 echo "Step 1: Rebuilding and deploying..."
-./rebuild.sh
+"$SCRIPT_DIR/rebuild.sh"
 
 # Step 2: Verify build
 echo ""
 echo "Step 2: Verifying build..."
-./verify-build.sh
+"$SCRIPT_DIR/verify-build.sh"
 
 # Step 3: Create DMG
 echo ""
 echo "Step 3: Creating DMG installer..."
-./create-dmg.sh
+"$SCRIPT_DIR/create-dmg.sh"
 
 # Step 4: Verify documentation
 echo ""
 echo "Step 4: Verifying documentation..."
-./verify-docs.sh
+"$SCRIPT_DIR/verify-docs.sh"
 if [ $? -ne 0 ]; then
     echo ""
     echo "❌ Documentation verification failed!"
-    echo "   Please update docs using: docs/instructions/update-docs.md"
-    echo "   Then run: ./send-it.sh $VERSION \"$MESSAGE\""
+    echo "   Please update docs using: docs/instructions/send-it.md"
+    echo "   Then run: ./scripts/release-workflow.sh $VERSION \"$MESSAGE\""
     exit 1
 fi
 

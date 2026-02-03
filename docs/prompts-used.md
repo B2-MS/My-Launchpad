@@ -2,7 +2,7 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 11 Sessions, 159 Prompts
+## Summary — 12 Sessions, 166 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
@@ -17,6 +17,7 @@ This file contains the actual prompts used during development of My Launchpad.
 | Version 1.5.4 Features, DMG Publishing & Chat History | January 29 - February 2, 2026 | 51 |
 | AppLauncher UI Improvements | February 2, 2026 | 6 |
 | Transparency Fix & Documentation (v1.5.5) | February 2, 2026 | 22 |
+| Project Structure Reorganization (v1.5.6) | February 2, 2026 | 7 |
 
 ---
 
@@ -1060,6 +1061,46 @@ screenshots are complete
 ### Prompt 22: All Markdown Updated
 ```
 did you update ALL of the markdown files per the instructions as part of this?
+```
+
+---
+
+## Session: February 2, 2026 - Project Structure Reorganization (v1.5.6)
+
+### Prompt 1: Scripts Folder Organization
+```
+The folder structure of this project seems a bit haphazard. Shouldn't all of the .SH files be contained in a folder versus the route?
+```
+
+### Prompt 2: Send It Question
+```
+so if I ask you to send it right now, will all updates to all files be made prior to the build packaging and publishing to get hub?
+```
+
+### Prompt 3: Instruction File Confusion
+```
+I thought that 'send-it.md' is the main instruction set that kicks off the related scripts to perform all of these activities that you've been working on?
+```
+
+### Prompt 4: Naming Preferences
+```
+1. It seems to have the markdown files in the scripts named exactly the same as a bit confusing.
+2. I don't want to be prompted to update, chat history and prompts used every time. This should be part of the main instruction set for any of the three files that kick off this process which are send it, pack it and test it.
+```
+
+### Prompt 5: Naming Backwards
+```
+I think you did that backwards, I want the simple commands (test it, pack it, send it) to be the 'trigger' for the event, the longer names should be used for scripts that I don't need to type.
+```
+
+### Prompt 6: Send It Question Again
+```
+so if I ask you to send it right now, will all updates to all files be made prior to the build packaging and publishing to github?
+```
+
+### Prompt 7: Update Docs Now
+```
+yes
 ```
 
 ---

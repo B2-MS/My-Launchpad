@@ -522,3 +522,35 @@ When making changes to My Launchpad, document the session here with:
   - `docs/prompts-used.md` - Added January 22 session prompts
 
 ---
+
+## Session: Project Structure Reorganization (v1.5.6)
+**Date:** February 2, 2026
+
+### Prompts
+1. Noted folder structure seems haphazard - suggested all .sh files should be in a folder
+2. Asked if "send it" would make all updates prior to build/packaging/publishing
+3. Asked about confusion between markdown files and scripts having same names
+4. Wanted simple names (test-it, pack-it, send-it) for instruction files, longer names for scripts
+5. Asked again if "send it" would update all files before release
+6. Confirmed to update documentation now
+
+### Outcomes
+- **Reorganized project structure**: Moved all 10 shell scripts from root to `scripts/` folder
+- **Renamed files to avoid confusion**:
+  - Instruction files (simple): `test-it.md`, `pack-it.md`, `send-it.md`
+  - Scripts (descriptive): `testing-workflow.sh`, `packaging-workflow.sh`, `release-workflow.sh`
+- **Updated all script paths**: Modified scripts to use `PROJECT_DIR` for proper path resolution
+- **Removed `update-docs.md`**: Merged content into individual workflow instruction files
+- **Updated all documentation references** to use new paths
+- Key files modified/created:
+  - `scripts/` folder created with all 10 scripts
+  - `scripts/build.sh`, `scripts/rebuild.sh` - Updated paths
+  - `scripts/testing-workflow.sh` (renamed from test-it.sh)
+  - `scripts/packaging-workflow.sh` (renamed from pack-it.sh)
+  - `scripts/release-workflow.sh` (renamed from send-it.sh)
+  - `docs/instructions/test-it.md` - Renamed, updated with doc prompts
+  - `docs/instructions/pack-it.md` - Renamed, updated with doc prompts
+  - `docs/instructions/send-it.md` - Renamed, updated with doc prompts
+  - `README.md` - Updated build script path
+
+---

@@ -3,6 +3,10 @@
 # Build Verification Script
 # Validates that the build completed successfully and app is functional
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_DIR"
+
 echo "🔍 Verifying Build..."
 echo "====================="
 
@@ -48,7 +52,7 @@ echo "4️⃣  Installation"
 if [ -d "/Applications/My Launchpad.app" ]; then
     echo "   ✅ App installed in /Applications"
 else
-    echo "   ⚠️  App NOT installed in /Applications (run ./rebuild.sh)"
+    echo "   ⚠️  App NOT installed in /Applications (run ./scripts/rebuild.sh)"
 fi
 
 # 5. Check app is running

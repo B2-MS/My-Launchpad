@@ -1,9 +1,13 @@
 #!/bin/bash
 
 # Pack It - Build, deploy, create DMG, and verify
-# Usage: ./pack-it.sh
+# Usage: ./scripts/pack-it.sh
 
 set -e  # Exit on any error
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_DIR"
 
 echo "📦 PACK IT - Build, Deploy & Package"
 echo "====================================="
@@ -11,25 +15,25 @@ echo "====================================="
 # Step 1: Rebuild and deploy
 echo ""
 echo "Step 1: Rebuilding and deploying..."
-./rebuild.sh
+"$SCRIPT_DIR/rebuild.sh"
 
 # Step 2: Verify build
 echo ""
 echo "Step 2: Verifying build..."
-./verify-build.sh
+"$SCRIPT_DIR/verify-build.sh"
 
 # Step 3: Create DMG
 echo ""
 echo "Step 3: Creating DMG installer..."
-./create-dmg.sh
+"$SCRIPT_DIR/create-dmg.sh"
 
 echo ""
 echo "====================================="
 echo "✅ PACK IT COMPLETE!"
 echo ""
 echo "📝 Next steps:"
-echo "   1. Update docs: see docs/instructions/update-docs.md"
-echo "   2. Verify docs: ./verify-docs.sh"
+echo "   1. Update docs: see docs/instructions/pack-it.md"
+echo "   2. Verify docs: ./scripts/verify-docs.sh"
 echo ""
 echo "📍 Output files:"
 echo "   • App: build/My Launchpad.app"

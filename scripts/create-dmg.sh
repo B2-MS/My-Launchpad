@@ -6,13 +6,14 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-BUILD_DIR="$SCRIPT_DIR/build"
-RELEASES_DIR="$SCRIPT_DIR/releases"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+BUILD_DIR="$PROJECT_DIR/build"
+RELEASES_DIR="$PROJECT_DIR/releases"
 APP_NAME="My Launchpad"
 APP_BUNDLE="$BUILD_DIR/$APP_NAME.app"
 DMG_NAME="My Launchpad Installer.dmg"
 DMG_PATH="$RELEASES_DIR/$DMG_NAME"
-TEMP_DMG="$SCRIPT_DIR/temp_$DMG_NAME"
+TEMP_DMG="$PROJECT_DIR/temp_$DMG_NAME"
 VOLUME_NAME="$APP_NAME"
 
 echo "📦 Creating DMG installer for $APP_NAME..."

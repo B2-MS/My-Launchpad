@@ -3,13 +3,17 @@
 # Rebuild and Redeploy Script
 # Builds the app, stops running instances, reinstalls, and launches
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_DIR"
+
 echo "🔄 Rebuild and Redeploy My Launchpad"
 echo "====================================="
 
 # 1. Build the app
 echo ""
 echo "1️⃣  Building app..."
-./build.sh
+"$SCRIPT_DIR/build.sh"
 if [ $? -ne 0 ]; then
     echo "❌ Build failed!"
     exit 1
