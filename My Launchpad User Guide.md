@@ -467,6 +467,11 @@ If an app shows a blank icon:
 
 ## Version History
 
+### v1.5.7 (February 2026)
+- Automatic app detection: new apps appear without restarting
+- Removed apps are automatically cleaned up
+- Automated GitHub Releases in release workflow
+
 ### v1.5.6 (February 2026)
 - Reorganized project: all scripts moved to `scripts/` folder
 - Renamed workflow files for clarity (instruction files vs scripts)

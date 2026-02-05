@@ -25,9 +25,62 @@ class LauncherViewModel: ObservableObject {
     @Published var windowHeight: Double = 600
     
     private let dataManager = DataManager.shared
+    private var cancellables = Set<AnyCancellable>()
     
     init() {
         loadData()
+        setupFolderMonitoring()
+    }
+    
+    /// Subscribe to folder change notifications
+    private func setupFolderMonitoring() {
+        AppScanner.shared.applicationsChanged
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.refreshAppsInBackground()
+            }
+            .store(in: &cancellables)
+    }
+    
+    /// Refresh apps when folder changes detected
+    private func refreshAppsInBackground() {
+        let freshApps = AppScanner.scanApplications()
+        let currentPaths = Set(allApps.map { $0.path })
+        let freshPaths = Set(freshApps.map { $0.path })
+        
+        // Find new apps
+        let newApps = freshApps.filter { !currentPaths.contains($0.path) }
+        
+        // Find removed apps
+        let removedPaths = currentPaths.subtracting(freshPaths)
+        let removedAppIds = Set(allApps.filter { removedPaths.contains($0.path) }.map { $0.id })
+        
+        if !newApps.isEmpty || !removedAppIds.isEmpty {
+            // Add new apps
+            allApps.append(contentsOf: newApps)
+            ungroupedAppIds.append(contentsOf: newApps.map { $0.id })
+            
+            // Remove deleted apps
+            if !removedAppIds.isEmpty {
+                allApps.removeAll { removedAppIds.contains($0.id) }
+                ungroupedAppIds.removeAll { removedAppIds.contains($0) }
+                
+                // Remove from groups too
+                groups = groups.map { group in
+                    var updatedGroup = group
+                    updatedGroup.appIds = group.appIds.filter { 
+                        AppGroup.isVoid($0) || !removedAppIds.contains($0) 
+                    }
+                    return updatedGroup
+                }
+            }
+            
+            // Re-sort apps
+            allApps.sort { $0.name.lowercased() < $1.name.lowercased() }
+            
+            saveData()
+            print("🔄 Apps refreshed: +\(newApps.count) new, -\(removedAppIds.count) removed")
+        }
     }
     
     /// Apps that are not in any group

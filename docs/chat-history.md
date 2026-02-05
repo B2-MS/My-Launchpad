@@ -554,3 +554,24 @@ When making changes to My Launchpad, document the session here with:
   - `README.md` - Updated build script path
 
 ---
+
+## Session: Auto-Detect New Apps (v1.5.7)
+**Date:** February 4, 2026
+
+### Prompts
+1. Asked to make new apps appear without quitting and restarting
+2. Confirmed it works
+3. Requested to send it with all markdown files updated
+
+### Outcomes
+- **Automatic App Detection**: Apps added to /Applications now appear automatically
+- **Folder Monitoring**: Added `DispatchSource` file system watchers to AppScanner
+- **Live Updates**: ViewModel subscribes to folder change notifications
+- **Cleanup**: Removed apps are automatically cleaned up from all lists/groups
+- **Automated GitHub Releases**: Updated release-workflow.sh to create GitHub Releases with DMG
+- Key files modified:
+  - `Sources/Services/AppScanner.swift` - Added folder monitoring with DispatchSource
+  - `Sources/ViewModels/LauncherViewModel.swift` - Added subscription to folder changes
+  - `scripts/release-workflow.sh` - Added automatic GitHub Release creation
+
+---

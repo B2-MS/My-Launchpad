@@ -1,7 +1,8 @@
 import Foundation
 import AppKit
+import Combine
 
-/// Scans the Applications folder for installed applications
+/// Scans the Applications folder for installed applications and monitors for changes
 class AppScanner {
     
     /// Standard paths to scan for applications
@@ -11,6 +12,57 @@ class AppScanner {
         "/System/Applications/Utilities",
         NSHomeDirectory() + "/Applications"
     ]
+    
+    /// Singleton instance for folder monitoring
+    static let shared = AppScanner()
+    
+    /// Publisher that emits when applications folder changes
+    let applicationsChanged = PassthroughSubject<Void, Never>()
+    
+    /// File descriptor sources for monitoring
+    private var folderMonitors: [DispatchSourceFileSystemObject] = []
+    
+    private init() {
+        startMonitoring()
+    }
+    
+    /// Start monitoring Applications folders for changes
+    private func startMonitoring() {
+        for path in AppScanner.applicationPaths {
+            guard FileManager.default.fileExists(atPath: path) else { continue }
+            
+            let fileDescriptor = open(path, O_EVTONLY)
+            guard fileDescriptor >= 0 else { continue }
+            
+            let source = DispatchSource.makeFileSystemObjectSource(
+                fileDescriptor: fileDescriptor,
+                eventMask: [.write, .rename, .delete],
+                queue: DispatchQueue.global(qos: .background)
+            )
+            
+            source.setEventHandler { [weak self] in
+                // Debounce by waiting a moment for file operations to complete
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self?.applicationsChanged.send()
+                }
+            }
+            
+            source.setCancelHandler {
+                close(fileDescriptor)
+            }
+            
+            source.resume()
+            folderMonitors.append(source)
+        }
+    }
+    
+    /// Stop monitoring (called on deinit)
+    func stopMonitoring() {
+        for monitor in folderMonitors {
+            monitor.cancel()
+        }
+        folderMonitors.removeAll()
+    }
     
     /// Scan all application directories and return found apps
     static func scanApplications() -> [AppItem] {

@@ -2,7 +2,7 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 12 Sessions, 166 Prompts
+## Summary — 13 Sessions, 169 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
@@ -18,6 +18,7 @@ This file contains the actual prompts used during development of My Launchpad.
 | AppLauncher UI Improvements | February 2, 2026 | 6 |
 | Transparency Fix & Documentation (v1.5.5) | February 2, 2026 | 22 |
 | Project Structure Reorganization (v1.5.6) | February 2, 2026 | 7 |
+| Auto-Detect New Apps (v1.5.7) | February 4, 2026 | 3 |
 
 ---
 
@@ -1101,6 +1102,25 @@ so if I ask you to send it right now, will all updates to all files be made prio
 ### Prompt 7: Update Docs Now
 ```
 yes
+```
+
+---
+
+## Session: February 4, 2026 - Auto-Detect New Apps (v1.5.7)
+
+### Prompt 1: Auto-Detect Apps Request
+```
+when I add new apps to the application folder, they don't show up under the apps section until I quit and restart can we make new apps show up without quiting and restarting?
+```
+
+### Prompt 2: Confirm Working
+```
+it works
+```
+
+### Prompt 3: Send It
+```
+send it, but ensure ALL markdown files are updated per the instructions in send it
 ```
 
 ---

@@ -1,5 +1,20 @@
 # Release Notes
 
+## Version 1.5.7 (February 2026)
+
+### New Features
+
+#### Automatic App Detection
+- **Live App Monitoring** - New apps added to Applications folder appear automatically without restarting
+- **Removed Apps Cleanup** - Apps that are deleted are automatically removed from the launcher
+- **Folder Watching** - Monitors `/Applications`, `/System/Applications`, and `~/Applications`
+- **Smart Debouncing** - Changes are batched to avoid excessive refreshes during bulk operations
+
+#### Release Workflow
+- **Automated GitHub Releases** - `release-workflow.sh` now automatically creates GitHub Releases with DMG attached
+
+---
+
 ## Version 1.5.6 (February 2026)
 
 ### Project Structure Improvements

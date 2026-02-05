@@ -52,6 +52,21 @@ git add -A
 git commit -m "Release v$VERSION - $MESSAGE"
 git push
 
+# Step 6: Create GitHub Release with DMG
+echo ""
+echo "Step 6: Creating GitHub Release..."
+gh release create "v$VERSION" "releases/My Launchpad Installer.dmg" \
+    --title "My Launchpad v$VERSION" \
+    --notes "$MESSAGE" \
+    2>/dev/null
+
+if [ $? -eq 0 ]; then
+    echo "   ✅ GitHub Release created with DMG attached"
+else
+    echo "   ⚠️  GitHub Release creation failed (gh CLI may not be installed or authenticated)"
+    echo "   Manual command: gh release create v$VERSION \"releases/My Launchpad Installer.dmg\" --title \"My Launchpad v$VERSION\""
+fi
+
 echo ""
 echo "======================================="
 echo "✅ SEND IT COMPLETE!"
@@ -60,6 +75,4 @@ echo "📍 Released:"
 echo "   • Version: $VERSION"
 echo "   • DMG: releases/My Launchpad Installer.dmg"
 echo "   • Pushed to GitHub"
-echo ""
-echo "📝 Optional: Create GitHub Release"
-echo "   gh release create v$VERSION \"releases/My Launchpad Installer.dmg\" --title \"My Launchpad v$VERSION\" --generate-notes"
+echo "   • GitHub Release created"
