@@ -366,6 +366,25 @@ Use this to:
 
 > **Note:** Importing will replace your current groups and organization with the imported settings.
 
+#### Cloud Backup
+
+Keep your settings synced across multiple Macs using cloud storage:
+
+| Setting | Description |
+|---------|-------------|
+| **iCloud** | When enabled, automatically backs up settings to `~/Library/Mobile Documents/com~apple~CloudDocs/My Launchpad/` |
+| **OneDrive** | When enabled, automatically backs up settings to `~/Library/CloudStorage/OneDrive-Personal/My Launchpad/` |
+
+**How Cloud Sync Works:**
+1. Enable one or both cloud backup options in Settings
+2. Your configuration is automatically saved to the cloud whenever you make changes
+3. On another Mac (signed into the same cloud account), launch My Launchpad
+4. If the app detects different settings in the cloud, you'll see a prompt:
+   - **Use These** - Import the cloud settings, replacing your local configuration
+   - **Keep Local Settings** - Dismiss and keep your current setup
+
+> **Tip:** This is perfect for keeping your app organization consistent across a MacBook and desktop Mac!
+
 #### Behavior Settings
 
 | Setting | Description |
@@ -476,6 +495,22 @@ If an app shows a blank icon:
 - Reorganized project: all scripts moved to `scripts/` folder
 - Renamed workflow files for clarity (instruction files vs scripts)
 - Integrated documentation update prompts into workflow files
+
+### v1.5.8 (February 2026)
+- Cloud backup to iCloud and OneDrive
+- Auto-discovery of cloud settings from other Macs
+- Import prompt when different configuration found
+- Cross-Mac settings sync
+
+### v1.5.7 (February 2026)
+- Automatic app detection (no restart needed)
+- Live folder monitoring for /Applications
+- Removed apps automatically cleaned up
+
+### v1.5.6 (February 2026)
+- Project structure reorganization
+- Scripts moved to dedicated folder
+- Automated GitHub Releases
 
 ### v1.5.5 (February 2026)
 - Enhanced window transparency (75% opacity)

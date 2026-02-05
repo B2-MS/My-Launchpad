@@ -2,7 +2,7 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 13 Sessions, 169 Prompts
+## Summary — 14 Sessions, 172 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
@@ -19,6 +19,7 @@ This file contains the actual prompts used during development of My Launchpad.
 | Transparency Fix & Documentation (v1.5.5) | February 2, 2026 | 22 |
 | Project Structure Reorganization (v1.5.6) | February 2, 2026 | 7 |
 | Auto-Detect New Apps (v1.5.7) | February 4, 2026 | 3 |
+| Cloud Backup Settings (v1.5.8) | February 4, 2026 | 3 |
 
 ---
 
@@ -1121,6 +1122,25 @@ it works
 ### Prompt 3: Send It
 ```
 send it, but ensure ALL markdown files are updated per the instructions in send it
+```
+
+---
+
+## Session: February 4, 2026 - Cloud Backup Settings (v1.5.8)
+
+### Prompt 1: Cloud Backup Request
+```
+we need to add an option in settings to allow the configuration to be backed up to icloud and onedrive
+```
+
+### Prompt 2: Auto-Discovery Question
+```
+if I'm on another mac and logged into onedrive, will it import these settings automatically? upon discovery, can it prompt if I want to use those settings if the config is different?
+```
+
+### Prompt 3: Send It
+```
+send it
 ```
 
 ---

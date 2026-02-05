@@ -8,6 +8,7 @@ class DataManager {
     static let shared = DataManager()
     
     private let dataFileName = "MyLaunchpadData.json"
+    private let backupFileName = "My Launchpad Backup.json"
     
     private var dataFileURL: URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -19,13 +20,74 @@ class DataManager {
         return appFolder.appendingPathComponent(dataFileName)
     }
     
-    /// Save launcher data to disk
+    /// iCloud Drive backup location
+    var iCloudBackupURL: URL? {
+        let homeDir = FileManager.default.homeDirectoryForCurrentUser
+        let iCloudPath = homeDir.appendingPathComponent("Library/Mobile Documents/com~apple~CloudDocs/My Launchpad")
+        
+        // Check if iCloud Drive exists
+        let iCloudDrive = homeDir.appendingPathComponent("Library/Mobile Documents/com~apple~CloudDocs")
+        guard FileManager.default.fileExists(atPath: iCloudDrive.path) else {
+            return nil
+        }
+        
+        // Create My Launchpad folder if needed
+        try? FileManager.default.createDirectory(at: iCloudPath, withIntermediateDirectories: true)
+        
+        return iCloudPath.appendingPathComponent(backupFileName)
+    }
+    
+    /// OneDrive backup location
+    var oneDriveBackupURL: URL? {
+        let homeDir = FileManager.default.homeDirectoryForCurrentUser
+        
+        // Check common OneDrive locations
+        let possiblePaths = [
+            homeDir.appendingPathComponent("Library/CloudStorage/OneDrive-Personal/My Launchpad"),
+            homeDir.appendingPathComponent("Library/CloudStorage/OneDrive/My Launchpad"),
+            homeDir.appendingPathComponent("OneDrive/My Launchpad")
+        ]
+        
+        for basePath in possiblePaths {
+            let parentPath = basePath.deletingLastPathComponent()
+            if FileManager.default.fileExists(atPath: parentPath.path) {
+                // Create My Launchpad folder if needed
+                try? FileManager.default.createDirectory(at: basePath, withIntermediateDirectories: true)
+                return basePath.appendingPathComponent(backupFileName)
+            }
+        }
+        
+        return nil
+    }
+    
+    /// Check if iCloud Drive is available
+    var isICloudAvailable: Bool {
+        iCloudBackupURL != nil
+    }
+    
+    /// Check if OneDrive is available
+    var isOneDriveAvailable: Bool {
+        oneDriveBackupURL != nil
+    }
+    
+    /// Save launcher data to disk and sync to cloud if enabled
     func save(_ data: LauncherData) {
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let jsonData = try encoder.encode(data)
             try jsonData.write(to: dataFileURL)
+            
+            // Sync to cloud backups if enabled
+            if data.backupToICloud == true, let iCloudURL = iCloudBackupURL {
+                try? jsonData.write(to: iCloudURL)
+                print("✅ Backed up to iCloud: \(iCloudURL.path)")
+            }
+            
+            if data.backupToOneDrive == true, let oneDriveURL = oneDriveBackupURL {
+                try? jsonData.write(to: oneDriveURL)
+                print("✅ Backed up to OneDrive: \(oneDriveURL.path)")
+            }
         } catch {
             print("Failed to save data: \(error.localizedDescription)")
         }
@@ -96,5 +158,82 @@ class DataManager {
             print("Failed to import data: \(error.localizedDescription)")
             return nil
         }
+    }
+    
+    /// Cloud backup info for display
+    struct CloudBackupInfo {
+        let source: String  // "iCloud" or "OneDrive"
+        let url: URL
+        let data: LauncherData
+        let modificationDate: Date
+        let groupCount: Int
+    }
+    
+    /// Check for available cloud backups
+    func discoverCloudBackups() -> [CloudBackupInfo] {
+        var backups: [CloudBackupInfo] = []
+        let decoder = JSONDecoder()
+        let fileManager = FileManager.default
+        
+        // Check iCloud
+        if let iCloudURL = iCloudBackupURL, fileManager.fileExists(atPath: iCloudURL.path) {
+            if let data = try? Data(contentsOf: iCloudURL),
+               let launcherData = try? decoder.decode(LauncherData.self, from: data),
+               let attrs = try? fileManager.attributesOfItem(atPath: iCloudURL.path),
+               let modDate = attrs[.modificationDate] as? Date {
+                backups.append(CloudBackupInfo(
+                    source: "iCloud",
+                    url: iCloudURL,
+                    data: launcherData,
+                    modificationDate: modDate,
+                    groupCount: launcherData.groups.count
+                ))
+            }
+        }
+        
+        // Check OneDrive
+        if let oneDriveURL = oneDriveBackupURL, fileManager.fileExists(atPath: oneDriveURL.path) {
+            if let data = try? Data(contentsOf: oneDriveURL),
+               let launcherData = try? decoder.decode(LauncherData.self, from: data),
+               let attrs = try? fileManager.attributesOfItem(atPath: oneDriveURL.path),
+               let modDate = attrs[.modificationDate] as? Date {
+                backups.append(CloudBackupInfo(
+                    source: "OneDrive",
+                    url: oneDriveURL,
+                    data: launcherData,
+                    modificationDate: modDate,
+                    groupCount: launcherData.groups.count
+                ))
+            }
+        }
+        
+        return backups
+    }
+    
+    /// Load data from a specific cloud backup
+    func loadFromCloudBackup(_ backup: CloudBackupInfo) -> LauncherData? {
+        return backup.data
+    }
+    
+    /// Compare local data with cloud backup to detect differences
+    func hasSignificantDifferences(local: LauncherData?, cloud: LauncherData) -> Bool {
+        guard let local = local else {
+            // No local data, cloud has data - significant difference
+            return cloud.groups.count > 0
+        }
+        
+        // Compare group counts
+        if local.groups.count != cloud.groups.count {
+            return true
+        }
+        
+        // Compare group names
+        let localGroupNames = Set(local.groups.map { $0.name })
+        let cloudGroupNames = Set(cloud.groups.map { $0.name })
+        if localGroupNames != cloudGroupNames {
+            return true
+        }
+        
+        return false
     }
 }

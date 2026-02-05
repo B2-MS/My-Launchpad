@@ -53,8 +53,10 @@ struct LauncherData: Codable {
     var hideOnFocusLost: Bool?
     var windowWidth: Double?
     var windowHeight: Double?
+    var backupToICloud: Bool?
+    var backupToOneDrive: Bool?
     
-    init(groups: [AppGroup] = [], ungroupedAppIds: [UUID] = [], allApps: [AppItem] = [], groupTileScale: Double? = nil, hideOnLaunch: Bool? = nil, hideOnFocusLost: Bool? = nil, windowWidth: Double? = nil, windowHeight: Double? = nil) {
+    init(groups: [AppGroup] = [], ungroupedAppIds: [UUID] = [], allApps: [AppItem] = [], groupTileScale: Double? = nil, hideOnLaunch: Bool? = nil, hideOnFocusLost: Bool? = nil, windowWidth: Double? = nil, windowHeight: Double? = nil, backupToICloud: Bool? = nil, backupToOneDrive: Bool? = nil) {
         self.groups = groups
         self.ungroupedAppIds = ungroupedAppIds
         self.allApps = allApps
@@ -63,5 +65,7 @@ struct LauncherData: Codable {
         self.hideOnFocusLost = hideOnFocusLost
         self.windowWidth = windowWidth
         self.windowHeight = windowHeight
+        self.backupToICloud = backupToICloud
+        self.backupToOneDrive = backupToOneDrive
     }
 }

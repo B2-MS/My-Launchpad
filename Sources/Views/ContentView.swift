@@ -35,10 +35,76 @@ struct ContentView: View {
         .sheet(isPresented: $showingNewGroupSheet) {
             newGroupSheet
         }
+        .sheet(isPresented: $viewModel.showCloudBackupPrompt) {
+            cloudBackupPromptSheet
+        }
         .onTapGesture {
             // Close the system color panel when clicking outside
             NSColorPanel.shared.close()
         }
+    }
+    
+    // MARK: - Cloud Backup Prompt
+    
+    private var cloudBackupPromptSheet: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "cloud.fill")
+                .font(.system(size: 48))
+                .foregroundColor(.blue)
+            
+            Text("Cloud Settings Found")
+                .font(.title2)
+                .fontWeight(.semibold)
+            
+            Text("Settings were found in your cloud storage that differ from your local settings.")
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(viewModel.availableCloudBackups, id: \.source) { backup in
+                    HStack {
+                        Image(systemName: backup.source == "iCloud" ? "icloud.fill" : "cloud.fill")
+                            .foregroundColor(backup.source == "iCloud" ? .blue : .cyan)
+                        
+                        VStack(alignment: .leading) {
+                            Text(backup.source)
+                                .fontWeight(.medium)
+                            Text("\(backup.groupCount) groups • \(formatDate(backup.modificationDate))")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Button("Use These") {
+                            viewModel.importFromCloudBackup(backup)
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.secondary.opacity(0.1))
+                    )
+                }
+            }
+            .padding(.horizontal)
+            
+            Button("Keep Local Settings") {
+                viewModel.dismissCloudBackupPrompt()
+            }
+            .foregroundColor(.secondary)
+        }
+        .padding(30)
+        .frame(width: 400)
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .abbreviated
+        return formatter.localizedString(for: date, relativeTo: Date())
     }
     
     // MARK: - Main Content
@@ -238,6 +304,30 @@ struct ContentView: View {
                         viewModel.saveData()
                     }
                     .help("Hide the launcher when clicking outside")
+            }
+            
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Cloud Backup")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Toggle("iCloud Drive", isOn: $viewModel.backupToICloud)
+                    .toggleStyle(.checkbox)
+                    .font(.system(size: 12))
+                    .disabled(!viewModel.isICloudAvailable)
+                    .onChange(of: viewModel.backupToICloud) { _ in
+                        viewModel.saveData()
+                    }
+                    .help(viewModel.isICloudAvailable ? "Automatically backup settings to iCloud Drive" : "iCloud Drive not available")
+                
+                Toggle("OneDrive", isOn: $viewModel.backupToOneDrive)
+                    .toggleStyle(.checkbox)
+                    .font(.system(size: 12))
+                    .disabled(!viewModel.isOneDriveAvailable)
+                    .onChange(of: viewModel.backupToOneDrive) { _ in
+                        viewModel.saveData()
+                    }
+                    .help(viewModel.isOneDriveAvailable ? "Automatically backup settings to OneDrive" : "OneDrive not available")
             }
             
             Spacer()

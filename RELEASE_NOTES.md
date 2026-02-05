@@ -1,5 +1,24 @@
 # Release Notes
 
+## Version 1.5.8 (February 2026)
+
+### New Features
+
+#### Cloud Backup
+- **iCloud Backup** - Automatically sync your settings to iCloud Drive
+- **OneDrive Backup** - Automatically sync your settings to OneDrive
+- **Auto-Discovery** - On launch, detects cloud backups from other Macs
+- **Import Prompt** - When a different configuration is found in the cloud, prompts to import or keep local settings
+- **Cross-Mac Sync** - Easily transfer your app organization between multiple Macs
+
+### How It Works
+1. Enable iCloud and/or OneDrive backup in Settings
+2. Your settings automatically sync whenever you make changes
+3. On another Mac, open My Launchpad (with same cloud account)
+4. If cloud settings differ, you'll be prompted to import them
+
+---
+
 ## Version 1.5.7 (February 2026)
 
 ### New Features
