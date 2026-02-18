@@ -19,6 +19,27 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: Search Improvements (v1.5.9)
+**Date:** February 18, 2026
+
+### Prompts
+1. Requested search improvements: auto-clear on app launch/window close, X button to clear
+2. Test it
+3. Pack it
+4. Fixed DMG installer window showing scroll bars - enlarged window
+5. Send it
+
+### Outcomes
+- **Search Auto-Clear**: Search text clears when launching app, hiding window, or losing focus
+- **Clear Button**: Added X button in search field when text is entered
+- **DMG Window Fix**: Enlarged installer window to 640×420 to eliminate scroll bars
+- Key files modified:
+  - `Sources/ViewModels/LauncherViewModel.swift` - Clear searchText on app launch
+  - `Sources/Views/ContentView.swift` - Added X button overlay, onReceive for hide/deactivate notifications
+  - `scripts/create-dmg.sh` - Enlarged window bounds and repositioned icons
+
+---
+
 ## Session: Cloud Backup Settings (v1.5.8)
 **Date:** February 4, 2026
 

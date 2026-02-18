@@ -2,7 +2,7 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 14 Sessions, 172 Prompts
+## Summary — 15 Sessions, 177 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
@@ -20,6 +20,7 @@ This file contains the actual prompts used during development of My Launchpad.
 | Project Structure Reorganization (v1.5.6) | February 2, 2026 | 7 |
 | Auto-Detect New Apps (v1.5.7) | February 4, 2026 | 3 |
 | Cloud Backup Settings (v1.5.8) | February 4, 2026 | 3 |
+| Search Improvements (v1.5.9) | February 18, 2026 | 5 |
 
 ---
 
@@ -1139,6 +1140,36 @@ if I'm on another mac and logged into onedrive, will it import these settings au
 ```
 
 ### Prompt 3: Send It
+```
+send it
+```
+
+---
+## Session: February 18, 2026 - Search Improvements (v1.5.9)
+
+### Prompt 1: Search Improvements Request
+```
+updates for search needed
+1. Once a search has been entered and an app is either been opened or the UI has been closed. That search criteria should no longer persist.
+2. There needs to be an X in the search box to allow the user to clear the search criteria.
+```
+
+### Prompt 2: Test It
+```
+test it
+```
+
+### Prompt 3: Pack It
+```
+pack it
+```
+
+### Prompt 4: DMG Window Fix
+```
+why is the installer window so small, it has VERY LARGE icons but showing both scroll bars vs. enlarging to accomodate?
+```
+
+### Prompt 5: Send It
 ```
 send it
 ```

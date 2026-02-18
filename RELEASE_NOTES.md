@@ -1,5 +1,20 @@
 # Release Notes
 
+## Version 1.5.9 (February 2026)
+
+### Improvements
+
+#### Search Enhancements
+- **Auto-Clear on Launch** - Search text automatically clears when you open an app
+- **Auto-Clear on Hide** - Search clears when the launcher window is hidden or loses focus
+- **Clear Button** - Added X button in search field to quickly clear search text
+
+#### DMG Installer
+- **Larger Window** - Installer window enlarged to properly display icons without scroll bars
+- **Better Icon Positioning** - App and Applications folder icons better centered
+
+---
+
 ## Version 1.5.8 (February 2026)
 
 ### New Features

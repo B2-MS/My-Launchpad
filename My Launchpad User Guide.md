@@ -496,6 +496,11 @@ If an app shows a blank icon:
 - Renamed workflow files for clarity (instruction files vs scripts)
 - Integrated documentation update prompts into workflow files
 
+### v1.5.9 (February 2026)
+- Search auto-clears when launching app or hiding window
+- Added X button to clear search field
+- DMG installer window enlarged for better layout
+
 ### v1.5.8 (February 2026)
 - Cloud backup to iCloud and OneDrive
 - Auto-discovery of cloud settings from other Macs

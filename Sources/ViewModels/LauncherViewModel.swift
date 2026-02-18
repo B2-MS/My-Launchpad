@@ -292,6 +292,8 @@ class LauncherViewModel: ObservableObject {
     func launchApp(_ app: AppItem) {
         if !isEditMode {
             app.launch()
+            // Clear search when launching an app
+            searchText = ""
             // Hide the launcher window after launching an app if enabled
             if hideOnLaunch {
                 NSApplication.shared.hide(nil)

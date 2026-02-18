@@ -42,6 +42,12 @@ struct ContentView: View {
             // Close the system color panel when clicking outside
             NSColorPanel.shared.close()
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didHideNotification)) { _ in
+            viewModel.searchText = ""
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in
+            viewModel.searchText = ""
+        }
     }
     
     // MARK: - Cloud Backup Prompt
@@ -696,6 +702,18 @@ struct ContentView: View {
             TextField("Search apps...", text: $viewModel.searchText)
                 .textFieldStyle(.roundedBorder)
                 .frame(width: 180)
+                .overlay(alignment: .trailing) {
+                    if !viewModel.searchText.isEmpty {
+                        Button {
+                            viewModel.searchText = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.trailing, 6)
+                    }
+                }
             
             Spacer()
             
