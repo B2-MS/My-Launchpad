@@ -7,7 +7,7 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 ![Version](https://img.shields.io/badge/Version-1.5.9-purple.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-**[Release Notes](RELEASE_NOTES.md)** | **[User Guide](My%20Launchpad%20User%20Guide.md)**
+**[Release Notes](RELEASE_NOTES.md)** | **[User Guide](docs/My%20Launchpad%20User%20Guide.md)**
 
 ## Overview
 

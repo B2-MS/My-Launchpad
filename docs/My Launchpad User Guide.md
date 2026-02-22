@@ -46,7 +46,7 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 4. **Eject** the DMG by right-clicking it in Finder and selecting "Eject"
 5. **Launch** the app from your Applications folder
 
-<img src="images/installer.png" alt="Menu Bar" width="300">
+<img src="../images/installer.png" alt="Menu Bar" width="300">
 
 ### First-Time Security Prompt
 
@@ -107,7 +107,7 @@ The app is configured to start automatically when you log in to your Mac. It run
 
 ## Menu Bar
 
-<img src="images/menu-bar.png" alt="Menu Bar" width="300">
+<img src="../images/menu-bar.png" alt="Menu Bar" width="300">
 
 The app displays a **grid icon** (⊞) in your menu bar. Click to open MyLaunchpad and Right-click it to access popup menu:
 
@@ -136,7 +136,7 @@ This hotkey works system-wide to toggle the launcher window:
 
 ## Main Window
 
-<img src="images/main-window.png" alt="Main Window" width="600">
+<img src="../images/main-window.png" alt="Main Window" width="600">
 
 ### Window Behavior
 - **Red X (Close button)** - Hides the window (app keeps running)
@@ -157,7 +157,7 @@ Click the section headers to expand/collapse them.
 
 ## Search
 
-<img src="images/search-bar.png" alt="Search Bar" width="500">
+<img src="../images/search-bar.png" alt="Search Bar" width="500">
 
 My Launchpad includes a built-in search function to help you quickly find apps.
 
@@ -167,7 +167,7 @@ My Launchpad includes a built-in search function to help you quickly find apps.
 2. **Type to Search** - Simply start typing the name of the app you're looking for
 3. **Real-Time Filtering** - Results filter instantly as you type
 
-<img src="images/search-filter.png" alt="Search Bar" width="500">
+<img src="../images/search-filter.png" alt="Search Bar" width="500">
 
 ### How Search Works
 
@@ -190,7 +190,7 @@ To clear your search and show all apps again:
 
 ## Groups
 
-<img src="images/groups.png" alt="Groups" width="600">
+<img src="../images/groups.png" alt="Groups" width="600">
 
 Groups let you organize apps into collections (like iOS folders).
 
@@ -217,7 +217,7 @@ In the group popup, click the group name in the header to edit it.
 
 ### Group Popup Features
 
-<img src="images/group-popup.png" alt="Group Popup" width="500">
+<img src="../images/group-popup.png" alt="Group Popup" width="500">
 
 - **Pagination** - Groups with more than 16 apps show multiple pages
 - **Page Navigation** - Use arrows or dots at the bottom to navigate pages
@@ -257,7 +257,7 @@ Simply **click** on any app icon to launch it.
 
 ### App Context Menu (Right-Click)
 
-<img src="images/app-context-menu.png" alt="App Context Menu" width="250">
+<img src="../images/app-context-menu.png" alt="App Context Menu" width="250">
 
 Right-click on any app icon to access a context menu with options that vary based on where the app is located:
 
@@ -270,7 +270,7 @@ Right-click on any app icon to access a context menu with options that vary base
 
 #### For Apps Inside a Group (Group Popup)
 
-<img src="images/group-app-context-menu.png" alt="Group App Context Menu" width="250">
+<img src="../images/group-app-context-menu.png" alt="Group App Context Menu" width="250">
 
 | Option | Description |
 |--------|-------------|
@@ -290,7 +290,7 @@ Right-click on any app icon to access a context menu with options that vary base
 
 ## Multi-Select
 
-<img src="images/multi-select.png" alt="Multi-Select" width="500">
+<img src="../images/multi-select.png" alt="Multi-Select" width="500">
 
 My Launchpad supports selecting multiple apps at once using keyboard modifiers, making it easy to organize many apps quickly.
 
@@ -328,7 +328,7 @@ My Launchpad supports selecting multiple apps at once using keyboard modifiers, 
 
 ## Settings
 
-<img src="images/settings.png" alt="Settings Panel" width="300">
+<img src="../images/settings.png" alt="Settings Panel" width="300">
 
 Access settings by clicking the **gear icon** in the top-right corner.
 
@@ -400,7 +400,7 @@ These settings help keep the launcher out of your way while still being instantl
 
 ## Drag and Drop
 
-<img src="images/drag-and-drop.png" alt="Drag and Drop" width="500">
+<img src="../images/drag-and-drop.png" alt="Drag and Drop" width="500">
 
 ### Adding Apps to Groups
 Drag an app onto a group icon to add it to that group.

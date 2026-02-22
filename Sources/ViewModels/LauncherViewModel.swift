@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import ServiceManagement
 
 /// Main view model that manages all launcher state
 @MainActor
@@ -25,6 +26,25 @@ class LauncherViewModel: ObservableObject {
     @Published var windowHeight: Double = 600
     @Published var backupToICloud: Bool = false
     @Published var backupToOneDrive: Bool = false
+    
+    /// Launch at Login setting
+    var launchAtLogin: Bool {
+        get {
+            SMAppService.mainApp.status == .enabled
+        }
+        set {
+            objectWillChange.send()
+            do {
+                if newValue {
+                    try SMAppService.mainApp.register()
+                } else {
+                    try SMAppService.mainApp.unregister()
+                }
+            } catch {
+                print("Failed to \(newValue ? "enable" : "disable") launch at login: \(error)")
+            }
+        }
+    }
     
     /// Check if iCloud is available
     var isICloudAvailable: Bool {

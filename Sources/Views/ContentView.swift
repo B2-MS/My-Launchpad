@@ -295,6 +295,14 @@ struct ContentView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
+                Toggle("Launch at login", isOn: Binding(
+                    get: { viewModel.launchAtLogin },
+                    set: { viewModel.launchAtLogin = $0 }
+                ))
+                    .toggleStyle(.checkbox)
+                    .font(.system(size: 12))
+                    .help("Automatically start My Launchpad when you log in")
+                
                 Toggle("Hide on launch", isOn: $viewModel.hideOnLaunch)
                     .toggleStyle(.checkbox)
                     .font(.system(size: 12))
