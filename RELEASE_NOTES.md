@@ -1,5 +1,27 @@
 # Release Notes
 
+## Version 1.6.0 (February 2026)
+
+### New Features
+
+#### Launch at Login
+- **Auto-Start** - New setting to automatically start My Launchpad when you log in
+- **Menu Bar Ready** - App appears in menu bar immediately after login
+- Uses macOS native SMAppService for reliable startup
+
+#### UI Improvements
+- **Settings Auto-Close** - Settings panel closes when app is hidden or loses focus
+- **Group Popup Auto-Close** - Open group popups close when app is hidden
+- **Clean State on Return** - App always returns to a clean state (no lingering panels)
+
+### Project Structure
+- Reorganized documentation into `docs/` folder
+- Archived 7 unused instruction files
+- Moved `create_icon.swift` to `scripts/`
+- Updated all image paths for new structure
+
+---
+
 ## Version 1.5.9 (February 2026)
 
 ### Improvements

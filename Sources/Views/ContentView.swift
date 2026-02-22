@@ -44,9 +44,13 @@ struct ContentView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didHideNotification)) { _ in
             viewModel.searchText = ""
+            viewModel.showSettings = false
+            viewModel.expandedGroupId = nil
         }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in
             viewModel.searchText = ""
+            viewModel.showSettings = false
+            viewModel.expandedGroupId = nil
         }
     }
     

@@ -2,7 +2,7 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 15 Sessions, 177 Prompts
+## Summary — 16 Sessions, 184 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
@@ -21,6 +21,7 @@ This file contains the actual prompts used during development of My Launchpad.
 | Auto-Detect New Apps (v1.5.7) | February 4, 2026 | 3 |
 | Cloud Backup Settings (v1.5.8) | February 4, 2026 | 3 |
 | Search Improvements (v1.5.9) | February 18, 2026 | 5 |
+| Launch at Login & Project Cleanup (v1.6.0) | February 22, 2026 | 7 |
 
 ---
 
@@ -1171,6 +1172,48 @@ why is the installer window so small, it has VERY LARGE icons but showing both s
 
 ### Prompt 5: Send It
 ```
+send it
+```
+
+---
+
+## Session: February 22, 2026 - Launch at Login & Project Cleanup (v1.6.0)
+
+### Prompt 1: Folder Rename Question
+```
+can we rename this project and folder from "MyLaunchpad" to "My Launchpad" without causing issues to our local project?
+```
+
+### Prompt 2: Launch at Login Feature
+```
+please ensure, upon restart, the app is loaded and showing up on the menu at the top
+```
+
+### Prompt 3: Project Cleanup
+```
+1. please ensure only the mardown files that are needed remain in docs any that are not used should be moved toe archive
+2. Please examine the entire project structure to ensure we are following best practices
+3. Reorganize anything that does not follow best practices
+```
+
+### Prompt 4: Screenshot Review
+```
+review the latest app updates to ensure the screen captures in the user guide are up to date
+```
+
+### Prompt 5: Screenshot Manual
+```
+I have taken a screenshot manually since you were not able to do it
+```
+
+### Prompt 6: Settings Auto-Close
+```
+if settings are open and I hide the app when I come back into the app setting should not still be open
+```
+
+### Prompt 7: Send It
+```
+yes that works
 send it
 ```
 

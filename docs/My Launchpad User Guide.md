@@ -496,6 +496,11 @@ If an app shows a blank icon:
 - Renamed workflow files for clarity (instruction files vs scripts)
 - Integrated documentation update prompts into workflow files
 
+### v1.6.0 (February 2026)
+- Launch at Login option in Settings
+- Settings/group popups auto-close when app is hidden
+- Project structure reorganized (docs moved to `docs/` folder)
+
 ### v1.5.9 (February 2026)
 - Search auto-clears when launching app or hiding window
 - Added X button to clear search field

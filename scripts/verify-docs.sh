@@ -42,7 +42,7 @@ echo ""
 echo "3️⃣  My Launchpad User Guide.md"
 # Extract major.minor.patch for comparison
 VERSION_PATTERN="v${README_VERSION}"
-if grep -q "### $VERSION_PATTERN" "My Launchpad User Guide.md"; then
+if grep -q "### $VERSION_PATTERN" "docs/My Launchpad User Guide.md"; then
     echo "   ✅ Version history includes $VERSION_PATTERN"
 else
     echo "   ❌ Version history MISSING $VERSION_PATTERN"

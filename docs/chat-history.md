@@ -19,6 +19,33 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: Launch at Login & Project Cleanup (v1.6.0)
+**Date:** February 22, 2026
+
+### Prompts
+1. Asked about renaming project folder from MyLaunchpad to My Launchpad
+2. Asked about moving VS Code chat history to new folder
+3. Requested Launch at Login feature so app starts on startup
+4. Requested cleanup of unused docs and best practices review
+5. Reviewed screenshots for User Guide updates
+6. Fixed settings panel staying open when app is hidden
+7. Send it
+
+### Outcomes
+- **Launch at Login**: Added toggle in Settings using SMAppService
+- **Settings Auto-Close**: Settings and group popups close when app is hidden or loses focus
+- **Project Reorganization**: 
+  - Moved User Guide to `docs/`
+  - Archived 7 duplicate instruction files
+  - Moved `create_icon.swift` to `scripts/`
+- **Screenshot Update**: Updated settings.png with new Launch at Login toggle
+- Key files modified:
+  - `Sources/ViewModels/LauncherViewModel.swift` - Added launchAtLogin property with SMAppService
+  - `Sources/Views/ContentView.swift` - Added Launch at Login toggle, settings auto-close on hide
+  - Various doc moves and path updates
+
+---
+
 ## Session: Search Improvements (v1.5.9)
 **Date:** February 18, 2026
 
