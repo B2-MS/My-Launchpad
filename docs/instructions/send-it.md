@@ -58,7 +58,19 @@ Then UPDATE the Summary section counts at the top of the file.
 
 ---
 
-## Step 3: Verify Documentation First
+## Step 3: Verify Tests Passed
+
+Before release, confirm all test cases pass in `docs/test-cases.md`:
+
+1. Open `docs/test-cases.md`
+2. Verify all new feature tests show **Status: ✅ Pass**
+3. Check the Test Summary table has no failures
+
+⚠️ **Do not release with failing tests**
+
+---
+
+## Step 4: Verify Documentation
 
 ```bash
 ./scripts/verify-docs.sh
@@ -68,7 +80,7 @@ Then UPDATE the Summary section counts at the top of the file.
 
 ---
 
-## Step 4: Run the Release Script
+## Step 5: Run the Release Script
 
 ```bash
 ./scripts/release-workflow.sh [version] [message]
@@ -88,13 +100,25 @@ This automatically:
 
 ---
 
-## Step 5: Optional GitHub Release
+## Step 6: Optional GitHub Release
 
 Create a formal GitHub release with the DMG attached:
 
 ```bash
 gh release create v1.5.6 "releases/My Launchpad Installer.dmg" --title "My Launchpad v1.5.6" --generate-notes
 ```
+
+---
+
+## Release Checklist
+
+Before saying "send it":
+- [ ] All test cases pass (docs/test-cases.md)
+- [ ] Version updated in all files
+- [ ] Release notes written
+- [ ] Chat history updated
+- [ ] Prompts-used updated
+- [ ] verify-docs.sh passes
 
 ---
 
