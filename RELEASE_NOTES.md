@@ -1,5 +1,15 @@
 # Release Notes
 
+## Version 1.6.1 (February 2026)
+
+### Bug Fixes
+
+#### Multi-Desktop Support
+- **Window Follows Desktop** - App now appears on your current desktop/space instead of switching you to the desktop where it was originally opened
+- Changed window behavior from "join all spaces" to "move to active space"
+
+---
+
 ## Version 1.6.0 (February 2026)
 
 ### New Features

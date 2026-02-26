@@ -74,6 +74,25 @@ This file documents test cases for each feature. Tests are written when features
 
 ---
 
+## Version 1.6.1 Tests
+
+### TC-012: Window Moves to Current Desktop
+**Feature:** Multi-desktop support
+**Added:** v1.6.1
+**Status:** ✅ Pass
+
+**Steps:**
+1. Open My Launchpad on Desktop 1
+2. Switch to Desktop 2 (swipe or Control+Arrow)
+3. Press Control+Option+Space to show app
+4. Observe which desktop the window appears on
+
+**Expected:** Window appears on Desktop 2 (current desktop)
+**Actual:** Window moves to current desktop correctly
+**Tested:** February 25, 2026
+
+---
+
 ## Version 1.6.0 Tests
 
 ### TC-004: Launch at Login Toggle
@@ -220,12 +239,13 @@ This file documents test cases for each feature. Tests are written when features
 
 | Version | Tests | Passed | Failed |
 |---------|-------|--------|--------|
+| v1.6.1 | 1 | 1 | 0 |
 | v1.6.0 | 3 | 3 | 0 |
 | v1.5.9 | 2 | 2 | 0 |
 | v1.5.8 | 2 | 2 | 0 |
 | v1.5.7 | 1 | 1 | 0 |
 | Core | 3 | 3 | 0 |
-| **Total** | **11** | **11** | **0** |
+| **Total** | **12** | **12** | **0** |
 
 ---
 
