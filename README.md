@@ -112,27 +112,32 @@ For the global hotkey to work:
 ```
 MyLaunchpad/
 ├── Package.swift                 # Swift package definition
-├── build.sh                      # Build script
 ├── README.md                     # This file
-├── My Launchpad User Guide.md    # Detailed user guide
+├── RELEASE_NOTES.md              # Release notes
 ├── Resources/
-│   └── Info.plist               # App metadata
-└── Sources/
-    ├── MyLaunchpadApp.swift     # Main app, hotkey manager, menu bar
-    ├── Models/
-    │   ├── AppItem.swift        # App model
-    │   └── AppGroup.swift       # Group model
-    ├── Services/
-    │   ├── AppScanner.swift     # Scans for applications
-    │   └── DataManager.swift    # Persistence & import/export
-    ├── ViewModels/
-    │   └── LauncherViewModel.swift
-    └── Views/
-        ├── ContentView.swift    # Main window
-        ├── AppIconView.swift    # App tile
-        ├── GroupIconView.swift  # Group tile with 2x2 preview
-        ├── ExpandedGroupView.swift # Group popup
-        └── EditModeToolbar.swift
+│   ├── Info.plist               # App metadata
+│   └── AppIcon.icns             # App icon
+├── Sources/
+│   ├── MyLaunchpadApp.swift     # Main app, hotkey manager, menu bar
+│   ├── Models/
+│   │   ├── AppItem.swift        # App model
+│   │   └── AppGroup.swift       # Group model
+│   ├── Services/
+│   │   ├── AppScanner.swift     # Scans for applications
+│   │   └── DataManager.swift    # Persistence & import/export
+│   ├── ViewModels/
+│   │   └── LauncherViewModel.swift
+│   └── Views/
+│       ├── ContentView.swift    # Main window
+│       ├── AppIconView.swift    # App tile
+│       ├── DraggableAppIconView.swift # Draggable app icon
+│       ├── GroupIconView.swift  # Group tile with 2x2 preview
+│       └── ExpandedGroupView.swift # Group popup
+├── docs/                         # Documentation
+│   └── My Launchpad User Guide.md
+├── scripts/                      # Build and workflow scripts
+├── images/                       # Screenshots and images
+└── releases/                     # DMG installers
 ```
 
 ## Data Storage

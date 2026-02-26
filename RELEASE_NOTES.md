@@ -63,7 +63,7 @@
 #### Automatic App Detection
 - **Live App Monitoring** - New apps added to Applications folder appear automatically without restarting
 - **Removed Apps Cleanup** - Apps that are deleted are automatically removed from the launcher
-- **Folder Watching** - Monitors `/Applications`, `/System/Applications`, and `~/Applications`
+- **Folder Watching** - Monitors `/Applications`, `/System/Applications`, `/System/Applications/Utilities`, and `~/Applications`
 - **Smart Debouncing** - Changes are batched to avoid excessive refreshes during bulk operations
 
 #### Release Workflow
@@ -272,4 +272,4 @@ These changes provide a more intuitive experience where only one panel (group or
 
 ---
 
-*For detailed usage instructions, see the [User Guide](My%20App%20Launcher%20User%20Guide.md).*
+*For detailed usage instructions, see the [User Guide](docs/My%20Launchpad%20User%20Guide.md).*
