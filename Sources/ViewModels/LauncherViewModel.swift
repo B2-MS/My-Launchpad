@@ -8,6 +8,7 @@ class LauncherViewModel: ObservableObject {
     @Published var allApps: [AppItem] = []
     @Published var groups: [AppGroup] = []
     @Published var ungroupedAppIds: [UUID] = []
+    @Published var launcherTiles: [LauncherTile] = []  // Ordered list of groups and standalone apps
     @Published var isEditMode: Bool = false
     @Published var selectedApps: Set<UUID> = []
     @Published var lastSelectedAppId: UUID? = nil  // For Shift+click range selection
@@ -252,6 +253,27 @@ class LauncherViewModel: ObservableObject {
             ungrouped.append(contentsOf: newApps.map { $0.id })
             self.ungroupedAppIds = ungrouped
             
+            // Load or create launcher tiles
+            if let tiles = savedData.launcherTiles {
+                // Filter out invalid tiles (standalone apps that no longer exist, groups that were deleted)
+                let validGroupIds = Set(self.groups.map { $0.id })
+                self.launcherTiles = tiles.filter { tile in
+                    switch tile {
+                    case .group(let uuid): return validGroupIds.contains(uuid)
+                    case .standaloneApp(let uuid): return validAppIds.contains(uuid)
+                    }
+                }
+                // Add any new groups that aren't in tiles
+                for group in self.groups {
+                    if !self.launcherTiles.contains(where: { $0.uuid == group.id && $0.isGroup }) {
+                        self.launcherTiles.append(.group(group.id))
+                    }
+                }
+            } else {
+                // Migration: Create tiles from existing groups
+                self.launcherTiles = self.groups.map { .group($0.id) }
+            }
+            
             // Restore settings
             if let scale = savedData.groupTileScale {
                 self.groupTileScale = scale
@@ -297,6 +319,7 @@ class LauncherViewModel: ObservableObject {
             groups: groups,
             ungroupedAppIds: ungroupedAppIds,
             allApps: allApps,
+            launcherTiles: launcherTiles,
             groupTileScale: groupTileScale,
             hideOnLaunch: hideOnLaunch,
             hideOnFocusLost: hideOnFocusLost,
@@ -383,6 +406,7 @@ class LauncherViewModel: ObservableObject {
         )
         
         groups.append(newGroup)
+        launcherTiles.append(.group(newGroup.id))
         
         // Remove from ungrouped
         ungroupedAppIds.removeAll { selectedApps.contains($0) }
@@ -412,6 +436,7 @@ class LauncherViewModel: ObservableObject {
         )
         
         groups.append(newGroup)
+        launcherTiles.append(.group(newGroup.id))
         
         // Remove from ungrouped
         ungroupedAppIds.removeAll { $0 == app.id }
@@ -463,10 +488,18 @@ class LauncherViewModel: ObservableObject {
         saveData()
     }
     
+    /// Set the tile size of a group
+    func setGroupTileSize(_ group: AppGroup, size: GroupTileSize) {
+        guard let index = groups.firstIndex(where: { $0.id == group.id }) else { return }
+        groups[index].tileSize = size
+        saveData()
+    }
+    
     /// Delete a group (apps move to ungrouped)
     func deleteGroup(_ group: AppGroup) {
-        ungroupedAppIds.append(contentsOf: group.appIds)
+        ungroupedAppIds.append(contentsOf: group.actualAppIds)
         groups.removeAll { $0.id == group.id }
+        launcherTiles.removeAll { $0.uuid == group.id && $0.isGroup }
         saveData()
     }
     
@@ -573,6 +606,7 @@ class LauncherViewModel: ObservableObject {
         )
         
         groups.append(newGroup)
+        launcherTiles.append(.group(newGroup.id))
         
         // Remove both from ungrouped
         ungroupedAppIds.removeAll { $0 == app1Id || $0 == app2Id }
@@ -635,15 +669,60 @@ class LauncherViewModel: ObservableObject {
         saveData()
     }
     
-    /// Reorder groups by moving one group to another's position (swap)
+    /// Reorder groups by moving one group to another's position in launcherTiles
     func reorderGroup(from sourceId: UUID, to targetId: UUID) {
-        guard let sourceIndex = groups.firstIndex(where: { $0.id == sourceId }),
-              let targetIndex = groups.firstIndex(where: { $0.id == targetId }),
-              sourceIndex != targetIndex else { return }
+        // Find the tile indices
+        guard let sourceIndex = launcherTiles.firstIndex(where: { 
+            if case .group(let id) = $0 { return id == sourceId }
+            return false
+        }) else {
+            return
+        }
         
-        let movedGroup = groups.remove(at: sourceIndex)
-        groups.insert(movedGroup, at: targetIndex)
-        saveData()
+        guard let targetIndex = launcherTiles.firstIndex(where: {
+            if case .group(let id) = $0 { return id == targetId }
+            return false
+        }) else {
+            return
+        }
+        
+        guard sourceIndex != targetIndex else {
+            return
+        }
+        
+        let movedTile = launcherTiles.remove(at: sourceIndex)
+        launcherTiles.insert(movedTile, at: targetIndex)
+        deferredSave()
+    }
+    
+    /// Insert a group at a specific index in launcherTiles
+    func insertTileAt(groupId: UUID, index: Int) {
+        guard let sourceIndex = launcherTiles.firstIndex(where: {
+            if case .group(let id) = $0 { return id == groupId }
+            return false
+        }) else { return }
+        
+        // Don't move if already at that position
+        if sourceIndex == index || sourceIndex == index - 1 { return }
+        
+        let movedTile = launcherTiles.remove(at: sourceIndex)
+        
+        // Adjust target index since we removed an item
+        var adjustedIndex = index
+        if sourceIndex < index {
+            adjustedIndex -= 1
+        }
+        
+        let clampedIndex = min(max(0, adjustedIndex), launcherTiles.count)
+        launcherTiles.insert(movedTile, at: clampedIndex)
+        deferredSave()
+    }
+    
+    /// Save after a short delay to avoid blocking the main thread during animation
+    private func deferredSave() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.saveData()
+        }
     }
     
     /// Insert a group at a specific index
@@ -666,6 +745,86 @@ class LauncherViewModel: ObservableObject {
         // Insert at target position (clamped to valid range)
         let clampedIndex = min(max(0, adjustedTargetIndex), groups.count)
         groups.insert(movedGroup, at: clampedIndex)
+        saveData()
+    }
+    
+    // MARK: - Standalone App Management
+    
+    /// Pin an app as a standalone tile in the main grid
+    func pinAppAsStandalone(_ appId: UUID) {
+        // Don't pin if already pinned
+        guard !launcherTiles.contains(where: { $0.uuid == appId && $0.isStandaloneApp }) else { return }
+        
+        // Remove from ungrouped (it's now a standalone)
+        ungroupedAppIds.removeAll { $0 == appId }
+        
+        // Remove from any groups
+        for i in groups.indices {
+            groups[i].appIds.removeAll { $0 == appId }
+        }
+        
+        // Add to tiles
+        launcherTiles.append(.standaloneApp(appId))
+        saveData()
+    }
+    
+    /// Unpin a standalone app (move back to ungrouped)
+    func unpinStandaloneApp(_ appId: UUID) {
+        launcherTiles.removeAll { $0.uuid == appId && $0.isStandaloneApp }
+        
+        // Add to ungrouped if not already there
+        if !ungroupedAppIds.contains(appId) {
+            ungroupedAppIds.append(appId)
+        }
+        saveData()
+    }
+    
+    /// Get the app for a standalone tile
+    func standaloneApp(for appId: UUID) -> AppItem? {
+        allApps.first { $0.id == appId }
+    }
+    
+    /// Get all standalone app IDs
+    var standaloneAppIds: [UUID] {
+        launcherTiles.compactMap { tile in
+            if case .standaloneApp(let uuid) = tile {
+                return uuid
+            }
+            return nil
+        }
+    }
+    
+    /// Reorder tiles (groups and standalone apps)
+    func reorderTile(from sourceId: String, to targetId: String) {
+        guard let sourceIndex = launcherTiles.firstIndex(where: { $0.id == sourceId }),
+              let targetIndex = launcherTiles.firstIndex(where: { $0.id == targetId }),
+              sourceIndex != targetIndex else { return }
+        
+        let movedTile = launcherTiles.remove(at: sourceIndex)
+        launcherTiles.insert(movedTile, at: targetIndex)
+        saveData()
+    }
+    
+    /// Insert a tile at a specific index
+    func insertTile(from sourceId: String, toIndex targetIndex: Int) {
+        guard let sourceIndex = launcherTiles.firstIndex(where: { $0.id == sourceId }) else { return }
+        
+        // Don't do anything if dropping in same position
+        if sourceIndex == targetIndex || sourceIndex == targetIndex - 1 {
+            return
+        }
+        
+        let movedTile = launcherTiles.remove(at: sourceIndex)
+        
+        // Adjust target index if we removed before it
+        var adjustedTargetIndex = targetIndex
+        if sourceIndex < targetIndex {
+            adjustedTargetIndex -= 1
+        }
+        
+        // Insert at target position (clamped to valid range)
+        let clampedIndex = min(max(0, adjustedTargetIndex), launcherTiles.count)
+        launcherTiles.insert(movedTile, at: clampedIndex)
         saveData()
     }
 

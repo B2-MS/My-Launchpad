@@ -4,7 +4,7 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 
 ![macOS](https://img.shields.io/badge/macOS-13.0+-blue.svg)
 ![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)
-![Version](https://img.shields.io/badge/Version-1.6.1-purple.svg)
+![Version](https://img.shields.io/badge/Version-1.7.0-purple.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 **[Release Notes](RELEASE_NOTES.md)** | **[User Guide](docs/My%20Launchpad%20User%20Guide.md)**
@@ -34,6 +34,7 @@ If you miss the way Launchpad used to work, this app is for you.
 - ⌨️ **Global Hotkey** - Press `⌃⌥Space` (Control+Option+Space) from anywhere to toggle the launcher
 - 📍 **Menu Bar Icon** - Click to toggle visibility, right-click for menu
 - 🎨 **Customizable** - Adjust group colors and tile sizes
+- 📐 **Resizable Groups** - Choose Standard (1x1), Large (2x1), or Extra Large (2x2) tile sizes per group
 - 🔍 **Search** - Quickly find apps by name
 - 🖱️ **Drag & Drop** - Reorder apps and groups with intuitive drag and drop
 - 📄 **Multi-Page Groups** - Groups with 16+ apps paginate automatically with swipe gestures
@@ -104,6 +105,7 @@ For the global hotkey to work:
 ### Settings (Gear Icon)
 - **Color** - Customize group header color
 - **Size** - Choose tile size (S/M/L)
+- **Resize Groups** - Right-click a group → Resize Group → Standard/Large/Extra Large
 - **Export** - Save your configuration to a file
 - **Import** - Restore configuration from a file
 
@@ -114,7 +116,8 @@ MyLaunchpad/
 ├── Package.swift                 # Swift package definition
 ├── build.sh                      # Build script
 ├── README.md                     # This file
-├── My Launchpad User Guide.md    # Detailed user guide
+├── docs/
+│   └── My Launchpad User Guide.md  # Detailed user guide
 ├── Resources/
 │   └── Info.plist               # App metadata
 └── Sources/
@@ -128,11 +131,12 @@ MyLaunchpad/
     ├── ViewModels/
     │   └── LauncherViewModel.swift
     └── Views/
-        ├── ContentView.swift    # Main window
-        ├── AppIconView.swift    # App tile
-        ├── GroupIconView.swift  # Group tile with 2x2 preview
-        ├── ExpandedGroupView.swift # Group popup
-        └── EditModeToolbar.swift
+        ├── ContentView.swift        # Main window with grid layout
+        ├── AppIconView.swift        # App tile
+        ├── GroupIconView.swift      # Group tile (supports 1x1, 2x1, 2x2)
+        ├── DraggableAppIconView.swift # Draggable app icon wrapper
+        ├── StandaloneAppTileView.swift # Standalone app tile
+        └── ExpandedGroupView.swift  # Group popup with pagination
 ```
 
 ## Data Storage

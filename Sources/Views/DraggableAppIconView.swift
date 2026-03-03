@@ -16,6 +16,7 @@ struct DraggableAppIconView: View {
     let onCreateNewGroup: () -> Void
     let onDropOntoApp: (UUID) -> Void
     let onReorderApp: (UUID) -> Void
+    let onPinToGrid: (() -> Void)?
     
     @State private var isHovered = false
     @State private var isDropTargeted = false
@@ -159,6 +160,16 @@ struct DraggableAppIconView: View {
     
     @ViewBuilder
     private var contextMenuContent: some View {
+        if let pinAction = onPinToGrid {
+            Button {
+                pinAction()
+            } label: {
+                Label("Pin to Grid", systemImage: "pin")
+            }
+            
+            Divider()
+        }
+        
         Button {
             onCreateNewGroup()
         } label: {

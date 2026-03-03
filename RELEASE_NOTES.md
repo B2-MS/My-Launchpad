@@ -1,5 +1,26 @@
 # Release Notes
 
+## Version 1.7.0 (March 2026)
+
+### New Features
+
+#### Resizable Group Tiles
+- **Three Tile Sizes** - Groups can now be resized to Standard (1×1), Large (2×1), or Extra Large (2×2)
+- **More App Previews** - Larger tiles show more app icons at a glance (4, 8, or 16 apps)
+- **Right-Click to Resize** - Right-click any group → Resize Group to change its size
+- **Smart Grid Layout** - Custom bin-packing algorithm arranges mixed-size tiles efficiently
+
+#### Improved Drag & Drop
+- **Smooth Animations** - Groups animate smoothly when reordered
+- **Location-Based Drops** - Drop detection uses precise cursor position for accurate placement
+- **Deferred Saves** - Disk writes no longer block the UI during drag operations
+
+### Bug Fixes
+- **Fixed Grid Gap** - Apps section now sits directly below groups instead of having a large gap
+- **Fixed Drop Handler** - Resolved issue where group drop handler wasn't firing with the new grid layout
+
+---
+
 ## Version 1.6.1 (February 2026)
 
 ### Bug Fixes

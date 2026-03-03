@@ -11,11 +11,17 @@ struct ContentView: View {
     @State private var draggedAppId: UUID? = nil
     @State private var dropTargetGroupId: UUID? = nil
     @State private var groupInsertIndex: Int? = nil
+    @State private var tileInsertIndex: Int? = nil
     @State private var scrollProxy: ScrollViewProxy? = nil
+    @State private var tilesContainerWidth: CGFloat = 600
+    @State private var gridContentHeight: CGFloat = 200
     
-    private var groupGridColumns: [GridItem] {
-        let baseSize: CGFloat = 120 * viewModel.groupTileScale
-        return [GridItem(.adaptive(minimum: baseSize, maximum: baseSize + 30), spacing: 2)]
+    private var standardTileWidth: CGFloat {
+        120 * viewModel.groupTileScale
+    }
+    
+    private var standardTileHeight: CGFloat {
+        135 * viewModel.groupTileScale
     }
     
     private let columns = [
@@ -436,57 +442,396 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Text("\(viewModel.groups.count) groups")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .padding(.horizontal, 16)
-            
-            LazyVGrid(columns: groupGridColumns, spacing: 2) {
-                ForEach(Array(viewModel.groups.enumerated()), id: \.element.id) { index, group in
-                    groupIconWithDropZones(for: group, at: index)
+                let groupCount = viewModel.launcherTiles.filter { $0.isGroup }.count
+                let appCount = viewModel.launcherTiles.filter { $0.isStandaloneApp }.count
+                if appCount > 0 {
+                    Text("\(groupCount) groups, \(appCount) apps")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                } else {
+                    Text("\(groupCount) groups")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
             .padding(.horizontal, 16)
+            
+            // Custom grid layout that supports multi-row tiles
+            GeometryReader { geometry in
+                let availableWidth = geometry.size.width - 32 // Account for padding
+                let spacing: CGFloat = 8
+                let columns = max(1, Int((availableWidth + spacing) / (standardTileWidth + spacing)))
+                let positions = calculateGridPositions(columns: columns)
+                let gridHeight = calculateGridHeight(positions: positions, spacing: spacing)
+                
+                ZStack(alignment: .topLeading) {
+                    ForEach(positions, id: \.tile.id) { position in
+                        let tileW = CGFloat(position.colSpan) * standardTileWidth + CGFloat(position.colSpan - 1) * spacing
+                        let tileH = CGFloat(position.rowSpan) * standardTileHeight + CGFloat(position.rowSpan - 1) * spacing
+                        
+                        tileView(for: position.tile, at: position.index)
+                            .frame(width: tileW, height: tileH)
+                            .position(
+                                x: 16 + CGFloat(position.col) * (standardTileWidth + spacing) + tileW / 2,
+                                y: CGFloat(position.row) * (standardTileHeight + spacing) + tileH / 2
+                            )
+                            .animation(.easeInOut(duration: 0.25), value: viewModel.launcherTiles)
+                    }
+                }
+                .frame(width: geometry.size.width, height: gridHeight)
+                .dropDestination(for: String.self) { items, location in
+                    dropTargetGroupId = nil
+                    guard let itemString = items.first else { return false }
+                    
+                    // Find which tile the drop landed on
+                    let targetTile = findTile(at: location, in: positions, spacing: spacing)
+                    
+                    // Handle group drag (reordering)
+                    if itemString.hasPrefix("group:") {
+                        let groupIdString = String(itemString.dropFirst(6))
+                        guard let sourceGroupId = UUID(uuidString: groupIdString) else { return false }
+                        
+                        // If dropped on a tile, move source to that tile's position
+                        if let targetTile = targetTile {
+                            if case .group(let targetGroupId) = targetTile.tile, sourceGroupId != targetGroupId {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    viewModel.reorderGroup(from: sourceGroupId, to: targetGroupId)
+                                }
+                                return true
+                            }
+                            // Dropped on a standalone app tile - insert at that index
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                viewModel.insertTileAt(groupId: sourceGroupId, index: targetTile.index)
+                            }
+                            return true
+                        }
+                        
+                        // Dropped in a gap - find nearest insert position
+                        let idx = findInsertIndex(at: location, in: positions, spacing: spacing)
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            viewModel.insertTileAt(groupId: sourceGroupId, index: idx)
+                        }
+                        return true
+                    }
+                    
+                    // Handle app drag (adding to group)
+                    if let targetTile = targetTile,
+                       case .group(let targetGroupId) = targetTile.tile,
+                       let appId = UUID(uuidString: itemString),
+                       let group = viewModel.groups.first(where: { $0.id == targetGroupId }) {
+                        viewModel.moveAppToGroup(appId, group: group)
+                        return true
+                    }
+                    
+                    return false
+                } isTargeted: { targeted in
+                    if !targeted {
+                        dropTargetGroupId = nil
+                    }
+                }
+                .onAppear {
+                    gridContentHeight = gridHeight
+                }
+                .onChange(of: positions.count) { _ in
+                    gridContentHeight = gridHeight
+                }
+                .onChange(of: viewModel.launcherTiles) { _ in
+                    // Recalculate after reorder
+                    let newPositions = calculateGridPositions(columns: columns)
+                    gridContentHeight = calculateGridHeight(positions: newPositions, spacing: spacing)
+                }
+            }
+            .frame(height: gridContentHeight)
         }
     }
     
-    private func groupIconWithDropZones(for group: AppGroup, at index: Int) -> some View {
-        HStack(spacing: 0) {
-            // Left drop zone for insert
-            Rectangle()
-                .fill(groupInsertIndex == index ? Color.blue.opacity(0.3) : Color.clear)
-                .frame(width: 8)
-                .dropDestination(for: String.self) { items, _ in
-                    handleGroupInsertDrop(items: items, atIndex: index)
-                } isTargeted: { targeted in
-                    groupInsertIndex = targeted ? index : nil
-                }
-            
-            groupIcon(for: group)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(dropTargetGroupId == group.id ? Color.blue : Color.clear, lineWidth: 3)
-                        .padding(4)
-                )
-                .dropDestination(for: String.self) { items, _ in
-                    handleGroupSwapDrop(items: items, withGroup: group)
-                } isTargeted: { targeted in
-                    dropTargetGroupId = targeted ? group.id : nil
-                }
-            
-            // Right drop zone for insert (for last item)
-            if index == viewModel.groups.count - 1 {
-                Rectangle()
-                    .fill(groupInsertIndex == index + 1 ? Color.blue.opacity(0.3) : Color.clear)
-                    .frame(width: 8)
-                    .dropDestination(for: String.self) { items, _ in
-                        handleGroupInsertDrop(items: items, atIndex: index + 1)
-                    } isTargeted: { targeted in
-                        groupInsertIndex = targeted ? index + 1 : nil
-                    }
+    private struct TileGridPosition {
+        let tile: LauncherTile
+        let index: Int
+        let row: Int
+        let col: Int
+        let colSpan: Int
+        let rowSpan: Int
+        
+        /// Get the rect for this tile position
+        func rect(tileWidth: CGFloat, tileHeight: CGFloat, spacing: CGFloat) -> CGRect {
+            let x = 16 + CGFloat(col) * (tileWidth + spacing)
+            let y = CGFloat(row) * (tileHeight + spacing)
+            let w = CGFloat(colSpan) * tileWidth + CGFloat(colSpan - 1) * spacing
+            let h = CGFloat(rowSpan) * tileHeight + CGFloat(rowSpan - 1) * spacing
+            return CGRect(x: x, y: y, width: w, height: h)
+        }
+    }
+    
+    /// Find which tile contains the given point
+    private func findTile(at point: CGPoint, in positions: [TileGridPosition], spacing: CGFloat) -> TileGridPosition? {
+        for position in positions {
+            let rect = position.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
+            if rect.contains(point) {
+                return position
             }
         }
+        return nil
+    }
+    
+    /// Find the insert index for a drop between tiles
+    private func findInsertIndex(at point: CGPoint, in positions: [TileGridPosition], spacing: CGFloat) -> Int {
+        guard !positions.isEmpty else { return 0 }
+        
+        // Find the closest tile and insert before or after it
+        var closestIndex = 0
+        var closestDistance: CGFloat = .infinity
+        
+        for position in positions {
+            let rect = position.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
+            let centerX = rect.midX
+            let centerY = rect.midY
+            let distance = hypot(point.x - centerX, point.y - centerY)
+            
+            if distance < closestDistance {
+                closestDistance = distance
+                // Insert after if drop is to the right of center, before otherwise
+                closestIndex = point.x > centerX ? position.index + 1 : position.index
+            }
+        }
+        
+        return closestIndex
+    }
+    
+    /// Estimate grid height for GeometryReader
+    private func estimateGridHeight() -> CGFloat {
+        let availableWidth: CGFloat = 800 // Reasonable estimate
+        let spacing: CGFloat = 8
+        let columns = max(1, Int((availableWidth + spacing) / (standardTileWidth + spacing)))
+        let positions = calculateGridPositions(columns: columns)
+        return calculateGridHeight(positions: positions, spacing: spacing)
+    }
+    
+    /// Calculate total grid height from positions
+    private func calculateGridHeight(positions: [TileGridPosition], spacing: CGFloat) -> CGFloat {
+        guard !positions.isEmpty else { return standardTileHeight }
+        let maxRow = positions.map { $0.row + $0.rowSpan }.max() ?? 1
+        return CGFloat(maxRow) * standardTileHeight + CGFloat(max(0, maxRow - 1)) * spacing
+    }
+    
+    /// Calculate grid positions for all tiles using bin-packing algorithm
+    private func calculateGridPositions(columns: Int) -> [TileGridPosition] {
+        var positions: [TileGridPosition] = []
+        var grid: [[Bool]] = [] // Dynamic grid: grid[row][col] = occupied
+        
+        func ensureRows(_ rowCount: Int) {
+            while grid.count < rowCount {
+                grid.append(Array(repeating: false, count: columns))
+            }
+        }
+        
+        func isAvailable(row: Int, col: Int, rowSpan: Int, colSpan: Int) -> Bool {
+            if col + colSpan > columns { return false }
+            ensureRows(row + rowSpan)
+            for r in row..<(row + rowSpan) {
+                for c in col..<(col + colSpan) {
+                    if grid[r][c] { return false }
+                }
+            }
+            return true
+        }
+        
+        func occupy(row: Int, col: Int, rowSpan: Int, colSpan: Int) {
+            ensureRows(row + rowSpan)
+            for r in row..<(row + rowSpan) {
+                for c in col..<(col + colSpan) {
+                    grid[r][c] = true
+                }
+            }
+        }
+        
+        func findPosition(rowSpan: Int, colSpan: Int) -> (row: Int, col: Int) {
+            var row = 0
+            while row < 100 { // Safety limit
+                ensureRows(row + rowSpan)
+                for col in 0..<columns {
+                    if isAvailable(row: row, col: col, rowSpan: rowSpan, colSpan: colSpan) {
+                        return (row, col)
+                    }
+                }
+                row += 1
+            }
+            return (row, 0)
+        }
+        
+        for (index, tile) in viewModel.launcherTiles.enumerated() {
+            let colSpan: Int
+            let rowSpan: Int
+            
+            switch tile {
+            case .group(let groupId):
+                if let group = viewModel.groups.first(where: { $0.id == groupId }) {
+                    colSpan = min(group.tileSize.gridSpanWidth, columns)
+                    rowSpan = group.tileSize.gridSpanHeight
+                } else {
+                    colSpan = 1
+                    rowSpan = 1
+                }
+            case .standaloneApp:
+                colSpan = 1
+                rowSpan = 1
+            }
+            
+            let (row, col) = findPosition(rowSpan: rowSpan, colSpan: colSpan)
+            occupy(row: row, col: col, rowSpan: rowSpan, colSpan: colSpan)
+            
+            positions.append(TileGridPosition(
+                tile: tile,
+                index: index,
+                row: row,
+                col: col,
+                colSpan: colSpan,
+                rowSpan: rowSpan
+            ))
+        }
+        
+        return positions
+    }
+    
+    private let tileSpacing: CGFloat = 8
+    
+    /// Get the width for a specific tile (accounting for spacing when spanning multiple tiles)
+    private func tileWidth(for tile: LauncherTile) -> CGFloat {
+        switch tile {
+        case .group(let groupId):
+            if let group = viewModel.groups.first(where: { $0.id == groupId }) {
+                let span = group.tileSize.gridSpanWidth
+                // Width = span * standardTileWidth + (span - 1) * spacing
+                return CGFloat(span) * standardTileWidth + CGFloat(span - 1) * tileSpacing
+            }
+            return standardTileWidth
+        case .standaloneApp:
+            return standardTileWidth
+        }
+    }
+    
+    /// Get the height for a specific tile (accounting for spacing when spanning multiple tiles)
+    private func tileHeight(for tile: LauncherTile) -> CGFloat {
+        switch tile {
+        case .group(let groupId):
+            if let group = viewModel.groups.first(where: { $0.id == groupId }) {
+                let span = group.tileSize.gridSpanHeight
+                // Height = span * standardTileHeight + (span - 1) * spacing
+                return CGFloat(span) * standardTileHeight + CGFloat(span - 1) * tileSpacing
+            }
+            return standardTileHeight
+        case .standaloneApp:
+            return standardTileHeight
+        }
+    }
+    
+    /// Simple tile view for the grid
+    @ViewBuilder
+    private func tileView(for tile: LauncherTile, at index: Int) -> some View {
+        switch tile {
+        case .group(let groupId):
+            if let group = viewModel.groups.first(where: { $0.id == groupId }) {
+                groupIcon(for: group, isDropTarget: dropTargetGroupId == groupId)
+            }
+        case .standaloneApp(let appId):
+            if let app = viewModel.standaloneApp(for: appId) {
+                standaloneAppTile(for: app)
+            }
+        }
+    }
+    
+    /// Handle drops on a group tile - for reordering groups or adding apps
+    private func handleGroupDrop(items: [String], targetGroupId: UUID) -> Bool {
+        print("DEBUG: handleGroupDrop called with items: \(items) target: \(targetGroupId)")
+        
+        // Write to file for debugging
+        let debugMsg = "handleGroupDrop: items=\(items) target=\(targetGroupId)\n"
+        if let data = debugMsg.data(using: .utf8) {
+            FileManager.default.createFile(atPath: "/tmp/drop_debug.log", contents: data)
+        }
+        
+        guard let itemString = items.first else { return false }
+        
+        // Handle group drag (reordering)
+        if itemString.hasPrefix("group:") {
+            let groupIdString = String(itemString.dropFirst(6))
+            if let sourceGroupId = UUID(uuidString: groupIdString), sourceGroupId != targetGroupId {
+                viewModel.reorderGroup(from: sourceGroupId, to: targetGroupId)
+                return true
+            }
+            return false
+        }
+        
+        // Handle app drag (adding to group)
+        if let appId = UUID(uuidString: itemString) {
+            viewModel.moveAppToGroup(appId, group: viewModel.groups.first(where: { $0.id == targetGroupId })!)
+            return true
+        }
+        
+        return false
+    }
+    
+    private func standaloneAppTile(for app: AppItem) -> some View {
+        StandaloneAppTileView(
+            app: app,
+            isEditMode: viewModel.isEditMode,
+            scale: viewModel.groupTileScale,
+            onTap: {
+                viewModel.launchApp(app)
+            },
+            onUnpin: {
+                viewModel.unpinStandaloneApp(app.id)
+            },
+            onMoveToGroup: { group in
+                viewModel.moveAppToGroup(app.id, group: group)
+                // Also remove from tiles since it's now in a group
+                viewModel.launcherTiles.removeAll { $0.uuid == app.id && $0.isStandaloneApp }
+                viewModel.saveData()
+            },
+            groups: viewModel.groups
+        )
+    }
+    
+    private func handleTileInsertDrop(items: [String], atIndex insertIndex: Int) -> Bool {
+        guard let itemString = items.first else { return false }
+        
+        // Handle group drag
+        if itemString.hasPrefix("group:") {
+            let groupIdString = String(itemString.dropFirst(6))
+            if let groupId = UUID(uuidString: groupIdString) {
+                let tileId = "group:\(groupId.uuidString)"
+                viewModel.insertTile(from: tileId, toIndex: insertIndex)
+                tileInsertIndex = nil
+                return true
+            }
+        }
+        
+        // Handle standalone app drag
+        if itemString.hasPrefix("standaloneApp:") {
+            let appIdString = String(itemString.dropFirst(14))
+            if let appId = UUID(uuidString: appIdString) {
+                let tileId = "app:\(appId.uuidString)"
+                viewModel.insertTile(from: tileId, toIndex: insertIndex)
+                tileInsertIndex = nil
+                return true
+            }
+        }
+        
+        // Handle app from ungrouped being pinned
+        if let appId = UUID(uuidString: itemString) {
+            viewModel.pinAppAsStandalone(appId)
+            // Move it to the right position
+            if let tileIndex = viewModel.launcherTiles.firstIndex(where: { $0.uuid == appId && $0.isStandaloneApp }) {
+                let movedTile = viewModel.launcherTiles.remove(at: tileIndex)
+                let adjustedIndex = min(insertIndex, viewModel.launcherTiles.count)
+                viewModel.launcherTiles.insert(movedTile, at: adjustedIndex)
+                viewModel.saveData()
+            }
+            tileInsertIndex = nil
+            return true
+        }
+        
+        return false
     }
     
     private func handleGroupSwapDrop(items: [String], withGroup targetGroup: AppGroup) -> Bool {
@@ -519,7 +864,7 @@ struct ContentView: View {
         return false
     }
     
-    private func groupIcon(for group: AppGroup) -> some View {
+    private func groupIcon(for group: AppGroup, isDropTarget: Bool = false) -> some View {
         GroupIconView(
             group: group,
             apps: viewModel.apps(for: group),
@@ -539,7 +884,11 @@ struct ContentView: View {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     viewModel.toggleGroupExpansion(group)
                 }
-            }
+            },
+            onChangeTileSize: { newSize in
+                viewModel.setGroupTileSize(group, size: newSize)
+            },
+            isDropTarget: isDropTarget
         )
         .contextMenu {
             Button {
@@ -556,6 +905,23 @@ struct ContentView: View {
                 viewModel.expandGroup(group)
             } label: {
                 Label("Rename", systemImage: "pencil")
+            }
+            
+            Divider()
+            
+            Menu("Resize Group") {
+                ForEach(GroupTileSize.allCases, id: \.self) { size in
+                    Button {
+                        viewModel.setGroupTileSize(group, size: size)
+                    } label: {
+                        HStack {
+                            Text(size.displayName)
+                            if group.tileSize == size {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
             }
             
             Divider()
@@ -639,6 +1005,9 @@ struct ContentView: View {
             },
             onReorderApp: { sourceAppId in
                 viewModel.reorderUngroupedApp(from: sourceAppId, to: app.id)
+            },
+            onPinToGrid: {
+                viewModel.pinAppAsStandalone(app.id)
             }
         )
     }

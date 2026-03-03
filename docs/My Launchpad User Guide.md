@@ -202,7 +202,7 @@ Groups let you organize apps into collections (like iOS folders).
 ### Group Display Modes
 
 #### Expanded Mode (Default)
-Shows a 2x2 preview of the first 4 apps in the group.
+Shows a preview grid of apps in the group. The number of preview icons depends on the group's tile size (4 for Standard, 8 for Large, 16 for Extra Large).
 
 #### Collapsed Mode
 Shows a folder icon with a badge indicating the number of apps.
@@ -214,6 +214,20 @@ Click on a group to open it in an expanded popup view showing all apps inside.
 
 ### Renaming a Group
 In the group popup, click the group name in the header to edit it.
+
+### Resizing Groups
+
+<img src="../images/group-popup 2.png" alt="Resize Group" width="500">
+
+Groups can be resized to show more app icons at a glance. Right-click on any group and select **"Resize Group"** to choose from three sizes:
+
+| Size | Grid | Apps Shown | Description |
+|------|------|------------|-------------|
+| **Standard (1x1)** | 2x2 | 4 | Default single tile |
+| **Large (2x1)** | 4x2 | 8 | Double-wide tile |
+| **Extra Large (2x2)** | 4x4 | 16 | Double-wide, double-tall tile |
+
+> **Tip:** Use larger tile sizes for your most-used groups so you can see and access more apps without opening the group.
 
 ### Group Popup Features
 
@@ -485,6 +499,34 @@ If an app shows a blank icon:
 ---
 
 ## Version History
+
+### v1.7.0 (March 2026)
+- Resizable group tiles: Standard (1×1), Large (2×1), Extra Large (2×2)
+- Larger tiles show more app icon previews (4, 8, or 16 apps)
+- Right-click any group → Resize Group to change size
+- Smart bin-packing grid layout for mixed-size tiles
+- Smooth drag & drop animations for group reordering
+- Deferred saves prevent UI blocking during drag operations
+- Fixed grid gap between groups and apps sections
+
+### v1.6.1 (February 2026)
+- Fixed multi-desktop support: window follows current desktop/space
+
+### v1.6.0 (February 2026)
+- Launch at Login option in Settings
+- Settings/group popups auto-close when app is hidden
+- Project structure reorganized (docs moved to `docs/` folder)
+
+### v1.5.9 (February 2026)
+- Search auto-clears when launching app or hiding window
+- Added X button to clear search field
+- DMG installer window enlarged for better layout
+
+### v1.5.8 (February 2026)
+- Cloud backup to iCloud and OneDrive
+- Auto-discovery of cloud settings from other Macs
+- Import prompt when different configuration found
+- Cross-Mac settings sync
 
 ### v1.5.7 (February 2026)
 - Automatic app detection: new apps appear without restarting
