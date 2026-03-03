@@ -104,12 +104,35 @@ hdiutil convert "$TEMP_DMG" -format UDZO -imagekey zlib-level=9 -o "$DMG_PATH"
 rm -f "$TEMP_DMG"
 rm -rf "$TEMP_DIR"
 
+# Also create the standalone My Launchpad.dmg (app-only, no installer)
+STANDALONE_DMG_NAME="My Launchpad.dmg"
+STANDALONE_DMG_PATH="$RELEASES_DIR/$STANDALONE_DMG_NAME"
+TEMP_STANDALONE_DMG="$PROJECT_DIR/temp_$STANDALONE_DMG_NAME"
+
+echo "📦 Creating standalone DMG..."
+rm -f "$STANDALONE_DMG_PATH"
+rm -f "$TEMP_STANDALONE_DMG"
+
+TEMP_DIR2=$(mktemp -d)
+cp -R "$APP_BUNDLE" "$TEMP_DIR2/"
+
+hdiutil create -srcfolder "$TEMP_DIR2" \
+    -volname "$APP_NAME" \
+    -fs HFS+ \
+    -format UDZO \
+    -imagekey zlib-level=9 \
+    "$STANDALONE_DMG_PATH"
+
+rm -rf "$TEMP_DIR2"
+
 echo ""
-echo "✅ DMG created successfully!"
+echo "✅ DMGs created successfully!"
 echo ""
-echo "📍 DMG location: $DMG_PATH"
+echo "📍 Installer DMG: $DMG_PATH"
 echo "📊 Size: $(du -h "$DMG_PATH" | cut -f1)"
+echo "📍 Standalone DMG: $STANDALONE_DMG_PATH"
+echo "📊 Size: $(du -h "$STANDALONE_DMG_PATH" | cut -f1)"
 echo ""
-echo "The DMG contains:"
+echo "The Installer DMG contains:"
 echo "  • $APP_NAME.app"
 echo "  • Applications shortcut (for drag-to-install)"
