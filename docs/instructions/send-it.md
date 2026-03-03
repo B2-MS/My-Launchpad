@@ -10,10 +10,19 @@ Before releasing, update version numbers in:
 
 | File | What to Update |
 |------|----------------|
-| `README.md` | Version badge: `Version-X.X.X-purple` |
+| `README.md` | Version badge: `Version-X.X.X-purple`, Features list, Usage section |
 | `RELEASE_NOTES.md` | Add new version section at top |
-| `My Launchpad User Guide.md` | Add to Version History section |
+| `My Launchpad User Guide.md` | **Full feature documentation** (see below) AND Version History |
 | `Resources/Info.plist` | `CFBundleShortVersionString` |
+
+### User Guide — Full Feature Documentation
+
+**This is mandatory.** Do NOT just add bullet points to Version History. For every new feature:
+
+1. **Add or update body sections** — If the feature is new (e.g., Pinned Apps), add a new `##` section with full how-to documentation. If it enhances an existing feature (e.g., Drag and Drop), update that section.
+2. **Include screenshots** — If new UI elements were added, note which screenshots are needed and ask the user to provide them. Wire `<img>` tags into the documentation.
+3. **Update Table of Contents** — If a new section was added, update the TOC table at the top.
+4. **Update Version History** — Add a summary entry to the Version History section at the bottom.
 
 ---
 
@@ -116,6 +125,10 @@ Before saying "send it":
 - [ ] All test cases pass (docs/test-cases.md)
 - [ ] Version updated in all files
 - [ ] Release notes written
+- [ ] **User Guide feature sections updated** (not just version history)
+- [ ] **README Features and Usage sections updated**
+- [ ] Screenshots requested for new UI elements
+- [ ] Table of Contents updated if new sections added
 - [ ] Chat history updated
 - [ ] Prompts-used updated
 - [ ] verify-docs.sh passes
