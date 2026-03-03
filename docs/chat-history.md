@@ -19,6 +19,47 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: Resizable Group Tiles & Drag-Drop Fix (v1.7.0)
+**Date:** March 2, 2026
+
+### Prompts
+1. Reported drag-and-drop completely broken after group resizing feature was added — groups couldn't be moved at any size
+2. Multiple iterations debugging drop handler not firing with `.position()` layout
+3. Switched to ZStack-level `.dropDestination` with CGPoint location-based tile hit-testing — swapping groups now works
+4. Reported inserting between groups doesn't work and there's stuttering during drag
+5. Fixed stuttering by removing `onContinuousHover`, adding `withAnimation` wrappers, deferring `saveData()` calls
+6. Fixed insert-between by creating `insertTileAt()` function operating on `launcherTiles`
+7. Reported Apps section too far below groups — fixed by replacing estimated grid height with actual computed `gridContentHeight`
+8. Confirmed everything working, asked about screenshots
+9. Added `group-popup 2.png` image, asked to update all markdown documentation
+10. Reviewed documentation changes, confirmed images updated, asked for full markdown audit
+11. Asked to send it — build, deploy, DMG, push to GitHub
+12. Asked to update Info.plist to 1.7.0 — rebuilt and pushed
+13. Reported `My Launchpad.dmg` not updated — updated `create-dmg.sh` to produce both DMGs
+14. Asked to validate all send-it instructions and ensure everything is properly done
+
+### Outcomes
+- **Resizable Group Tiles**: Groups can be resized to Standard (1×1), Large (2×1), Extra Large (2×2) via right-click context menu
+- **Fixed Drag & Drop**: ZStack-level `.dropDestination` with CGPoint location for tile hit-testing replaces broken per-tile approach
+- **Smooth Animations**: Removed `onContinuousHover`, added `withAnimation(.easeInOut(duration: 0.25))`, deferred disk writes
+- **Insert Between Groups**: New `insertTileAt(groupId:index:)` function for gap drops
+- **Grid Height Fix**: `@State gridContentHeight` tracks actual computed height instead of estimate
+- **Documentation Updated**: README v1.7.0, RELEASE_NOTES v1.7.0 section, User Guide resizing section with new image and size table, version history in all docs
+- **Info.plist**: Version bumped to 1.7.0 (build 9)
+- **DMG Script**: `create-dmg.sh` now produces both `My Launchpad Installer.dmg` and `My Launchpad.dmg`
+- Key files modified:
+  - `Sources/Views/ContentView.swift` — ZStack grid with `.position()`, location-based drop, `findTile()`, `findInsertIndex()`, `gridContentHeight`
+  - `Sources/Views/GroupIconView.swift` — `isDropTarget` parameter, `.draggable(dragId)`
+  - `Sources/ViewModels/LauncherViewModel.swift` — `reorderGroup()`, `insertTileAt()`, `deferredSave()`
+  - `Sources/Views/StandaloneAppTileView.swift` — New file
+  - `Resources/Info.plist` — Version 1.7.0, build 9
+  - `scripts/create-dmg.sh` — Generates both DMGs
+  - `README.md` — Version badge, features, file structure
+  - `RELEASE_NOTES.md` — v1.7.0 section
+  - `docs/My Launchpad User Guide.md` — Resizing Groups section, version history
+
+---
+
 ## Session: Launch at Login & Project Cleanup (v1.6.0)
 **Date:** February 22, 2026
 

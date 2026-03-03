@@ -2,7 +2,7 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 16 Sessions, 184 Prompts
+## Summary — 17 Sessions, 196 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
@@ -22,6 +22,7 @@ This file contains the actual prompts used during development of My Launchpad.
 | Cloud Backup Settings (v1.5.8) | February 4, 2026 | 3 |
 | Search Improvements (v1.5.9) | February 18, 2026 | 5 |
 | Launch at Login & Project Cleanup (v1.6.0) | February 22, 2026 | 7 |
+| Resizable Group Tiles & Drag-Drop Fix (v1.7.0) | March 2, 2026 | 14 |
 
 ---
 
@@ -1215,6 +1216,70 @@ if settings are open and I hide the app when I come back into the app setting sh
 ```
 yes that works
 send it
+```
+
+---
+
+## Session: March 2, 2026 - Resizable Group Tiles & Drag-Drop Fix (v1.7.0)
+
+### Prompt 1: Drag-Drop Broken
+```
+I can't move any group at any size now at all
+```
+
+### Prompt 2: Still Not Working
+```
+it's still not working, drop handler never fires
+```
+
+### Prompt 3: Swap Works but Insert Doesn't
+```
+swapping groups works but inserting between groups doesn't, and there's stuttering
+```
+
+### Prompt 4: Apps Section Too Far Below
+```
+the Apps section is too far below the groups
+```
+
+### Prompt 5: Confirm Working
+```
+yes it now works with all three sizes of groups
+```
+
+### Prompt 6: Screenshot Question
+```
+can you take a screenshot?
+```
+
+### Prompt 7: Update Documentation with New Image
+```
+I added group-popup 2.png, please update all markdown documentation
+```
+
+### Prompt 8: Confirm Images Updated
+```
+I updated the other images per your instructions, please ensure all marked down has been updated based on all of these changes
+```
+
+### Prompt 9: Send It
+```
+send it
+```
+
+### Prompt 10: Update Info.plist
+```
+yes
+```
+
+### Prompt 11: DMG Not Updated
+```
+I checked the GitHub repo you still have not updated the My Launchpad DMG you've only updated the Installer. I don't understand why you're not following the full instructions of doing everything you're supposed to do as part of the send it operation?
+```
+
+### Prompt 12: Validate Full Instructions
+```
+Please validate all of the instructions and ensure this is updated, I should not have to recheck your work each time. You perform this action!!
 ```
 
 ---

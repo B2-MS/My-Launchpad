@@ -24,6 +24,86 @@ This file documents test cases for each feature. Tests are written when features
 
 ---
 
+## Version 1.7.0 Tests
+
+### TC-013: Resize Group to Large
+**Feature:** Right-click → Resize Group → Large (2×1)
+**Added:** v1.7.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Right-click on a Standard (1×1) group
+2. Select "Resize Group" → "Large"
+3. Observe the group tile size changes
+
+**Expected:** Group becomes a double-wide tile showing 4×2 grid (8 app icons)
+**Actual:** Group resizes to Large correctly
+**Tested:** March 2, 2026
+
+---
+
+### TC-014: Resize Group to Extra Large
+**Feature:** Right-click → Resize Group → Extra Large (2×2)
+**Added:** v1.7.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Right-click on a group
+2. Select "Resize Group" → "Extra Large"
+3. Observe the group tile size changes
+
+**Expected:** Group becomes a double-wide, double-tall tile showing 4×4 grid (16 app icons)
+**Actual:** Group resizes to Extra Large correctly
+**Tested:** March 2, 2026
+
+---
+
+### TC-015: Drag and Drop - Swap Groups
+**Feature:** Drag group onto another group to swap positions
+**Added:** v1.7.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Drag a group tile and drop it directly onto another group
+2. Observe the positions
+
+**Expected:** The two groups swap positions, with smooth animation
+**Actual:** Groups swap correctly with animation
+**Tested:** March 2, 2026
+
+---
+
+### TC-016: Drag and Drop - Insert Between Groups
+**Feature:** Drag group to gap between groups to insert
+**Added:** v1.7.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Drag a group tile
+2. Drop it in the gap between two other groups (not directly on a group)
+3. Observe the positions
+
+**Expected:** The dragged group is inserted at the drop position, pushing others over
+**Actual:** Insert between works correctly
+**Tested:** March 2, 2026
+
+---
+
+### TC-017: Mixed Size Group Grid Layout
+**Feature:** Bin-packing layout with mixed tile sizes
+**Added:** v1.7.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Resize some groups to Standard, some to Large, some to Extra Large
+2. Observe the grid layout arranges them efficiently
+
+**Expected:** Tiles pack efficiently with no overlapping, smaller tiles fill gaps
+**Actual:** Bin-packing layout works correctly
+**Tested:** March 2, 2026
+
+---
+
 ## Core Functionality Tests
 
 ### TC-001: App Launch
@@ -239,13 +319,14 @@ This file documents test cases for each feature. Tests are written when features
 
 | Version | Tests | Passed | Failed |
 |---------|-------|--------|--------|
+| v1.7.0 | 5 | 5 | 0 |
 | v1.6.1 | 1 | 1 | 0 |
 | v1.6.0 | 3 | 3 | 0 |
 | v1.5.9 | 2 | 2 | 0 |
 | v1.5.8 | 2 | 2 | 0 |
 | v1.5.7 | 1 | 1 | 0 |
 | Core | 3 | 3 | 0 |
-| **Total** | **12** | **12** | **0** |
+| **Total** | **17** | **17** | **0** |
 
 ---
 
