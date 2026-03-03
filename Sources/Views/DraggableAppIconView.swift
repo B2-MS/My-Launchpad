@@ -75,6 +75,26 @@ struct DraggableAppIconView: View {
             if isEditMode && isSelected {
                 selectionCheckmark
             }
+            
+            // Pin to grid button in edit mode
+            if isEditMode, let pinAction = onPinToGrid {
+                Button {
+                    pinAction()
+                } label: {
+                    Image(systemName: "pin.fill")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 20, height: 20)
+                        .background(
+                            Circle()
+                                .fill(Color.orange)
+                                .shadow(color: .black.opacity(0.3), radius: 2, y: 1)
+                        )
+                }
+                .buttonStyle(.plain)
+                .offset(x: 6, y: -6)
+                .help("Pin to Grid")
+            }
         }
     }
     

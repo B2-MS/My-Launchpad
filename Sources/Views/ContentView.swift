@@ -465,6 +465,9 @@ struct ContentView: View {
                 let gridHeight = calculateGridHeight(positions: positions, spacing: spacing)
                 
                 ZStack(alignment: .topLeading) {
+                    // Invisible background to ensure drop target covers full area
+                    Color.clear
+                    
                     ForEach(positions, id: \.tile.id) { position in
                         let tileW = CGFloat(position.colSpan) * standardTileWidth + CGFloat(position.colSpan - 1) * spacing
                         let tileH = CGFloat(position.rowSpan) * standardTileHeight + CGFloat(position.rowSpan - 1) * spacing
@@ -479,6 +482,7 @@ struct ContentView: View {
                     }
                 }
                 .frame(width: geometry.size.width, height: gridHeight)
+                .contentShape(Rectangle())
                 .dropDestination(for: String.self) { items, location in
                     dropTargetGroupId = nil
                     guard let itemString = items.first else { return false }
@@ -514,16 +518,80 @@ struct ContentView: View {
                         return true
                     }
                     
-                    // Handle app drag (adding to group)
-                    if let targetTile = targetTile,
-                       case .group(let targetGroupId) = targetTile.tile,
-                       let appId = UUID(uuidString: itemString),
-                       let group = viewModel.groups.first(where: { $0.id == targetGroupId }) {
-                        viewModel.moveAppToGroup(appId, group: group)
+                    // Handle standalone app tile drag (reordering on grid)
+                    if itemString.hasPrefix("standaloneApp:") {
+                        let appIdString = String(itemString.dropFirst(14))
+                        guard let appId = UUID(uuidString: appIdString) else { return false }
+                        let tileId = "app:\(appId.uuidString)"
+                        
+                        // Check if dropped clearly on center of a group tile (use inset rect)
+                        // Edge drops are treated as "insert between" rather than "add to group"
+                        if let targetTile = targetTile,
+                           case .group(let targetGroupId) = targetTile.tile,
+                           let group = viewModel.groups.first(where: { $0.id == targetGroupId }) {
+                            let tileRect = targetTile.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
+                            let insetRect = tileRect.insetBy(dx: tileRect.width * 0.2, dy: tileRect.height * 0.2)
+                            if insetRect.contains(location) {
+                                // Dropped on center of group - move app into that group
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    viewModel.launcherTiles.removeAll { $0.uuid == appId && $0.isStandaloneApp }
+                                    viewModel.moveAppToGroup(appId, group: group)
+                                }
+                                return true
+                            }
+                        }
+                        
+                        // Reorder: insert at the calculated position
+                        let idx: Int
+                        if let targetTile = targetTile {
+                            // Dropped on or near a tile - use its index
+                            let tileRect = targetTile.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
+                            idx = location.x > tileRect.midX ? targetTile.index + 1 : targetTile.index
+                        } else {
+                            idx = findInsertIndex(at: location, in: positions, spacing: spacing)
+                        }
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            viewModel.insertTile(from: tileId, toIndex: idx)
+                        }
                         return true
                     }
                     
-                    return false
+                    // Handle app drag from Apps section (plain UUID string)
+                    guard let appId = UUID(uuidString: itemString) else { return false }
+                    
+                    // If dropped clearly on center of a group tile, add to that group
+                    if let targetTile = targetTile,
+                       case .group(let targetGroupId) = targetTile.tile,
+                       let group = viewModel.groups.first(where: { $0.id == targetGroupId }) {
+                        let tileRect = targetTile.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
+                        let insetRect = tileRect.insetBy(dx: tileRect.width * 0.2, dy: tileRect.height * 0.2)
+                        if insetRect.contains(location) {
+                            viewModel.moveAppToGroup(appId, group: group)
+                            return true
+                        }
+                    }
+                    
+                    // Pin as standalone at the drop position
+                    let insertIdx: Int
+                    if let targetTile = targetTile {
+                        // Dropped on/near a tile edge - use position relative to tile center
+                        let tileRect = targetTile.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
+                        insertIdx = location.x > tileRect.midX ? targetTile.index + 1 : targetTile.index
+                    } else {
+                        insertIdx = findInsertIndex(at: location, in: positions, spacing: spacing)
+                    }
+                    
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        viewModel.pinAppAsStandalone(appId)
+                        // Move the newly pinned tile to the correct grid position
+                        if let tileIndex = viewModel.launcherTiles.firstIndex(where: { $0.uuid == appId && $0.isStandaloneApp }) {
+                            let movedTile = viewModel.launcherTiles.remove(at: tileIndex)
+                            let adjustedIndex = min(insertIdx, viewModel.launcherTiles.count)
+                            viewModel.launcherTiles.insert(movedTile, at: adjustedIndex)
+                            viewModel.saveData()
+                        }
+                    }
+                    return true
                 } isTargeted: { targeted in
                     if !targeted {
                         dropTargetGroupId = nil
@@ -574,28 +642,47 @@ struct ContentView: View {
         return nil
     }
     
-    /// Find the insert index for a drop between tiles
+    /// Find the insert index for a drop between tiles using row-aware logic
     private func findInsertIndex(at point: CGPoint, in positions: [TileGridPosition], spacing: CGFloat) -> Int {
         guard !positions.isEmpty else { return 0 }
         
-        // Find the closest tile and insert before or after it
-        var closestIndex = 0
-        var closestDistance: CGFloat = .infinity
+        let tileHeight = standardTileHeight
         
-        for position in positions {
-            let rect = position.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
-            let centerX = rect.midX
-            let centerY = rect.midY
-            let distance = hypot(point.x - centerX, point.y - centerY)
-            
-            if distance < closestDistance {
-                closestDistance = distance
-                // Insert after if drop is to the right of center, before otherwise
-                closestIndex = point.x > centerX ? position.index + 1 : position.index
+        // Determine which row the drop point is on
+        let targetRow = max(0, Int(point.y / (tileHeight + spacing)))
+        
+        // Find tiles that occupy this row (including multi-row tiles)
+        let tilesOnRow = positions.filter { position in
+            let startRow = position.row
+            let endRow = startRow + position.rowSpan - 1
+            return targetRow >= startRow && targetRow <= endRow
+        }
+        
+        if tilesOnRow.isEmpty {
+            // No tiles on this row - find the last tile above
+            let tilesAbove = positions.filter { $0.row + $0.rowSpan - 1 < targetRow }
+            if let lastAbove = tilesAbove.max(by: { $0.index < $1.index }) {
+                return lastAbove.index + 1
+            }
+            // Drop is above all tiles
+            return 0
+        }
+        
+        // Find the closest tile on this row by x position
+        var closestTile = tilesOnRow[0]
+        var closestXDist: CGFloat = .infinity
+        
+        for tile in tilesOnRow {
+            let rect = tile.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
+            let dist = abs(point.x - rect.midX)
+            if dist < closestXDist {
+                closestXDist = dist
+                closestTile = tile
             }
         }
         
-        return closestIndex
+        let rect = closestTile.rect(tileWidth: standardTileWidth, tileHeight: standardTileHeight, spacing: spacing)
+        return point.x > rect.midX ? closestTile.index + 1 : closestTile.index
     }
     
     /// Estimate grid height for GeometryReader

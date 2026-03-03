@@ -19,6 +19,35 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: Standalone App Pinning & Edit Mode Buttons (v1.8.0)
+**Date:** March 3, 2026
+
+### Prompts
+1. Requested drag-and-drop from Apps section to grid to pin apps as standalone tiles, and drag apps between groups to reorder
+2. Reported nothing works — discovered binary deployed to wrong name (`AppLauncher` instead of `MyLaunchpad`), fixed deployment path
+3. Reported 3 issues: drop position goes to beginning of row instead of target, can't reorder between groups (adds to group instead), wants pin icon button in edit mode
+4. Requested unpin button on standalone app tiles in edit mode
+5. Send it — full release workflow for v1.8.0
+
+### Outcomes
+- **Standalone App Pinning**: Drag apps from Apps section to grid to pin as standalone tiles at precise position
+- **Pin Button**: Orange pin icon on app tiles in DraggableAppIconView during edit mode — one-click pin to grid
+- **Unpin Button**: Orange unpin icon on standalone app tiles in StandaloneAppTileView during edit mode — one-click unpin
+- **Row-Aware Drop Positioning**: Rewrote `findInsertIndex` with row-based logic — calculates target row from y-coordinate, filters tiles on that row, finds closest tile by x-position
+- **Inset Rect Hit Testing**: Group tile drops use 20% inset rect — center drops add to group, edge drops trigger reorder
+- **Drag Between Groups**: Standalone apps can be reordered between groups without being absorbed into groups
+- **Binary Name Fix**: Corrected deployment to copy to `MyLaunchpad` instead of `AppLauncher`
+- Key files modified:
+  - `Sources/Views/ContentView.swift` — Row-aware `findInsertIndex`, inset rect for group drops, `Color.clear` drop background
+  - `Sources/Views/DraggableAppIconView.swift` — Orange pin button in edit mode
+  - `Sources/Views/StandaloneAppTileView.swift` — Orange unpin button in edit mode
+  - `Resources/Info.plist` — Version 1.8.0, build 10
+  - `README.md` — Version badge 1.8.0
+  - `RELEASE_NOTES.md` — v1.8.0 section
+  - `docs/My Launchpad User Guide.md` — v1.8.0 version history
+
+---
+
 ## Session: Resizable Group Tiles & Drag-Drop Fix (v1.7.0)
 **Date:** March 2, 2026
 

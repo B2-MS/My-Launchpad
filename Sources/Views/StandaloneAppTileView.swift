@@ -61,47 +61,70 @@ struct StandaloneAppTileView: View {
     // MARK: - Icon View
     
     private var iconView: some View {
-        ZStack {
-            // Glass background matching GroupIconView style
+        ZStack(alignment: .topTrailing) {
             ZStack {
-                RoundedRectangle(cornerRadius: 18 * scale)
-                    .fill(.thickMaterial)
-                
-                // Subtle blue gradient for standalone apps (different from purple groups)
-                RoundedRectangle(cornerRadius: 18 * scale)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.blue.opacity(0.2),
-                                Color.cyan.opacity(0.1)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                // Glass background matching GroupIconView style
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18 * scale)
+                        .fill(.thickMaterial)
+                    
+                    // Subtle blue gradient for standalone apps (different from purple groups)
+                    RoundedRectangle(cornerRadius: 18 * scale)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.blue.opacity(0.2),
+                                    Color.cyan.opacity(0.1)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
                         )
-                    )
+                    
+                    // Highlight stroke
+                    RoundedRectangle(cornerRadius: 18 * scale)
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.5), Color.white.opacity(0.1)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1
+                        )
+                }
+                .frame(width: scaledIconSize, height: scaledIconSize)
                 
-                // Highlight stroke
-                RoundedRectangle(cornerRadius: 18 * scale)
-                    .stroke(
-                        LinearGradient(
-                            colors: [Color.white.opacity(0.5), Color.white.opacity(0.1)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
+                // App icon
+                if let icon = loadedIcon {
+                    Image(nsImage: icon)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: scaledIconSize * 0.7, height: scaledIconSize * 0.7)
+                } else {
+                    ProgressView()
+                        .frame(width: scaledIconSize * 0.7, height: scaledIconSize * 0.7)
+                }
             }
             .frame(width: scaledIconSize, height: scaledIconSize)
             
-            // App icon
-            if let icon = loadedIcon {
-                Image(nsImage: icon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: scaledIconSize * 0.7, height: scaledIconSize * 0.7)
-            } else {
-                ProgressView()
-                    .frame(width: scaledIconSize * 0.7, height: scaledIconSize * 0.7)
+            // Unpin button in edit mode
+            if isEditMode {
+                Button {
+                    onUnpin()
+                } label: {
+                    Image(systemName: "pin.slash.fill")
+                        .font(.system(size: 10 * scale, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 22 * scale, height: 22 * scale)
+                        .background(
+                            Circle()
+                                .fill(Color.orange)
+                                .shadow(color: .black.opacity(0.3), radius: 2, y: 1)
+                        )
+                }
+                .buttonStyle(.plain)
+                .offset(x: 4 * scale, y: -4 * scale)
+                .help("Unpin from Grid")
             }
         }
         .scaleEffect(isHovering ? 1.05 : 1.0)

@@ -500,6 +500,14 @@ If an app shows a blank icon:
 
 ## Version History
 
+### v1.8.0 (March 2026)
+- Drag apps from Apps section to grid to pin as standalone tiles
+- Precise row-aware drop positioning for accurate placement
+- Pin button (orange pin icon) on each app in edit mode for one-click pinning
+- Unpin button (orange unpin icon) on pinned grid apps in edit mode for one-click removal
+- Drag pinned apps between groups to reorder on grid
+- Smart drop zones: edge drops reorder, center drops add to group
+
 ### v1.7.0 (March 2026)
 - Resizable group tiles: Standard (1×1), Large (2×1), Extra Large (2×2)
 - Larger tiles show more app icon previews (4, 8, or 16 apps)

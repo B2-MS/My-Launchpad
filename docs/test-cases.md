@@ -24,6 +24,81 @@ This file documents test cases for each feature. Tests are written when features
 
 ---
 
+## Version 1.8.0 Tests
+
+### TC-018: Drag App to Grid - Pin as Standalone
+**Feature:** Drag app from Apps section to open grid space
+**Added:** v1.8.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Open My Launchpad
+2. Scroll to the Apps section
+3. Drag an app icon upward onto an open area of the grid
+4. Release the drag
+
+**Expected:** App is pinned as a standalone tile at the drop position
+**Actual:** App appears as standalone tile at the correct grid position
+**Tested:** March 3, 2026 by User
+
+### TC-019: Pin Button in Edit Mode
+**Feature:** Orange pin icon on apps in edit mode
+**Added:** v1.8.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Click the edit (pencil) icon in the top-right toolbar
+2. Observe app icons in the Apps section
+3. Click the orange pin icon on an app
+
+**Expected:** Orange pin button appears on each app; clicking pins it to the grid
+**Actual:** Pin button appears and clicking it adds the app as a standalone grid tile
+**Tested:** March 3, 2026 by User
+
+### TC-020: Unpin Button in Edit Mode
+**Feature:** Orange unpin icon on pinned grid apps in edit mode
+**Added:** v1.8.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Pin an app to the grid (via drag or pin button)
+2. Enter edit mode (pencil icon)
+3. Click the orange unpin icon on the pinned app tile
+
+**Expected:** Orange unpin button appears on standalone grid tiles; clicking removes from grid
+**Actual:** Unpin button appears and clicking it returns the app to the Apps section
+**Tested:** March 3, 2026 by User
+
+### TC-021: Drag Standalone App Between Groups
+**Feature:** Reorder a pinned standalone app by dragging between groups
+**Added:** v1.8.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Pin an app to the grid
+2. Drag the standalone app tile to a gap between two group tiles
+3. Release the drag
+
+**Expected:** App tile moves to the new position between the groups
+**Actual:** App repositions correctly between groups and grid repaginates
+**Tested:** March 3, 2026 by User
+
+### TC-022: Drop Position Accuracy
+**Feature:** Row-aware drop positioning
+**Added:** v1.8.0
+**Status:** ✅ Pass
+
+**Steps:**
+1. Have multiple rows of groups on the grid
+2. Drag an app from the Apps section to a specific position on row 2
+3. Release the drag
+
+**Expected:** App appears at the position on row 2, not defaulting to row 1
+**Actual:** App placed at the correct row and column position
+**Tested:** March 3, 2026 by User
+
+---
+
 ## Version 1.7.0 Tests
 
 ### TC-013: Resize Group to Large

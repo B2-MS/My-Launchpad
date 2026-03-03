@@ -2,7 +2,7 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 17 Sessions, 196 Prompts
+## Summary — 18 Sessions, 201 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
@@ -23,6 +23,7 @@ This file contains the actual prompts used during development of My Launchpad.
 | Search Improvements (v1.5.9) | February 18, 2026 | 5 |
 | Launch at Login & Project Cleanup (v1.6.0) | February 22, 2026 | 7 |
 | Resizable Group Tiles & Drag-Drop Fix (v1.7.0) | March 2, 2026 | 14 |
+| Standalone App Pinning & Edit Mode Buttons (v1.8.0) | March 3, 2026 | 5 |
 
 ---
 
@@ -1280,6 +1281,37 @@ I checked the GitHub repo you still have not updated the My Launchpad DMG you've
 ### Prompt 12: Validate Full Instructions
 ```
 Please validate all of the instructions and ensure this is updated, I should not have to recheck your work each time. You perform this action!!
+```
+
+---
+
+## Session: March 3, 2026 - Standalone App Pinning & Edit Mode Buttons (v1.8.0)
+
+### Prompt 1: Drag to Pin & Drag Between Groups
+```
+I want to be able to drag an app from the Apps section to the grid to pin it as a standalone tile. I also want to be able to drag apps between groups to reorder them.
+```
+
+### Prompt 2: Nothing Works — Binary Name Mismatch
+```
+You didn't test, none of this works
+```
+
+### Prompt 3: Three Issues — Position, Reorder, Pin Button
+```
+1. Drop position is wrong - it goes to the beginning of the row instead of where I drop it
+2. I can't reorder between groups - it adds to the group instead of reordering
+3. I want a pin icon button in edit mode to pin apps to the grid
+```
+
+### Prompt 4: Unpin Button in Edit Mode
+```
+While in the app edit mode, add an unpin icon to standalone app tiles on the grid
+```
+
+### Prompt 5: Send It
+```
+send it
 ```
 
 ---

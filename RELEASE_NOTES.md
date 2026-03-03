@@ -1,5 +1,28 @@
 # Release Notes
 
+## Version 1.8.0 (March 2026)
+
+### New Features
+
+#### Standalone App Pinning to Grid
+- **Drag to Pin** - Drag any app from the Apps section to an open spot on the grid to pin it as a standalone tile
+- **Precise Placement** - Row-aware drop positioning places apps exactly where you drop them
+- **Pin Button in Edit Mode** - Orange pin icon appears on each app in edit mode for one-click pinning
+- **Unpin Button in Edit Mode** - Orange unpin icon appears on pinned grid apps for one-click removal
+
+#### Standalone App Reordering
+- **Drag Between Groups** - Drag a pinned app between groups to reposition it on the grid
+- **Smart Drop Zones** - Edge drops reorder tiles; center drops add to groups (20% inset threshold)
+- **Standalone Tile Drag** - Already-pinned apps can be dragged to new grid positions
+
+### Improvements
+- **Row-Aware Insert Logic** - Drop position calculation now respects grid rows for accurate placement
+- **Inset Hit Testing** - Dropping on the edge of a group inserts between rather than adding to group
+- **Color.clear Background** - Grid ZStack uses invisible background for reliable drop targeting
+- **ContentShape Rectangle** - Ensures full grid area accepts drops
+
+---
+
 ## Version 1.7.0 (March 2026)
 
 ### New Features
