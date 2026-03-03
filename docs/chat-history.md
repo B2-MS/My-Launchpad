@@ -28,6 +28,11 @@ When making changes to My Launchpad, document the session here with:
 3. Reported 3 issues: drop position goes to beginning of row instead of target, can't reorder between groups (adds to group instead), wants pin icon button in edit mode
 4. Requested unpin button on standalone app tiles in edit mode
 5. Send it — full release workflow for v1.8.0
+6. Reported User Guide missing full feature documentation for pin/unpin and grid repositioning — added Pinned Apps section, updated Drag and Drop section, updated TOC and README
+7. Confirmed need for screenshots — recommended pinned-app.png, pin-button.png, unpin-button.png
+8. Provided three new screenshots — wired into User Guide and pushed
+9. Called out that markdown updates are part of send-it instructions but keep getting missed — strengthened send-it.md with explicit User Guide requirements and expanded release checklist
+10. Asked if chat history and prompts-used were also updated — they were not, fixed now
 
 ### Outcomes
 - **Standalone App Pinning**: Drag apps from Apps section to grid to pin as standalone tiles at precise position
@@ -37,14 +42,18 @@ When making changes to My Launchpad, document the session here with:
 - **Inset Rect Hit Testing**: Group tile drops use 20% inset rect — center drops add to group, edge drops trigger reorder
 - **Drag Between Groups**: Standalone apps can be reordered between groups without being absorbed into groups
 - **Binary Name Fix**: Corrected deployment to copy to `MyLaunchpad` instead of `AppLauncher`
+- **User Guide — Full Feature Docs**: Added Pinned Apps section (pin, unpin, reposition), updated Drag and Drop section, updated TOC, added 3 screenshots
+- **README Updated**: Added pinned apps to Features list and Usage section
+- **Send-it Instructions Strengthened**: Step 1 now requires full User Guide feature docs, not just version history; checklist expanded with 4 new items
 - Key files modified:
   - `Sources/Views/ContentView.swift` — Row-aware `findInsertIndex`, inset rect for group drops, `Color.clear` drop background
   - `Sources/Views/DraggableAppIconView.swift` — Orange pin button in edit mode
   - `Sources/Views/StandaloneAppTileView.swift` — Orange unpin button in edit mode
   - `Resources/Info.plist` — Version 1.8.0, build 10
-  - `README.md` — Version badge 1.8.0
+  - `README.md` — Version badge 1.8.0, Features list, Usage section
   - `RELEASE_NOTES.md` — v1.8.0 section
-  - `docs/My Launchpad User Guide.md` — v1.8.0 version history
+  - `docs/My Launchpad User Guide.md` — Pinned Apps section, Drag and Drop updates, TOC, screenshots, version history
+  - `docs/instructions/send-it.md` — Strengthened User Guide requirements and release checklist
 
 ---
 

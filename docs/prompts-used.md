@@ -2,7 +2,7 @@
 
 This file contains the actual prompts used during development of My Launchpad.
 
-## Summary — 18 Sessions, 201 Prompts
+## Summary — 18 Sessions, 206 Prompts
 
 | Session | Date | Prompts |
 |---------|------|---------|
@@ -23,7 +23,7 @@ This file contains the actual prompts used during development of My Launchpad.
 | Search Improvements (v1.5.9) | February 18, 2026 | 5 |
 | Launch at Login & Project Cleanup (v1.6.0) | February 22, 2026 | 7 |
 | Resizable Group Tiles & Drag-Drop Fix (v1.7.0) | March 2, 2026 | 14 |
-| Standalone App Pinning & Edit Mode Buttons (v1.8.0) | March 3, 2026 | 5 |
+| Standalone App Pinning & Edit Mode Buttons (v1.8.0) | March 3, 2026 | 10 |
 
 ---
 
@@ -1312,6 +1312,33 @@ While in the app edit mode, add an unpin icon to standalone app tiles on the gri
 ### Prompt 5: Send It
 ```
 send it
+```
+
+### Prompt 6: User Guide Missing Feature Documentation
+```
+I don't see the new feature that we added for apps to be added to the grid included in the user guide have all these new features been added?
+ 1. I don't see the ability to pin or unpin.
+ 2. I don't see the ability to move and reposition apps in the grid.
+```
+
+### Prompt 7: Screenshots Needed
+```
+Do I need to provide updated screen captures for these capabilities?
+```
+
+### Prompt 8: Screenshots Added
+```
+OK, I've added the three new images
+```
+
+### Prompt 9: Why Does Markdown Keep Getting Missed
+```
+If updating markdown is part of the instructions for send it, why do you keep missing this important activity before reporting back to me that actions are complete?
+```
+
+### Prompt 10: Check Chat and Prompt History
+```
+Has chat history and prompt history also been updated per the instructions?
 ```
 
 ---
