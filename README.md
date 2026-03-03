@@ -35,7 +35,8 @@ If you miss the way Launchpad used to work, this app is for you.
 - 📍 **Menu Bar Icon** - Click to toggle visibility, right-click for menu
 - 🎨 **Customizable** - Adjust group colors and tile sizes
 - 📐 **Resizable Groups** - Choose Standard (1x1), Large (2x1), or Extra Large (2x2) tile sizes per group
-- 🔍 **Search** - Quickly find apps by name
+- � **Pin Apps to Grid** - Pin frequently-used apps as standalone tiles on the main grid for one-click access
+- �🔍 **Search** - Quickly find apps by name
 - 🖱️ **Drag & Drop** - Reorder apps and groups with intuitive drag and drop
 - 📄 **Multi-Page Groups** - Groups with 16+ apps paginate automatically with swipe gestures
 - 🎯 **iPad-Style Layout** - Drag apps to page edges to move between pages, with empty slot preservation
@@ -100,7 +101,14 @@ For the global hotkey to work:
 - **Drag app onto group** - Add app to group
 - **Drag app in group** - Reorder (drop on app to swap, drop between apps to insert)
 - **Drag groups** - Reorder groups on main screen
+- **Drag app to grid** - Pin as a standalone tile at the drop position
 - **Right-click app** - Move to group or remove from group
+
+### Pinned Apps (Edit Mode)
+- **Long-press** any app or group to enter edit mode
+- **Pin icon** (🟠📌) appears on each app — click to pin to grid
+- **Unpin icon** (🟠📌✕) appears on pinned grid apps — click to remove from grid
+- **Drag pinned apps** to reposition them on the grid
 
 ### Settings (Gear Icon)
 - **Color** - Customize group header color

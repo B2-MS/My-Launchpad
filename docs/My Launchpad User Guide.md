@@ -26,11 +26,15 @@ A beautiful, native macOS app launcher with group organization, global hotkeys, 
 </tr>
 <tr>
 <td>5. <a href="#main-window">Main Window</a></td>
-<td>11. <a href="#drag-and-drop">Drag and Drop</a></td>
+<td>11. <a href="#pinned-apps">Pinned Apps</a></td>
 </tr>
 <tr>
 <td>6. <a href="#search">Search</a></td>
-<td>12. <a href="#keyboard-shortcuts">Keyboard Shortcuts</a></td>
+<td>12. <a href="#drag-and-drop">Drag and Drop</a></td>
+</tr>
+<tr>
+<td></td>
+<td>13. <a href="#keyboard-shortcuts">Keyboard Shortcuts</a></td>
 </tr>
 </table>
 
@@ -412,6 +416,48 @@ These settings help keep the launcher out of your way while still being instantl
 
 ---
 
+## Pinned Apps
+
+Pinned apps are standalone app tiles that appear directly on the main grid alongside your groups. They give you one-click access to your most-used apps without needing to open a group first.
+
+### Pinning an App to the Grid
+
+There are two ways to pin an app:
+
+#### Drag to Pin
+1. Find the app in the **Apps** section at the bottom of the window
+2. **Drag** the app up to the main grid area
+3. **Drop** it at the exact position where you want it to appear
+4. The app appears as a standalone tile on the grid
+
+#### Pin Button (Edit Mode)
+1. **Enter Edit Mode** — Long-press on any app or group tile
+2. Each app in the Apps section displays an **orange pin icon** (📌) in the top-right corner
+3. **Click the pin icon** to instantly pin that app to the grid
+4. The app is added as a standalone tile at the end of the grid
+
+### Unpinning an App from the Grid
+
+1. **Enter Edit Mode** — Long-press on any app or group tile
+2. Each pinned app on the grid displays an **orange unpin icon** (pin with slash) in the top-right corner
+3. **Click the unpin icon** to remove the app from the grid
+4. The app remains available in the Apps section
+
+### Repositioning Pinned Apps
+
+Pinned apps can be repositioned on the grid by dragging:
+
+1. **Drag** a pinned app tile to a new position on the grid
+2. The drop position is **row-aware** — the app lands exactly where you drop it on the target row
+3. **Drop near the edge** of a group tile to insert at that position (reorder)
+4. **Drop on the center** of a group tile to add the app to that group instead
+
+> **Tip:** Pinned apps and groups share the same grid, so you can freely mix standalone apps with group tiles for the perfect layout.
+
+[↑ Table of Contents](#table-of-contents)
+
+---
+
 ## Drag and Drop
 
 <img src="../images/drag-and-drop.png" alt="Drag and Drop" width="500">
@@ -419,12 +465,21 @@ These settings help keep the launcher out of your way while still being instantl
 ### Adding Apps to Groups
 Drag an app onto a group icon to add it to that group.
 
+### Pinning Apps to the Grid
+Drag an app from the **Apps** section and drop it onto the main grid to pin it as a standalone tile. The app appears at the exact position where you drop it. See [Pinned Apps](#pinned-apps) for details.
+
 ### Reordering Apps Within a Group
 In the group popup:
 - **Drop ON an app** - Inserts at that position, pushing other apps forward
 - **Drop to the LEFT of an app** - Inserts before that app
 - **Drop to the RIGHT** - Inserts after (at end of row or end of list)
 - **Drop on empty slot** - Places the app in that empty position
+
+### Repositioning Pinned Apps on the Grid
+Drag a pinned app tile to move it:
+- **Drop near the edge** of another tile — Inserts at that position (reorder)
+- **Drop on the center** of a group tile — Adds the app to that group
+- Position is **row-aware** — the app lands on the exact row where you release it
 
 ### Moving Apps Between Pages
 In multi-page groups:
