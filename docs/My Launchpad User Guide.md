@@ -418,6 +418,8 @@ These settings help keep the launcher out of your way while still being instantl
 
 ## Pinned Apps
 
+<img src="../images/pinned-app.png" alt="Pinned App on Grid" width="500">
+
 Pinned apps are standalone app tiles that appear directly on the main grid alongside your groups. They give you one-click access to your most-used apps without needing to open a group first.
 
 ### Pinning an App to the Grid
@@ -431,12 +433,17 @@ There are two ways to pin an app:
 4. The app appears as a standalone tile on the grid
 
 #### Pin Button (Edit Mode)
+
+<img src="../images/pin-button.png" alt="Pin Button in Edit Mode" width="500">
+
 1. **Enter Edit Mode** — Long-press on any app or group tile
 2. Each app in the Apps section displays an **orange pin icon** (📌) in the top-right corner
 3. **Click the pin icon** to instantly pin that app to the grid
 4. The app is added as a standalone tile at the end of the grid
 
 ### Unpinning an App from the Grid
+
+<img src="../images/unpin-button.png" alt="Unpin Button in Edit Mode" width="500">
 
 1. **Enter Edit Mode** — Long-press on any app or group tile
 2. Each pinned app on the grid displays an **orange unpin icon** (pin with slash) in the top-right corner
