@@ -5,20 +5,20 @@
             "request": "launch",
             "args": [],
             "cwd": "${workspaceFolder:My Launchpad}",
-            "name": "Debug MyLaunchpad",
-            "target": "MyLaunchpad",
+            "name": "Debug My-Launchpad",
+            "target": "My-Launchpad",
             "configuration": "debug",
-            "preLaunchTask": "swift: Build Debug MyLaunchpad"
+            "preLaunchTask": "swift: Build Debug My-Launchpad"
         },
         {
             "type": "swift",
             "request": "launch",
             "args": [],
             "cwd": "${workspaceFolder:My Launchpad}",
-            "name": "Release MyLaunchpad",
-            "target": "MyLaunchpad",
+            "name": "Release My-Launchpad",
+            "target": "My-Launchpad",
             "configuration": "release",
-            "preLaunchTask": "swift: Build Release MyLaunchpad"
+            "preLaunchTask": "swift: Build Release My-Launchpad"
         }
     ]
 }

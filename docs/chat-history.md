@@ -19,6 +19,26 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: Smoother Group Popup Animation (v1.8.1)
+**Date:** April 9, 2026
+
+### Prompts
+1. Reported group popup animation is slow and not smooth, asked to test and refine
+2. Reported the fix is slower and now broken (yellow background, missing frosted glass) — see screenshot
+3. Confirmed the fix is MUCH better — send it, ensure all docs are updated prior to packaging and syncing
+
+### Outcomes
+- **Faster Spring Animation**: Reduced `.spring(response:)` from 0.3s to 0.2s with 0.85 damping fraction for snappier popup open/close
+- **Lighter Scale Transition**: Changed `.transition(.scale.combined(with: .opacity))` to `.transition(.opacity.combined(with: .scale(scale: 0.92)))` — scales from 92%→100% instead of 0%→100%, drastically reducing GPU work
+- **Consolidated Shadow**: Combined two shadows (radius 40 + radius 20) into single shadow (radius 25) — simpler rendering during animation
+- **Reverted `.drawingGroup()`**: Initially added for GPU rasterization but it broke `.thickMaterial` frosted glass (caused yellow background) — removed immediately
+- Key files modified:
+  - `Sources/Views/ContentView.swift` — Spring response 0.2s, scale transition 0.92
+  - `Sources/Views/ExpandedGroupView.swift` — Single consolidated shadow
+  - `Resources/Info.plist` — Version 1.8.1, build 11
+
+---
+
 ## Session: Standalone App Pinning & Edit Mode Buttons (v1.8.0)
 **Date:** March 3, 2026
 

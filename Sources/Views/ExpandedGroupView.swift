@@ -210,8 +210,7 @@ struct ExpandedGroupView: View {
             }
         )
         .clipShape(RoundedRectangle(cornerRadius: 24))
-        .shadow(color: headerColor.opacity(0.3), radius: 40, y: 15)
-        .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
+        .shadow(color: .black.opacity(0.35), radius: 25, y: 10)
         .overlay(
             RoundedRectangle(cornerRadius: 24)
                 .stroke(

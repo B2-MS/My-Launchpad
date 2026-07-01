@@ -24,6 +24,26 @@ This file documents test cases for each feature. Tests are written when features
 
 ---
 
+## Version 1.8.1 Tests
+
+### TC-023: Group Popup Animation Smoothness
+**Feature:** Refined group popup open/close animation
+**Added:** v1.8.1
+**Status:** ✅ Pass
+
+**Steps:**
+1. Open My Launchpad
+2. Click on any group tile to open the group popup
+3. Observe the popup animation speed and smoothness
+4. Close the popup (click outside or X button)
+5. Observe the close animation
+
+**Expected:** Popup opens and closes with a fast, smooth animation — no jank, no yellow/broken material, frosted glass effect intact
+**Actual:** Popup opens snappily (~0.2s spring) with subtle 92% scale-in, frosted glass material renders correctly, close animation is equally smooth
+**Tested:** April 9, 2026 by User
+
+---
+
 ## Version 1.8.0 Tests
 
 ### TC-018: Drag App to Grid - Pin as Standalone

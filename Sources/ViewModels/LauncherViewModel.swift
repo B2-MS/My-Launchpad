@@ -27,23 +27,17 @@ class LauncherViewModel: ObservableObject {
     @Published var windowHeight: Double = 600
     @Published var backupToICloud: Bool = false
     @Published var backupToOneDrive: Bool = false
+    @Published var launchAtLoginEnabled: Bool = false
     
     /// Launch at Login setting
     var launchAtLogin: Bool {
         get {
-            SMAppService.mainApp.status == .enabled
+            launchAtLoginEnabled
         }
         set {
-            objectWillChange.send()
-            do {
-                if newValue {
-                    try SMAppService.mainApp.register()
-                } else {
-                    try SMAppService.mainApp.unregister()
-                }
-            } catch {
-                print("Failed to \(newValue ? "enable" : "disable") launch at login: \(error)")
-            }
+            launchAtLoginEnabled = newValue
+            applyLaunchAtLoginPreference()
+            saveData()
         }
     }
     
@@ -66,8 +60,33 @@ class LauncherViewModel: ObservableObject {
     
     init() {
         loadData()
+        reconcileLaunchAtLoginRegistration()
         setupFolderMonitoring()
         checkForCloudBackups()
+    }
+
+    /// Apply the user's launch-at-login preference through ServiceManagement.
+    private func applyLaunchAtLoginPreference() {
+        do {
+            if launchAtLoginEnabled {
+                if SMAppService.mainApp.status != .enabled {
+                    try SMAppService.mainApp.register()
+                }
+            } else {
+                if SMAppService.mainApp.status == .enabled {
+                    try SMAppService.mainApp.unregister()
+                }
+            }
+        } catch {
+            print("Failed to \(launchAtLoginEnabled ? "enable" : "disable") launch at login: \(error)")
+        }
+    }
+
+    /// Re-register login item on startup if the user wants it and macOS dropped registration.
+    private func reconcileLaunchAtLoginRegistration() {
+        if launchAtLoginEnabled && SMAppService.mainApp.status != .enabled {
+            applyLaunchAtLoginPreference()
+        }
     }
     
     /// Subscribe to folder change notifications
@@ -134,6 +153,7 @@ class LauncherViewModel: ObservableObject {
         
         // Restore settings
         if let scale = cloudData.groupTileScale { self.groupTileScale = scale }
+        if let launchAtLogin = cloudData.launchAtLoginEnabled { self.launchAtLoginEnabled = launchAtLogin }
         if let hide = cloudData.hideOnLaunch { self.hideOnLaunch = hide }
         if let hideFocus = cloudData.hideOnFocusLost { self.hideOnFocusLost = hideFocus }
         if let width = cloudData.windowWidth { self.windowWidth = width }
@@ -278,6 +298,11 @@ class LauncherViewModel: ObservableObject {
             if let scale = savedData.groupTileScale {
                 self.groupTileScale = scale
             }
+            if let launchAtLogin = savedData.launchAtLoginEnabled {
+                self.launchAtLoginEnabled = launchAtLogin
+            } else {
+                self.launchAtLoginEnabled = (SMAppService.mainApp.status == .enabled)
+            }
             if let hide = savedData.hideOnLaunch {
                 self.hideOnLaunch = hide
             }
@@ -321,6 +346,7 @@ class LauncherViewModel: ObservableObject {
             allApps: allApps,
             launcherTiles: launcherTiles,
             groupTileScale: groupTileScale,
+            launchAtLoginEnabled: launchAtLoginEnabled,
             hideOnLaunch: hideOnLaunch,
             hideOnFocusLost: hideOnFocusLost,
             windowWidth: windowWidth,

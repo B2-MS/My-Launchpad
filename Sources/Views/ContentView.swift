@@ -33,7 +33,7 @@ struct ContentView: View {
             mainContent
             expandedGroupOverlay
         }
-        .animation(.spring(response: 0.3), value: viewModel.expandedGroupId)
+        .animation(.spring(response: 0.2, dampingFraction: 0.85), value: viewModel.expandedGroupId)
         .frame(minWidth: 600, minHeight: 450)
         .toolbar {
             toolbarContent
@@ -1148,7 +1148,7 @@ struct ContentView: View {
                     viewModel.swapAppsInGroup(appId, withAppAtIndex: targetIndex, in: group)
                 }
             )
-            .transition(.scale.combined(with: .opacity))
+            .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .center)))
         }
     }
     

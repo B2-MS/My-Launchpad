@@ -1,5 +1,16 @@
 # Release Notes
 
+## Version 1.8.1 (April 2026)
+
+### Improvements
+
+#### Smoother Group Popup Animation
+- **Faster spring animation** — Reduced spring response from 0.3s to 0.2s with 0.85 damping for a snappier feel
+- **Lighter scale transition** — Popup scales from 92%→100% instead of 0%→100%, reducing GPU work during open/close
+- **Consolidated shadow rendering** — Combined two heavy shadows (radius 40 + radius 20) into a single efficient shadow (radius 25)
+
+---
+
 ## Version 1.8.0 (March 2026)
 
 ### New Features

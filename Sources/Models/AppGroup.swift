@@ -175,6 +175,7 @@ struct LauncherData: Codable {
     var allApps: [AppItem]
     var launcherTiles: [LauncherTile]?  // Ordered list of groups and standalone apps
     var groupTileScale: Double?
+    var launchAtLoginEnabled: Bool?
     var hideOnLaunch: Bool?
     var hideOnFocusLost: Bool?
     var windowWidth: Double?
@@ -182,12 +183,13 @@ struct LauncherData: Codable {
     var backupToICloud: Bool?
     var backupToOneDrive: Bool?
     
-    init(groups: [AppGroup] = [], ungroupedAppIds: [UUID] = [], allApps: [AppItem] = [], launcherTiles: [LauncherTile]? = nil, groupTileScale: Double? = nil, hideOnLaunch: Bool? = nil, hideOnFocusLost: Bool? = nil, windowWidth: Double? = nil, windowHeight: Double? = nil, backupToICloud: Bool? = nil, backupToOneDrive: Bool? = nil) {
+    init(groups: [AppGroup] = [], ungroupedAppIds: [UUID] = [], allApps: [AppItem] = [], launcherTiles: [LauncherTile]? = nil, groupTileScale: Double? = nil, launchAtLoginEnabled: Bool? = nil, hideOnLaunch: Bool? = nil, hideOnFocusLost: Bool? = nil, windowWidth: Double? = nil, windowHeight: Double? = nil, backupToICloud: Bool? = nil, backupToOneDrive: Bool? = nil) {
         self.groups = groups
         self.ungroupedAppIds = ungroupedAppIds
         self.allApps = allApps
         self.launcherTiles = launcherTiles
         self.groupTileScale = groupTileScale
+        self.launchAtLoginEnabled = launchAtLoginEnabled
         self.hideOnLaunch = hideOnLaunch
         self.hideOnFocusLost = hideOnFocusLost
         self.windowWidth = windowWidth

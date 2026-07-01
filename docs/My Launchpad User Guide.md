@@ -562,6 +562,11 @@ If an app shows a blank icon:
 
 ## Version History
 
+### v1.8.1 (April 2026)
+- Smoother group popup animation with faster spring response (0.2s vs 0.3s)
+- Lighter scale transition (92% to 100%) for reduced GPU load during popup open/close
+- Consolidated shadow rendering for improved animation performance
+
 ### v1.8.0 (March 2026)
 - Drag apps from Apps section to grid to pin as standalone tiles
 - Precise row-aware drop positioning for accurate placement
