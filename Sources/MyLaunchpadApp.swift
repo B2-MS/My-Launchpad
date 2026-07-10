@@ -208,6 +208,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc private func statusBarButtonClicked(_ sender: NSStatusBarButton) {
         guard let event = NSApp.currentEvent else { return }
+        let targetScreen = sender.window?.screen ?? Self.screenForCurrentMouseLocation()
         
         // Right-click shows menu
         if event.type == .rightMouseUp {
@@ -221,28 +222,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             statusItem?.menu = nil
         } else {
             // Left-click toggles window visibility
-            toggleLauncher()
+            toggleLauncher(targetScreen: targetScreen)
         }
     }
     
     @objc private func toggleLauncher() {
+        toggleLauncher(targetScreen: statusItem?.button?.window?.screen ?? Self.screenForCurrentMouseLocation())
+    }
+
+    private func toggleLauncher(targetScreen: NSScreen?) {
         if let window = NSApp.windows.first(where: { $0.canBecomeKey }), window.isVisible, NSApp.isActive {
             // Window is visible and app is active - hide it
             NSApp.hide(nil)
         } else {
             // Window is hidden - show it
-            showLauncher()
+            showLauncherOnScreen(targetScreen)
         }
     }
     
     @objc private func showLauncher() {
+        showLauncherOnScreen(statusItem?.button?.window?.screen ?? Self.screenForCurrentMouseLocation())
+    }
+
+    private func showLauncherOnScreen(_ targetScreen: NSScreen?) {
         NSApp.activate(ignoringOtherApps: true)
         if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
             // Move window to current desktop/space when activated
             window.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary]
             window.makeKeyAndOrderFront(nil)
-            WindowAccessor.centerWindowOnScreen(window)
+            WindowAccessor.centerWindowOnScreen(window, targetScreen: targetScreen)
         }
+    }
+
+    private static func screenForCurrentMouseLocation() -> NSScreen? {
+        let mouseLocation = NSEvent.mouseLocation
+        return NSScreen.screens.first { NSMouseInRect(mouseLocation, $0.frame, false) }
     }
     
     @objc private func quitApp() {
@@ -333,8 +347,11 @@ struct WindowAccessor: NSViewRepresentable {
     }
     
     /// Center window on the visible screen area (accounting for menu bar and dock)
-    static func centerWindowOnScreen(_ window: NSWindow) {
-        guard let screen = window.screen ?? NSScreen.main else {
+    static func centerWindowOnScreen(_ window: NSWindow, targetScreen: NSScreen? = nil) {
+        let mouseLocation = NSEvent.mouseLocation
+        let mouseScreen = NSScreen.screens.first { NSMouseInRect(mouseLocation, $0.frame, false) }
+
+        guard let screen = targetScreen ?? window.screen ?? mouseScreen ?? NSScreen.main else {
             window.center()
             return
         }
