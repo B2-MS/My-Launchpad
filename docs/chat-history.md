@@ -36,6 +36,22 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: App Discovery Clean Pass and Documentation Sync (v1.8.3)
+**Date:** July 10, 2026
+
+### Prompts
+1. Requested default launch behavior for fresh installs to be visible on startup.
+2. Reported newly installed apps were not appearing in available apps.
+3. Requested a full clean pass, markdown updates, and repository sync.
+
+### Outcomes
+- Changed fresh-install default to `Hide on launch = OFF`.
+- Updated app scanner to recursively discover `.app` bundles in nested directories.
+- Added `/Applications/Utilities` to scan paths.
+- Updated release docs and version metadata for v1.8.3.
+
+---
+
 ## Session: Smoother Group Popup Animation (v1.8.1)
 **Date:** April 9, 2026
 

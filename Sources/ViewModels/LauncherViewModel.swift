@@ -20,7 +20,7 @@ class LauncherViewModel: ObservableObject {
     @Published var windowOpacity: Double = 0.5
     @Published var groupHeaderColor: Color = .purple
     @Published var groupTileScale: Double = 1.1
-    @Published var hideOnLaunch: Bool = true
+    @Published var hideOnLaunch: Bool = false
     @Published var hideOnFocusLost: Bool = true
     @Published var showSettings: Bool = false
     @Published var windowWidth: Double = 800

@@ -564,6 +564,12 @@ If an app shows a blank icon:
 
 ## Version History
 
+### v1.8.3 (July 2026)
+- Recursive app scanning now detects apps installed in nested folders
+- Added `/Applications/Utilities` to app discovery scan paths
+- Fresh installs now default to showing the launcher on startup (`Hide on launch` OFF)
+- Menu bar clicks now open the launcher on the display where the click occurred
+
 ### v1.8.2 (July 2026)
 - Cloud backup files now include the device name in the filename
 - Cloud backup discovery now reads all matching backups from iCloud and OneDrive

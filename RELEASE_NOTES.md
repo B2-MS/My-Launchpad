@@ -1,5 +1,17 @@
 # Release Notes
 
+## Version 1.8.3 (July 2026)
+
+### Improvements
+
+#### App Discovery and Launch Behavior
+- **Recursive app scanning** - App discovery now scans nested folders inside application directories, so newly installed apps in vendor subfolders are detected
+- **More complete scan coverage** - Added `/Applications/Utilities` to standard scan paths
+- **Visible on first launch** - Fresh installs now default to showing the launcher at startup (`Hide on launch` default is now OFF)
+- **Multi-display menu bar targeting** - Clicking the menu bar icon now opens the launcher on the display where the click occurred
+
+---
+
 ## Version 1.8.2 (July 2026)
 
 ### Improvements
