@@ -16,6 +16,21 @@ DMG_PATH="$RELEASES_DIR/$DMG_NAME"
 TEMP_DMG="$PROJECT_DIR/temp_$DMG_NAME"
 VOLUME_NAME="$APP_NAME"
 
+detach_dmg() {
+    local target="$1"
+
+    for attempt in 1 2 3; do
+        if hdiutil detach "$target" >/dev/null 2>&1; then
+            return 0
+        fi
+        echo "   ⏳ Detach attempt $attempt failed, retrying..."
+        sleep 1
+    done
+
+    echo "   ⚠️  Retrying with force detach..."
+    hdiutil detach -force "$target" >/dev/null 2>&1
+}
+
 echo "📦 Creating DMG installer for $APP_NAME..."
 
 # Ensure releases directory exists
@@ -30,7 +45,7 @@ fi
 
 # Unmount any existing volume with the same name
 echo "🔌 Unmounting any existing volumes..."
-hdiutil detach "/Volumes/$VOLUME_NAME" 2>/dev/null || true
+detach_dmg "/Volumes/$VOLUME_NAME" || true
 
 # Remove existing DMG files
 rm -f "$DMG_PATH"
@@ -94,7 +109,7 @@ EOF
 
 # Sync and unmount
 sync
-hdiutil detach "$DEVICE"
+detach_dmg "$DEVICE"
 
 # Convert to compressed read-only DMG
 echo "🗜️  Compressing DMG..."

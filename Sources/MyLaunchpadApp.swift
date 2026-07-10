@@ -143,8 +143,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Set as accessory app (no dock icon, stays running)
-        NSApp.setActivationPolicy(.accessory)
+        // Use regular policy so users always have a visible Dock presence.
+        NSApp.setActivationPolicy(.regular)
         
         HotkeyManager.shared.registerHotkey()
         
@@ -188,17 +188,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         if let button = statusItem?.button {
-            button.image = NSImage(systemSymbolName: "square.grid.2x2.fill", accessibilityDescription: "App Launcher")
+            if let icon = NSImage(systemSymbolName: "square.grid.2x2.fill", accessibilityDescription: "App Launcher") {
+                icon.isTemplate = true
+                button.image = icon
+                button.imagePosition = .imageLeading
+            } else {
+                button.image = nil
+            }
+            // Always show a short label so the item is visible on all menu bar themes.
+            button.title = "ML"
+            button.toolTip = "My Launchpad"
             button.action = #selector(statusBarButtonClicked(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
             button.target = self
         }
-        
-        // Create menu for right-click
-        let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Show Launcher (⌃⌥Space)", action: #selector(showLauncher), keyEquivalent: ""))
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
         
         statusItem?.menu = nil // Don't set menu directly - we'll show it conditionally
     }

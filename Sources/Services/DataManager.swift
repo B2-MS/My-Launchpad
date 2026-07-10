@@ -8,7 +8,38 @@ class DataManager {
     static let shared = DataManager()
     
     private let dataFileName = "MyLaunchpadData.json"
-    private let backupFileName = "My Launchpad Backup.json"
+    private let backupFileBaseName = "My Launchpad Backup"
+    private let backupFileExtension = "json"
+
+    private var backupFileName: String {
+        "\(backupFileBaseName) - \(sanitizedDeviceName).\(backupFileExtension)"
+    }
+
+    private var legacyBackupFileName: String {
+        "\(backupFileBaseName).\(backupFileExtension)"
+    }
+
+    private var sanitizedDeviceName: String {
+        let rawDeviceName = Host.current().localizedName ?? ProcessInfo.processInfo.hostName
+        return sanitizeFileNameComponent(rawDeviceName)
+    }
+
+    private func sanitizeFileNameComponent(_ value: String) -> String {
+        let invalidCharacters = CharacterSet(charactersIn: "/\\:?%*|\"<>")
+        let components = value.components(separatedBy: invalidCharacters)
+        let cleaned = components.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+        return cleaned.isEmpty ? "Unknown Device" : cleaned
+    }
+
+    private func isBackupFile(name: String) -> Bool {
+        if name == legacyBackupFileName {
+            return true
+        }
+
+        let expectedPrefix = "\(backupFileBaseName) - "
+        let expectedSuffix = ".\(backupFileExtension)"
+        return name.hasPrefix(expectedPrefix) && name.hasSuffix(expectedSuffix)
+    }
     
     private var dataFileURL: URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -20,8 +51,8 @@ class DataManager {
         return appFolder.appendingPathComponent(dataFileName)
     }
     
-    /// iCloud Drive backup location
-    var iCloudBackupURL: URL? {
+    /// iCloud Drive backup folder location
+    var iCloudBackupDirectoryURL: URL? {
         let homeDir = FileManager.default.homeDirectoryForCurrentUser
         let iCloudPath = homeDir.appendingPathComponent("Library/Mobile Documents/com~apple~CloudDocs/My Launchpad")
         
@@ -34,11 +65,16 @@ class DataManager {
         // Create My Launchpad folder if needed
         try? FileManager.default.createDirectory(at: iCloudPath, withIntermediateDirectories: true)
         
-        return iCloudPath.appendingPathComponent(backupFileName)
+        return iCloudPath
+    }
+
+    /// iCloud Drive backup file location for this device
+    var iCloudBackupURL: URL? {
+        iCloudBackupDirectoryURL?.appendingPathComponent(backupFileName)
     }
     
-    /// OneDrive backup location
-    var oneDriveBackupURL: URL? {
+    /// OneDrive backup folder location
+    var oneDriveBackupDirectoryURL: URL? {
         let homeDir = FileManager.default.homeDirectoryForCurrentUser
         
         // Check common OneDrive locations
@@ -53,11 +89,16 @@ class DataManager {
             if FileManager.default.fileExists(atPath: parentPath.path) {
                 // Create My Launchpad folder if needed
                 try? FileManager.default.createDirectory(at: basePath, withIntermediateDirectories: true)
-                return basePath.appendingPathComponent(backupFileName)
+                return basePath
             }
         }
         
         return nil
+    }
+
+    /// OneDrive backup file location for this device
+    var oneDriveBackupURL: URL? {
+        oneDriveBackupDirectoryURL?.appendingPathComponent(backupFileName)
     }
     
     /// Check if iCloud Drive is available
@@ -163,10 +204,28 @@ class DataManager {
     /// Cloud backup info for display
     struct CloudBackupInfo {
         let source: String  // "iCloud" or "OneDrive"
+        let deviceName: String
         let url: URL
         let data: LauncherData
         let modificationDate: Date
         let groupCount: Int
+    }
+
+    private func deviceName(fromBackupFileName fileName: String) -> String {
+        if fileName == legacyBackupFileName {
+            return "Unknown Device"
+        }
+
+        let prefix = "\(backupFileBaseName) - "
+        let suffix = ".\(backupFileExtension)"
+        guard fileName.hasPrefix(prefix), fileName.hasSuffix(suffix) else {
+            return "Unknown Device"
+        }
+
+        let startIndex = fileName.index(fileName.startIndex, offsetBy: prefix.count)
+        let endIndex = fileName.index(fileName.endIndex, offsetBy: -suffix.count)
+        let extracted = String(fileName[startIndex..<endIndex]).trimmingCharacters(in: .whitespacesAndNewlines)
+        return extracted.isEmpty ? "Unknown Device" : extracted
     }
     
     /// Check for available cloud backups
@@ -174,38 +233,48 @@ class DataManager {
         var backups: [CloudBackupInfo] = []
         let decoder = JSONDecoder()
         let fileManager = FileManager.default
-        
-        // Check iCloud
-        if let iCloudURL = iCloudBackupURL, fileManager.fileExists(atPath: iCloudURL.path) {
-            if let data = try? Data(contentsOf: iCloudURL),
-               let launcherData = try? decoder.decode(LauncherData.self, from: data),
-               let attrs = try? fileManager.attributesOfItem(atPath: iCloudURL.path),
-               let modDate = attrs[.modificationDate] as? Date {
-                backups.append(CloudBackupInfo(
-                    source: "iCloud",
-                    url: iCloudURL,
-                    data: launcherData,
-                    modificationDate: modDate,
-                    groupCount: launcherData.groups.count
-                ))
+
+        func appendBackups(in directoryURL: URL, source: String) {
+            guard let fileURLs = try? fileManager.contentsOfDirectory(
+                at: directoryURL,
+                includingPropertiesForKeys: [.nameKey, .isRegularFileKey, .contentModificationDateKey],
+                options: [.skipsHiddenFiles]
+            ) else {
+                return
+            }
+
+            for fileURL in fileURLs {
+                let fileName = fileURL.lastPathComponent
+                guard isBackupFile(name: fileName) else { continue }
+                let deviceName = deviceName(fromBackupFileName: fileName)
+
+                if let data = try? Data(contentsOf: fileURL),
+                   let launcherData = try? decoder.decode(LauncherData.self, from: data),
+                   let attrs = try? fileManager.attributesOfItem(atPath: fileURL.path),
+                   let modDate = attrs[.modificationDate] as? Date {
+                    backups.append(CloudBackupInfo(
+                        source: source,
+                        deviceName: deviceName,
+                        url: fileURL,
+                        data: launcherData,
+                        modificationDate: modDate,
+                        groupCount: launcherData.groups.count
+                    ))
+                }
             }
         }
-        
-        // Check OneDrive
-        if let oneDriveURL = oneDriveBackupURL, fileManager.fileExists(atPath: oneDriveURL.path) {
-            if let data = try? Data(contentsOf: oneDriveURL),
-               let launcherData = try? decoder.decode(LauncherData.self, from: data),
-               let attrs = try? fileManager.attributesOfItem(atPath: oneDriveURL.path),
-               let modDate = attrs[.modificationDate] as? Date {
-                backups.append(CloudBackupInfo(
-                    source: "OneDrive",
-                    url: oneDriveURL,
-                    data: launcherData,
-                    modificationDate: modDate,
-                    groupCount: launcherData.groups.count
-                ))
-            }
+
+        // Check iCloud backups from all devices
+        if let iCloudDirectoryURL = iCloudBackupDirectoryURL {
+            appendBackups(in: iCloudDirectoryURL, source: "iCloud")
         }
+
+        // Check OneDrive backups from all devices
+        if let oneDriveDirectoryURL = oneDriveBackupDirectoryURL {
+            appendBackups(in: oneDriveDirectoryURL, source: "OneDrive")
+        }
+
+        backups.sort { $0.modificationDate > $1.modificationDate }
         
         return backups
     }

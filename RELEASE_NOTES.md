@@ -1,5 +1,17 @@
 # Release Notes
 
+## Version 1.8.2 (July 2026)
+
+### Improvements
+
+#### Device-Named Cloud Backups
+- **Device name in backup filename** - Cloud backup files now include the source device name (for example, `My Launchpad Backup - Bartbis MacBook Pro.json`)
+- **Multi-device backup discovery** - Import scanning now detects all device-specific backup files in iCloud and OneDrive folders
+- **Import prompt clarity** - Cloud import prompt now displays the device name for each backup option
+- **Legacy compatibility** - Existing `My Launchpad Backup.json` files are still recognized and importable
+
+---
+
 ## Version 1.8.1 (April 2026)
 
 ### Improvements

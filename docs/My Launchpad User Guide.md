@@ -390,16 +390,18 @@ Keep your settings synced across multiple Macs using cloud storage:
 
 | Setting | Description |
 |---------|-------------|
-| **iCloud** | When enabled, automatically backs up settings to `~/Library/Mobile Documents/com~apple~CloudDocs/My Launchpad/` |
-| **OneDrive** | When enabled, automatically backs up settings to `~/Library/CloudStorage/OneDrive-Personal/My Launchpad/` |
+| **iCloud** | When enabled, automatically backs up settings to `~/Library/Mobile Documents/com~apple~CloudDocs/My Launchpad/` using a device-specific filename |
+| **OneDrive** | When enabled, automatically backs up settings to `~/Library/CloudStorage/OneDrive-Personal/My Launchpad/` using a device-specific filename |
 
 **How Cloud Sync Works:**
 1. Enable one or both cloud backup options in Settings
-2. Your configuration is automatically saved to the cloud whenever you make changes
+2. Your configuration is automatically saved to the cloud whenever you make changes, with a filename that includes your device name
 3. On another Mac (signed into the same cloud account), launch My Launchpad
 4. If the app detects different settings in the cloud, you'll see a prompt:
-   - **Use These** - Import the cloud settings, replacing your local configuration
+   - **Use These** - Import the selected cloud settings, replacing your local configuration
    - **Keep Local Settings** - Dismiss and keep your current setup
+
+> **Example filename:** `My Launchpad Backup - Bartbis MacBook Pro.json`
 
 > **Tip:** This is perfect for keeping your app organization consistent across a MacBook and desktop Mac!
 
@@ -561,6 +563,11 @@ If an app shows a blank icon:
 ---
 
 ## Version History
+
+### v1.8.2 (July 2026)
+- Cloud backup files now include the device name in the filename
+- Cloud backup discovery now reads all matching backups from iCloud and OneDrive
+- Cloud import prompt now displays the source device for each backup
 
 ### v1.8.1 (April 2026)
 - Smoother group popup animation with faster spring response (0.2s vs 0.3s)

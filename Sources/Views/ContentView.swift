@@ -79,7 +79,7 @@ struct ContentView: View {
                 .padding(.horizontal)
             
             VStack(alignment: .leading, spacing: 12) {
-                ForEach(viewModel.availableCloudBackups, id: \.source) { backup in
+                ForEach(viewModel.availableCloudBackups, id: \.url) { backup in
                     HStack {
                         Image(systemName: backup.source == "iCloud" ? "icloud.fill" : "cloud.fill")
                             .foregroundColor(backup.source == "iCloud" ? .blue : .cyan)
@@ -87,6 +87,9 @@ struct ContentView: View {
                         VStack(alignment: .leading) {
                             Text(backup.source)
                                 .fontWeight(.medium)
+                            Text(backup.deviceName)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             Text("\(backup.groupCount) groups • \(formatDate(backup.modificationDate))")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
