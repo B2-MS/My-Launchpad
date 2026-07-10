@@ -195,8 +195,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             } else {
                 button.image = nil
             }
-            // Always show a short label so the item is visible on all menu bar themes.
-            button.title = "ML"
+            button.title = ""
             button.toolTip = "My Launchpad"
             button.action = #selector(statusBarButtonClicked(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
