@@ -11,7 +11,6 @@ echo "📋 Verifying Documentation Updates..."
 echo "======================================="
 
 ERRORS=0
-WARNINGS=0
 
 # Get current version from README
 README_VERSION=$(grep -o 'Version-[0-9.]*' README.md | head -1 | sed 's/Version-//')
@@ -37,6 +36,15 @@ else
     ((ERRORS++))
 fi
 
+# Check latest release notes section matches README version
+LATEST_RELEASE_NOTES_VERSION=$(grep '^## Version ' RELEASE_NOTES.md | head -1 | sed -E 's/^## Version ([0-9.]+).*/\1/')
+if [ "$LATEST_RELEASE_NOTES_VERSION" = "$README_VERSION" ]; then
+    echo "   ✅ Latest release notes version matches README ($README_VERSION)"
+else
+    echo "   ❌ Latest release notes version is $LATEST_RELEASE_NOTES_VERSION (expected $README_VERSION)"
+    ((ERRORS++))
+fi
+
 # 3. Check User Guide version history
 echo ""
 echo "3️⃣  My Launchpad User Guide.md"
@@ -49,19 +57,36 @@ else
     ((ERRORS++))
 fi
 
+# Check latest user guide version history entry matches README version
+LATEST_USER_GUIDE_VERSION=$(grep '^### v[0-9.]\+' "docs/My Launchpad User Guide.md" | head -1 | sed -E 's/^### v([0-9.]+).*/\1/')
+if [ "$LATEST_USER_GUIDE_VERSION" = "$README_VERSION" ]; then
+    echo "   ✅ Latest User Guide version matches README ($README_VERSION)"
+else
+    echo "   ❌ Latest User Guide version is $LATEST_USER_GUIDE_VERSION (expected $README_VERSION)"
+    ((ERRORS++))
+fi
+
 # 4. Check chat-history.md was updated recently
 echo ""
 echo "4️⃣  docs/chat-history.md"
 CHAT_SESSIONS=$(grep -c "^## Session:" docs/chat-history.md)
 echo "   📊 Total sessions documented: $CHAT_SESSIONS"
-# Check if today's date appears (for recent updates)
+# Check if today's date appears (required for release documentation hygiene)
 TODAY=$(date "+%B %-d, %Y")
 TODAY_SHORT=$(date "+%B %Y")
 if grep -q "$TODAY\|$TODAY_SHORT" docs/chat-history.md; then
-    echo "   ✅ Recent session entry found"
+    echo "   ✅ Recent session entry found for current date"
 else
-    echo "   ⚠️  No entry with current date found - verify session was added"
-    ((WARNINGS++))
+    echo "   ❌ No entry with current date found - add this session to docs/chat-history.md"
+    ((ERRORS++))
+fi
+
+# Ensure chat history includes the current release version
+if grep -q "(v$README_VERSION)" docs/chat-history.md; then
+    echo "   ✅ Chat history includes release version v$README_VERSION"
+else
+    echo "   ❌ Chat history missing release version v$README_VERSION"
+    ((ERRORS++))
 fi
 
 # 5. Check prompts-used.md
@@ -113,14 +138,11 @@ echo "   ⚠️  Manually verify chronological order"
 # Summary
 echo ""
 echo "======================================="
-if [ $ERRORS -eq 0 ] && [ $WARNINGS -eq 0 ]; then
+if [ $ERRORS -eq 0 ]; then
     echo "✅ ALL CHECKS PASSED!"
     exit 0
-elif [ $ERRORS -eq 0 ]; then
-    echo "⚠️  PASSED with $WARNINGS warning(s)"
-    exit 0
 else
-    echo "❌ FAILED: $ERRORS error(s), $WARNINGS warning(s)"
+    echo "❌ FAILED: $ERRORS error(s)"
     echo ""
     echo "Please fix the issues above before completing the workflow."
     exit 1
