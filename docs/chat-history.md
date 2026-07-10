@@ -19,6 +19,23 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: Release Automation and Multi-Screen Launcher Updates (v1.8.2)
+**Date:** July 10, 2026
+
+### Prompts
+1. Requested device names in cloud backup filenames and export filename defaults.
+2. Requested launcher menu bar behavior on multi-screen setups to open on the clicked display.
+3. Requested stricter send-it documentation verification and retry-until-success behavior.
+4. Requested full send-it execution after workflow updates.
+
+### Outcomes
+- Added device-specific naming for cloud backups and exported settings defaults.
+- Updated menu bar click handling to open launcher on the clicked monitor.
+- Hardened documentation verification and enabled automatic retry loop for send-it.
+- Synced workflow and app updates to GitHub.
+
+---
+
 ## Session: Smoother Group Popup Animation (v1.8.1)
 **Date:** April 9, 2026
 
@@ -190,17 +207,11 @@ When making changes to My Launchpad, document the session here with:
 
 ## Session: Auto-Detect New Apps (v1.5.7)
 **Date:** February 4, 2026
-
 ### Prompts
 1. Asked to make new apps appear without quitting and restarting
-2. Confirmed it works
-3. Requested to send it with all markdown files updated
-
-### Outcomes
 - **Automatic App Detection**: Apps added to /Applications now appear automatically
 - **Folder Monitoring**: Added `DispatchSource` file system watchers to AppScanner
 - **Live Updates**: ViewModel subscribes to folder change notifications
-- **Cleanup**: Removed apps are automatically cleaned up from all lists/groups
 - **Automated GitHub Releases**: Updated release-workflow.sh to create GitHub Releases with DMG
 - Key files modified:
   - `Sources/Services/AppScanner.swift` - Added folder monitoring with DispatchSource
@@ -217,20 +228,12 @@ When making changes to My Launchpad, document the session here with:
 2. Asked if "send it" would make all updates prior to build/packaging/publishing
 3. Asked about confusion between markdown files and scripts having same names
 4. Wanted simple names (test-it, pack-it, send-it) for instruction files, longer names for scripts
-5. Asked again if "send it" would update all files before release
-6. Confirmed to update documentation now
-
-### Outcomes
-- **Reorganized project structure**: Moved all 10 shell scripts from root to `scripts/` folder
-- **Renamed files to avoid confusion**:
   - Instruction files (simple): `test-it.md`, `pack-it.md`, `send-it.md`
   - Scripts (descriptive): `testing-workflow.sh`, `packaging-workflow.sh`, `release-workflow.sh`
 - **Updated all script paths**: Modified scripts to use `PROJECT_DIR` for proper path resolution
 - **Removed `update-docs.md`**: Merged content into individual workflow instruction files
-- **Updated all documentation references** to use new paths
 - Key files modified/created:
   - `scripts/` folder created with all 10 scripts
-  - `scripts/build.sh`, `scripts/rebuild.sh` - Updated paths
   - `scripts/testing-workflow.sh` (renamed from test-it.sh)
   - `scripts/packaging-workflow.sh` (renamed from pack-it.sh)
   - `scripts/release-workflow.sh` (renamed from send-it.sh)
@@ -247,19 +250,14 @@ When making changes to My Launchpad, document the session here with:
 ### Prompts
 1. Requested appending this conversation to chat-history.md (for the January 22 v1.5.0 Liquid Glass session that was loaded from conversation context).
 2. Requested appending to prompts-used.md.
-3. Reported the chat history from this chat was not included in the chat history file - requested ensuring entire contents are included in correct chronological location.
-
 ### Outcomes
 - Appended v1.5.0 Liquid Glass session (January 22, 2026) to chat-history.md with 9 prompts documented
 - Appended January 22, 2026 session prompts to prompts-used.md
 - Verified chronological ordering of all sessions in chat-history.md
 - Key files modified:
-  - `docs/chat-history.md` - Added v1.5.0 session documentation
   - `docs/prompts-used.md` - Added January 22 session prompts
 
 ---
-
-## Session: Project Rename Documentation & Transparency Fix (v1.5.5)
 **Date:** February 2, 2026
 
 ### Prompts
@@ -267,7 +265,6 @@ When making changes to My Launchpad, document the session here with:
 2. Pushed changes to GitHub
 3. Requested all entries be in chronological order in prompts-used.md
 4. Requested summary totals moved to same line as Summary header
-5. Requested test-it, pack-it, send-it instructions updated to include prompts-used.md updates
 6. Asked which screenshots need updating
 7. Noted transparency slider was removed
 8. Confirmed to proceed with screenshot updates
@@ -279,23 +276,15 @@ When making changes to My Launchpad, document the session here with:
 14. Asked if reloaded again, no difference seen
 15. Confirmed transparency now works but needs more
 16. Confirmed "YES!" when transparency was right at 75%
-17. Asked about prompts-used markdown
-18. Requested summary totals on same line as Summary heading
 19. Asked why User Guide version history is outdated
 20. Confirmed to add sync reminder to pack-it and send-it instructions
 21. Confirmed screenshots are complete
-22. Asked if ALL markdown files were updated per instructions
-
-### Outcomes
-- Fixed window transparency by reducing opacity from 0.95 to 0.75
-- Removed opaque .ultraThickMaterial, replaced with light color tints
 - Updated prompts-used.md to chronological order with summary header
 - Added prompts-used.md update instructions to test-it.md, pack-it.md, send-it.md
 - Added User Guide version history sync reminder to pack-it.md and send-it.md
 - Synced User Guide version history with RELEASE_NOTES.md (added v1.5.0-1.5.4)
 - Updated screenshots for new UI
 - Updated README.md version badge to 1.5.5
-- Added v1.5.5 section to RELEASE_NOTES.md
 - Added v1.5.5 to User Guide version history
 - Built and created DMG installer
 - Key files modified:
@@ -310,17 +299,13 @@ When making changes to My Launchpad, document the session here with:
   - `RELEASE_NOTES.md` - Added v1.5.5 section
   - `images/` - Updated screenshots
 
----
-
 ## Session: AppLauncher UI Improvements and Settings Feature
 **Date:** February 2, 2026
-
 ### Prompts
 1. Requested 5 changes to AppLauncher app: remove the 'groups' dropdown, resize from 9 icons per group to 16, enlarge groups by 30%, sort group names alphabetically in "Add to Group" popups, and redeploy the app.
 2. Continued monitoring build progress after encountering SwiftPM process conflicts and terminal issues with paths containing spaces.
 3. Requested 4 additional changes: reduce header height in group popup by 30%, add a settings option at the top, include a slider to change background transparency of main window, and add a collapsible section for apps with default state collapsed.
 4. Continued monitoring deployment build progress.
-5. Requested this conversation summary be appended to chat-history.md.
 
 ### Outcomes
 - Removed groups dropdown from main view
