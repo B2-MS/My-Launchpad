@@ -8,6 +8,7 @@ class AppScanner {
     /// Standard paths to scan for applications
     static let applicationPaths = [
         "/Applications",
+        "/Applications/Utilities",
         "/System/Applications",
         "/System/Applications/Utilities",
         NSHomeDirectory() + "/Applications"
@@ -67,25 +68,41 @@ class AppScanner {
     /// Scan all application directories and return found apps
     static func scanApplications() -> [AppItem] {
         var apps: [AppItem] = []
+        var seenPaths = Set<String>()
         let fileManager = FileManager.default
         
         for basePath in applicationPaths {
             guard fileManager.fileExists(atPath: basePath) else { continue }
-            
-            do {
-                let contents = try fileManager.contentsOfDirectory(atPath: basePath)
-                for item in contents {
-                    let fullPath = (basePath as NSString).appendingPathComponent(item)
-                    
-                    // Check if it's an application bundle
-                    if item.hasSuffix(".app") {
-                        if let appItem = createAppItem(from: fullPath) {
-                            apps.append(appItem)
-                        }
-                    }
+
+            guard let enumerator = fileManager.enumerator(
+                at: URL(fileURLWithPath: basePath),
+                includingPropertiesForKeys: [.isDirectoryKey, .isPackageKey],
+                options: [.skipsHiddenFiles],
+                errorHandler: { url, error in
+                    print("Error scanning \(url.path): \(error.localizedDescription)")
+                    return true
                 }
-            } catch {
-                print("Error scanning \(basePath): \(error.localizedDescription)")
+            ) else {
+                continue
+            }
+
+            for case let fileURL as URL in enumerator {
+                if fileURL.pathExtension != "app" {
+                    continue
+                }
+
+                // Don't descend into app bundles once discovered.
+                enumerator.skipDescendants()
+
+                let normalizedPath = fileURL.standardizedFileURL.path
+                if seenPaths.contains(normalizedPath) {
+                    continue
+                }
+
+                seenPaths.insert(normalizedPath)
+                if let appItem = createAppItem(from: normalizedPath) {
+                    apps.append(appItem)
+                }
             }
         }
         
