@@ -159,7 +159,7 @@ class DataManager {
     func exportData(_ data: LauncherData) -> Bool {
         let savePanel = NSSavePanel()
         savePanel.allowedContentTypes = [.json]
-        savePanel.nameFieldStringValue = "My Launchpad Settings.json"
+        savePanel.nameFieldStringValue = "My Launchpad Settings - \(sanitizedDeviceName).json"
         savePanel.title = "Export Settings"
         savePanel.message = "Choose where to save your launcher settings"
         
