@@ -36,6 +36,25 @@ When making changes to My Launchpad, document the session here with:
 
 ---
 
+## Session: App Icon Fix in Deploy Script (v1.8.3)
+**Date:** July 12, 2026
+
+### Prompts
+1. Reported app icon showing as blank tile in Finder.
+2. Requested full rebuild, redeploy, and validation before handing back.
+3. Requested documentation sync and repo commit as part of standard completion workflow.
+
+### Outcomes
+- Fixed `scripts/deploy.sh` to copy `AppIcon.icns` into the app bundle during deploy.
+- Identified root cause: deploy script was missing the icon copy step, causing blank icon after every deploy.
+- Full rebuild and redeploy to `/Applications` with verification.
+
+### Files Modified
+- `scripts/deploy.sh` — Added `cp Resources/AppIcon.icns` to bundle creation step.
+- `RELEASE_NOTES.md` — Added bug fix entry for missing icon.
+
+---
+
 ## Session: App Discovery Clean Pass and Documentation Sync (v1.8.3)
 **Date:** July 10, 2026
 

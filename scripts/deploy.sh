@@ -26,6 +26,7 @@ mkdir -p "build/My Launchpad.app/Contents/MacOS"
 mkdir -p "build/My Launchpad.app/Contents/Resources"
 cp .build/release/MyLaunchpad "build/My Launchpad.app/Contents/MacOS/"
 cp Resources/Info.plist "build/My Launchpad.app/Contents/"
+cp Resources/AppIcon.icns "build/My Launchpad.app/Contents/Resources/"
 printf 'APPL????' > "build/My Launchpad.app/Contents/PkgInfo"
 codesign --force --deep --sign - "build/My Launchpad.app" 2>/dev/null
 

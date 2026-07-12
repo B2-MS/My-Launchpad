@@ -19,6 +19,26 @@
             "target": "My-Launchpad",
             "configuration": "release",
             "preLaunchTask": "swift: Build Release My-Launchpad"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:My Launchpad}",
+            "name": "Debug MyLaunchpad",
+            "target": "MyLaunchpad",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug MyLaunchpad"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:My Launchpad}",
+            "name": "Release MyLaunchpad",
+            "target": "MyLaunchpad",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release MyLaunchpad"
         }
     ]
 }

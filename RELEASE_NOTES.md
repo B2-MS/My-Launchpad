@@ -10,6 +10,9 @@
 - **Visible on first launch** - Fresh installs now default to showing the launcher at startup (`Hide on launch` default is now OFF)
 - **Multi-display menu bar targeting** - Clicking the menu bar icon now opens the launcher on the display where the click occurred
 
+### Bug Fixes
+- **App icon missing after deploy** - Fixed `deploy.sh` not copying `AppIcon.icns` into the app bundle, causing a blank tile in Finder and Dock after each deploy
+
 ---
 
 ## Version 1.8.2 (July 2026)
